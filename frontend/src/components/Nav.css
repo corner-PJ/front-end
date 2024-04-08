@@ -1,0 +1,76 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    width: 100vw;
+    height: 80px;
+    background-color: #FC819E;
+    z-index: 999;
+}
+
+.navbar strong:hover {
+    color: #FFE791;
+}
+
+.navbar .logo {
+    width: 5.8em;
+    height: 1.6em;
+    padding: 0 4em 0 1.5em;
+}
+
+.navbar .pageLink {
+    display: flex;
+    align-items: center;
+    padding-left: 90px;
+    gap: 6em;
+    color: #FFFFFF;
+}
+
+/* 드롭다운 부분 */
+.navbar .dropmenu {
+    position: relative;
+    display : inline-block;
+}
+
+.navbar .dropmenu .dropContent {
+    display: none;
+    position: absolute;
+    background-color: #FFE791;
+    border-radius: 5%;
+    width: 180px;
+    font-size: 15px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.navbar .dropmenu:hover .dropContent {
+    display: block;
+    text-align: center;
+}
+
+.navbar .dropmenu .dropContent h4 {
+    color: #646464;
+    padding: 11px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.navbar .dropmenu .dropContent h4:hover {
+    color: #FFFFFF;
+}
+
+.navbar .login {
+    display: flex;
+    align-items: center;
+    margin-left: auto;  
+    padding-right: 30px;
+    color: #FFFFFF;
+}
+
+.navbar .profileImg {
+    margin-left: 15px;
+    margin-top: 3px;
+    width: 2em;
+    height: 2em;
+}

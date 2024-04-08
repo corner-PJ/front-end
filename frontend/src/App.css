@@ -1,0 +1,16 @@
+* {
+  margin: 0;
+}
+
+a {
+  text-decoration-line: none;
+  color: inherit;
+}
+
+ul li{
+  list-style: none;
+}
+
+.App .main {
+  margin-top: 90px;
+}
