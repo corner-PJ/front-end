@@ -1,0 +1,27 @@
+.footer {
+    padding: 20px 0;
+    text-align: center;
+    background-color: #D9D9D9;
+    color: #858585; 
+}
+
+.footer .logo {
+    width: 65px;
+    height: 55px;
+}
+
+.footer hr {
+    border: solid 1.3px #a0a0a0;
+    width: 10em;
+    margin: 0.7em auto 1.3em auto;
+}
+
+.footer .pageLink {
+    display: flex;
+    justify-content: center;
+    gap: 1.5em;
+}
+
+.footer .copyright {
+    margin-top: 15px;
+}
