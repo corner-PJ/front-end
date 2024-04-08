@@ -1,20 +1,19 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import './App.css';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
+import Router from './Router';
 
 function App() {
   return (
-    <BrowserRouter>
       <div className="App">
         <Nav />
         <div className='main'>
-          <Routes>
-          </Routes>
+          <Router />
         </div>
         <Footer />
       </div> 
-    </BrowserRouter>
+
   );
 }
 
