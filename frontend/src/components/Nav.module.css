@@ -60,6 +60,12 @@
     color: #FFFFFF;
 }
 
+.dropmenu hr {
+    border: solid 1.3px #a0a0a0;
+    width: 10em;
+    margin: 0 auto;
+}
+
 .navbar .login {
     display: flex;
     align-items: center;
