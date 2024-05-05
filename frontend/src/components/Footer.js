@@ -1,13 +1,13 @@
-import './Footer.css'
+import s from './Footer.module.css'
 import {Link} from "react-router-dom"
 import logImage from '../assets/dogLogo.png';
 
 function Footer() {
     return (
-        <div className="footer">
-            <img className="logo" alt="buleumbuleung" src={logImage} />
+        <div className={s.footer}>
+            <img className={s.logo} alt="buleumbuleung" src={logImage} />
             <hr />
-            <div className='pageLink'>
+            <div className={s.pageLink}>
                 <div>
                     <Link>
                         <h5>이름찾기</h5>
@@ -29,7 +29,7 @@ function Footer() {
                     </Link>
                 </div>
             </div>
-            <div className="copyright">
+            <div className={s.copyright}>
                 <h6>Copyright © HADOG</h6>
             </div>
         </div>
