@@ -1,6 +1,6 @@
 import s from './Footer.module.css'
 import {Link} from "react-router-dom"
-import logImage from '../assets/dogLogo.png';
+import logImage from '../../assets/dogLogo.png';
 
 function Footer() {
     return (

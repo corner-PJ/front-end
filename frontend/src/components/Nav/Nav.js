@@ -1,7 +1,7 @@
 import s from'./Nav.module.css'
 import {Link} from "react-router-dom"
-import hadogIog from '../assets/HADOG.png'
-import defaultImage from '../assets/defaultImage.png'
+import hadogIog from '../../assets/HADOG.png'
+import defaultImage from '../../assets/defaultImage.png'
 import { useState } from 'react';
 
 function Nav() {
