@@ -1,7 +1,7 @@
 
 import './App.css';
-import Nav from './components/Nav';
-import Footer from './components/Footer';
+import Nav from './components/Nav/Nav';
+import Footer from './components/Footer/Footer';
 import Router from './Router';
 
 function App() {
