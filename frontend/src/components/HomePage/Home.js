@@ -1,14 +1,27 @@
 import {Link} from "react-router-dom"
+import React, { useEffect, useState } from 'react';
 import s from './Home.module.css';
+import Modal from "./Modal";
 import mainLogo from '../../assets/Home_log.png';
 import nameLogo from '../../assets/homeImg1.png';
 import decodeLogo from '../../assets/homeImg2.png';
 import diaryLogo from '../../assets/homeImg3.png';
 import listLogo from '../../assets/homeImg4.png';
 
+
 export default function Home() {
+
+    const [modalVisible, setModalVisible] = useState(true)
+
+    const closeModal = () => {
+        setModalVisible(false)
+    }
+
     return (
         <div className={s.home}>
+             {modalVisible && (
+                   <Modal visible={modalVisible} closable={true} maskClosable={true} onClose={closeModal}></Modal>
+                )}
             <div className={s.main}>
                 <img className={s.mainLogo} alt="mainLogo" src={mainLogo} />
                 <p>유기견 입양 성공률을 높이기 위한 유기견 행동 분석 서비스</p>

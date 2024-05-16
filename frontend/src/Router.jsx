@@ -10,7 +10,7 @@ function AppNavigation() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<Signin />} />  
-          <Route path="/homePage" element={<HomePage />} />  
+          <Route path="/" element={<HomePage />} />  
         </Routes>
     </>
   );
