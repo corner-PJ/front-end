@@ -13,7 +13,7 @@ export function LoginPage() {
   return (
     <L.LoginRootWrapper>
       <L.LogoContainer>
-        <LogoImg src={hadogIogo} />
+        <L.LogoImg src={hadogIogo} />
         <L.Text1>반려견의 감정을 해독하다</L.Text1>
       </L.LogoContainer>
 
