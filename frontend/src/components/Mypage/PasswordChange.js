@@ -79,7 +79,7 @@ const ContentContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
+    min-height: 80vh;
 	margin-top: 65px;
     & > *:not(:last-child) {
         width: 390px;
