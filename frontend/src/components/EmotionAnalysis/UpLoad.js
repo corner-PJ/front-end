@@ -20,16 +20,21 @@ function UpLoad() {
         }
     };
 
+    const handleUploadButtonClick = () => {
+        fileInputRef.current.click();
+    };
+
+
     return (
         <UpLoadContainer>
             <Title>반려견의 모습이 담긴 영상을 첨부해주세요</Title>
-            <VideoContainer >
+            <VideoContainer onClick={handleUploadButtonClick}>
                 {video ? 
-                ( <Video controls src={video} /> ) :
+                ( <Video autoPlay loop muted src={video} /> ) :
                 (
                     <FileContainer>
                         <FileIcon src={UpLoadIcon} alt="Upload Icon" />
-                        <PlaceholderText>동영상을 첨부해주세요.</PlaceholderText>
+                        <FileText>동영상을 첨부해주세요.</FileText>
                     </FileContainer>
                 )}
             </VideoContainer>
@@ -64,18 +69,18 @@ const VideoContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 50px;
-    width: 900px;
-    height: 400px;
+    margin-bottom: 30px;
+    width: 1000px;
+    height: 500px;
     border: 2px dashed #000000;
 
     &:before {
         content: "";
         position: absolute;
-        top: 30%; 
-        left: 18%; 
-        right: 18%; 
-        bottom: 17%; 
+        top: 300px; 
+        left: 310px; 
+        right: 310px; 
+        bottom: 65px; 
         border-radius: 20px;
         background: #FFE6E6;
         z-index: -1;
@@ -89,6 +94,7 @@ const Video = styled.video`
 `;
 
 const UpLoadVideo = styled.input`
+    display: none;
 `;
 
 const FileContainer = styled.div`
@@ -105,7 +111,7 @@ const FileIcon = styled.img`
     margin-bottom: 50px;
 `;
 
-const PlaceholderText = styled.div`
+const FileText = styled.div`
     font-size: 1.3em;
     font-weight: bold;
 `;
