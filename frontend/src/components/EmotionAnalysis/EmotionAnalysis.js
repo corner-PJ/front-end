@@ -53,7 +53,7 @@ const EmotionAnalysisContainer = styled.div`
     justify-content: center;
 `
 const MianTitle = styled.div`
-    font-size: 2em;
+    font-size: 2.5em;
     font-weight: bold;
     text-align: center;
 `

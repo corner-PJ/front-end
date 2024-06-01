@@ -64,7 +64,8 @@ const Title = styled.div`
 `
 
 const ResultDate = styled.div`
-    margin: 10px;
+    margin: 20px;
+    font-size: 1.1em;
 `
 
 const ImgContainer = styled.div`
@@ -93,7 +94,7 @@ const Text = styled.div`
 const Result = styled.div`
     font-size: 2.2em;
     font-weight: bold;
-    margin: 30px 0;
+    margin: 20px 0;
 
 `
 
@@ -111,13 +112,15 @@ const ResultTitle = styled.div`
 
 const ResultDetail = styled.div`
     font-size: 1.2em;
-    margin: 30px 10px;
+    margin: 30px 20px;
     line-height:2;
+    word-break: keep-all;
+    white-space: pre-line;
 `
 
 const ButtonContainer = styled.div`
     display: flex;
-    gap: 30px;
+    gap: 60px;
     align-items: center;
     justify-content: center;
 `
