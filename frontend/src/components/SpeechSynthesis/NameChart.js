@@ -3,14 +3,14 @@ import ReactApexChart from "react-apexcharts";
 import styled from "@emotion/styled";
 
 const data = [
-    { age: '청소년-남', number: 35 },
-    { age: '청소년-여', number: 29 },
-    { age: '청년-남', number: 62 },
-    { age: '청년-여', number: 130 },
-    { age: '중/장년-남', number: 93 },
-    { age: '중/장년-여', number: 41 },
-    { age: '노인-남', number: 25 },
-    { age: '노인-여', number: 17 },
+    { name: '별이', number: 123 },
+    { name: '설이', number: 97 },
+    { name: '몽이', number: 94 },
+    { name: '보리', number: 80 },
+    { name: '콩이', number: 61 },
+    { name: '까미', number: 41 },
+    { name: '토리', number: 26 },
+    { name: '사랑이', number: 17 },
 ];
 
 const series = [{
@@ -19,7 +19,7 @@ const series = [{
     data: data.map(item => item.number)
 }]
 
-const categories = data.map(item => item.age);
+const categories = data.map(item => item.name);
 console.log("Categories:", categories);
 
 const options = {
@@ -110,7 +110,7 @@ const options = {
 
 
 
-export function VoiceChart() {
+export function NameChart() {
     console.log("Options:", options);
     console.log("Series:", series);
 
