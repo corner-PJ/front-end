@@ -24,7 +24,7 @@ console.log("Categories:", categories);
 
 const options = {
     chart: {
-        type: 'bar',
+        type: "bar",
         toolbar: { show: false },
         stacked: true,
         height: 350,
@@ -33,18 +33,20 @@ const options = {
         bar: {
             horizontal: false,
             distributed: true,
-            columnWidth: '50%',
             endingShape: 'rounded',
-            barHeight: "20", 
+            columnWidth: "20",
             colors: {
                 backgroundBarColors: ["#E4EAF0"],
                 backgroundBarOpacity: 1,
-                backgroundBarRadius: 9,
+                backgroundBarRadius: 5,
             },
         },
     },
     dataLabels: { // 바 내부 수치 표시
         enabled: false
+    },
+    legend: {
+        show: false  
     },
     stroke: {
         show: true,
@@ -63,7 +65,7 @@ const options = {
                 fontFamily: "Pretendard",
                 fontStyle: "normal",
                 fontWeight: "400",
-                fontSize: "12px",
+                fontSize: "16px",
                 lineHeight: "20px",
                 textAlign: "center",
                 color: "#888888",
@@ -85,9 +87,7 @@ const options = {
         }
     },
     yaxis: {
-        title: {
-            text: undefined,
-        },
+        show: false,
         max: 170,
     },
     grid: {
@@ -117,10 +117,11 @@ export function NameChart() {
     return(
         <ChartWrapper>
             <ReactApexChart 
+                type="bar"
                 options={options} 
                 series={series}  
                 height="400" 
-                width="1000"
+                width="800"
             />
         </ChartWrapper>
         

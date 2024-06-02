@@ -132,7 +132,7 @@ export function SpeechSynthesisPage1() {
 
 
 const SpeechSynthesisWrapper = styled.div`
-    min-height: 250vh;
+    min-height: 280vh;
 	width: 100%;
     background-color: white;
     display: flex;
@@ -219,7 +219,7 @@ const ExplanationText = styled.span`
 
 
 const VideoWrapper = styled.div`
-    width: 57%;
+    width: 40%;
 	height: 330px;
     display: flex;
     flex-direction: column;
@@ -277,7 +277,7 @@ const FileText = styled.div`
 `;
 
 const ResultWrapper = styled.div`
-    width: 100%;
+    width: 90%;
 	height: 500px;
     display: flex;
     flex-direction: column;

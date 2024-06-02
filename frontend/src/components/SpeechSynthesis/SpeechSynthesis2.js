@@ -1,4 +1,4 @@
-import React, { useState, useRef  } from "react";
+import React, { useState, useRef, useEffect  } from "react";
 import { useNavigate } from 'react-router-dom';
 import { NameChart } from "./NameChart";
 
@@ -46,6 +46,11 @@ export function SpeechSynthesisPage2() {
 	const handleUploadButtonClick = () => {
         fileInputRef.current.click();
     };
+
+	useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
 
     return (
         <SpeechSynthesisWrapper>
@@ -102,7 +107,7 @@ export function SpeechSynthesisPage2() {
 				</VideoWrapper>
 
 				<ResultWrapper>
-					<ResultText>해당 유기견이 선호하는 목소리는 청년 여성입니다.</ResultText>
+					<ResultText>해당 유기견이 선호하는 이름은 별이입니다.</ResultText>
 					<NameChart />
 				</ResultWrapper>
 				
@@ -254,7 +259,7 @@ const ExplanationText = styled.span`
 
 
 const VideoWrapper = styled.div`
-    width: 57%;
+    width: 40%;
 	height: 330px;
     display: flex;
     flex-direction: column;
@@ -312,7 +317,7 @@ const FileText = styled.div`
 `;
 
 const ResultWrapper = styled.div`
-    width: 100%;
+    width: 90%;
 	height: 500px;
     display: flex;
     flex-direction: column;
