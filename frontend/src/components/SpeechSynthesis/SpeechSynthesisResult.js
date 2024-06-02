@@ -19,7 +19,9 @@ export function SpeechSynthesisResultPage() {
             <ResultHeader>결과 확인</ResultHeader>
 			<ContentContainer>
 				<ResultRectangle>
-					<DownloadIcon/>
+					<IconWrapper>
+						<FiDownload size={30}/>
+					</IconWrapper>
 					<VoiceResult>
 						<TextWrapper>
 							<ResultText>목소리 반응 결과</ResultText>
@@ -92,11 +94,12 @@ const ResultRectangle = styled.div`
 	margin-top: 20px;
 `;
 
-const DownloadIcon = styled(FiDownload)`
-	position: relative;
-	top: 10px; 
-	left: 1280px; 
-	font-size: 30px;
+const IconWrapper = styled.div`
+	width: 100%;  
+	display: flex;
+	justify-content: flex-end;
+	align-items: center; 
+	margin-bottom: 10px;
 `;
 
 const VoiceResult = styled.div`
