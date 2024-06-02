@@ -17,6 +17,7 @@ export function SpeechSynthesisPage1() {
     const [command, setCommand] = useState(null);
 	const [otherValue, setOtherValue] = useState("");
 	const [isOtherSelected, setIsOtherSelected] = useState(false);
+	const [showResult, setShowResult] = useState(false);
 
 	const handleCommandChange = (value) => {
         setCommand(value);
@@ -46,6 +47,10 @@ export function SpeechSynthesisPage1() {
 	const handleUploadButtonClick = () => {
         fileInputRef.current.click();
     };
+
+	const handleShowResult = () => {
+		setShowResult(true);
+	};
 
     return (
         <SpeechSynthesisWrapper>
@@ -111,14 +116,16 @@ export function SpeechSynthesisPage1() {
 					</VideoRectangle>
 					<SpeechBtn>
 						<LuClipboardList size={40} />
-						<SpeechBtnText>결과 보기</SpeechBtnText>
+						<SpeechBtnText onClick={handleShowResult}>결과 보기</SpeechBtnText>
 					</SpeechBtn>
 				</VideoWrapper>
 
-				<ResultWrapper>
-					<ResultText>해당 유기견이 선호하는 목소리는 청년 여성입니다.</ResultText>
-					<VoiceChart />
-				</ResultWrapper>
+				{showResult && (
+					<ResultWrapper>
+						<ResultText>해당 유기견이 선호하는 목소리는 청년 여성입니다.</ResultText>
+						<VoiceChart />
+					</ResultWrapper>
+				)}
 				
 				<NextBtn>
 					<NextBtnText onClick={goToNext}>다음으로</NextBtnText>

@@ -17,6 +17,7 @@ const names = [
 
 export function SpeechSynthesisPage2() {
 	const [selectedNames, setSelectedNames] = useState([]);
+	const [showResult, setShowResult] = useState(false);
 
 	const toggleSelection = (name) => {
 		setSelectedNames(prevSelectedNames =>
@@ -50,6 +51,11 @@ export function SpeechSynthesisPage2() {
 	useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+	const handleShowResult = () => {
+		setShowResult(true);
+	};
+
 
 
     return (
@@ -100,16 +106,18 @@ export function SpeechSynthesisPage2() {
 							/>
 						</VideoContainer>
 					</VideoRectangle>
-					<ResultBtn>
+					<ResultBtn onClick={handleShowResult}>
 						<LuClipboardList size={40} />
 						<SpeechBtnText>결과 보기</SpeechBtnText>
 					</ResultBtn>
 				</VideoWrapper>
-
-				<ResultWrapper>
-					<ResultText>해당 유기견이 선호하는 이름은 별이입니다.</ResultText>
-					<NameChart />
-				</ResultWrapper>
+				
+				{showResult && (
+					<ResultWrapper>
+						<ResultText>해당 유기견이 선호하는 이름은 별이입니다.</ResultText>
+						<NameChart />
+					</ResultWrapper>
+				)}
 				
 				<NextBtn>
 					<NextBtnText onClick={goToResult}>결과 전체 보기</NextBtnText>
