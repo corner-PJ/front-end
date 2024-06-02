@@ -1,39 +1,39 @@
 import React, { useState, useRef  } from "react";
 import { useNavigate } from 'react-router-dom';
-import { RadioGroup } from './RadioGroup';
-import { Radio } from './Radio';
-import { VoiceChart } from "./VioceChart";
+import { NameChart } from "./NameChart";
 
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 import { PiFilePlus } from "react-icons/pi";
 import { LuClipboardList } from "react-icons/lu";
-import { GrLinkNext } from "react-icons/gr";
 
-export function SpeechSynthesisPage1() {
-	const [gender, setGender] = useState(null);
-    const [ageGroup, setAgeGroup] = useState(null);
-    const [command, setCommand] = useState(null);
-	const [otherValue, setOtherValue] = useState("");
-	const [isOtherSelected, setIsOtherSelected] = useState(false);
+const names = [
+	"해피", "초코", "마루", "구름", "뭉치",
+	"까미", "보리", "설이", "몽이", "토리",
+	"코코", "콩이", "두부", "별이", "호두", "사랑이",
+	"까미", "보리", "설이", "몽이", "토리",
+];
 
-	const handleCommandChange = (value) => {
-        setCommand(value);
-        if (value === "기타") {
-            setIsOtherSelected(true);
-        } else {
-            setIsOtherSelected(false);
-        }
-    };
+export function SpeechSynthesisResultPage() {
+	const [selectedNames, setSelectedNames] = useState([]);
 
+	const toggleSelection = (name) => {
+		setSelectedNames(prevSelectedNames =>
+			prevSelectedNames.includes(name)
+				? prevSelectedNames.filter(n => n !== name)
+				: [...prevSelectedNames, name]
+		);
+	};
+
+	
 	const [video, setVideo] = useState(null);
     const fileInputRef = useRef(null);
 
     const navigate = useNavigate();
 
-    const goToNext = () => {
-        navigate('/SpeechSynthesis2/');
+    const goToResult = () => {
+        navigate('/SpeechResult/');
     }
 
     const videoUpload = e => {
@@ -49,45 +49,31 @@ export function SpeechSynthesisPage1() {
 
     return (
         <SpeechSynthesisWrapper>
-            <SpeechHeader>STEP 1. 목소리 선택하기</SpeechHeader>
+            <SpeechHeader>STEP 2. 이름 찾기</SpeechHeader>
             <ContentContainer>
-				<ListenSpeech>
-					<RadioGroup label="성별" value={gender} onChange={setGender}>
-						<Radio value="남">남</Radio>
-						<Radio value="여">여</Radio>
-					</RadioGroup>
-
-					<RadioGroup label="연령대" value={ageGroup} onChange={setAgeGroup}>
-						<Radio value="청소년">청소년</Radio>
-						<Radio value="청년">청년</Radio>
-						<Radio value="중장년">중장년</Radio>
-						<Radio value="노년">노년</Radio>
-					</RadioGroup>
-
-					<RadioGroup label="들려줄 단어" value={command} onChange={handleCommandChange}>
-						<Radio value="이리와">이리와</Radio>
-						<Radio value="앉아">앉아</Radio>
-						<Radio value="손">손</Radio>
-						<Radio value="산책 갈까">산책 갈까</Radio>
-						<Radio value="기타">
-							<OtherInput
-									type="text"
-									value={otherValue}
-									onChange={(e) => setOtherValue(e.target.value)}
-									disabled={!isOtherSelected}
-								/>
-						</Radio>
-					</RadioGroup>
-				</ListenSpeech>
+				<ListenName>
+					<ResultText>유기견이 선호하는 목소리 : 청년 여성</ResultText>
+					<NameBox>
+						{names.map(name => (
+							<NameItem
+							key={name}
+							selected={selectedNames.includes(name)}
+							onClick={() => toggleSelection(name)}
+							>
+							{name}
+							</NameItem>
+						))}
+					</NameBox>
+				</ListenName>
 				<SpeechBtn>
 					<FontAwesomeIcon icon={faVolumeUp} style={{ marginLeft: '6px' }}/>
-					<SpeechBtnText>음성 듣기</SpeechBtnText>
+					<SpeechBtnText>이름 들려주기</SpeechBtnText>
 				</SpeechBtn>
 
 				<ExplanationText>
-					유기견에게 음성을 성별과 연령대별로 음성을 차례로 들려주면서<br/>
-					동영상을 촬영하고, 해당 동영상을 첨부해주세요!<br/>
-					<br/>유기견의 반응을 분석하여, 먼저 선호하는 목소리를 선정합니다.
+					앞서 선정된 목소리로 우리나라의 흔한 반려견 이름 50개를 불러줍니다.<br/>
+					유기견에게 해당 이름들을 들려주면서 동영상을 촬영하고, 해당 동영상을 첨부해주세요!<br/>
+					<br/>유기견의 반응을 분석하여, 유기견이 크게 반응한 이름 TOP8을 찾아줍니다.
 				</ExplanationText>
                 
 				<VideoWrapper>
@@ -109,20 +95,19 @@ export function SpeechSynthesisPage1() {
 							/>
 						</VideoContainer>
 					</VideoRectangle>
-					<SpeechBtn>
+					<ResultBtn>
 						<LuClipboardList size={40} />
 						<SpeechBtnText>결과 보기</SpeechBtnText>
-					</SpeechBtn>
+					</ResultBtn>
 				</VideoWrapper>
 
 				<ResultWrapper>
 					<ResultText>해당 유기견이 선호하는 목소리는 청년 여성입니다.</ResultText>
-					<VoiceChart />
+					<NameChart />
 				</ResultWrapper>
 				
 				<NextBtn>
-					<NextBtnText onClick={goToNext}>다음으로</NextBtnText>
-					<GrLinkNext size={35} />
+					<NextBtnText>결과 전체 보기</NextBtnText>
 				</NextBtn>
             </ContentContainer>
             
@@ -157,7 +142,7 @@ const ContentContainer = styled.div`
     align-items: center;
 `;
 
-const ListenSpeech = styled.div`
+const ListenName = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -166,19 +151,46 @@ const ListenSpeech = styled.div`
 	margin-bottom: 50px;
 `;
 
+const NameBox = styled.div`
+	display: flex;
+    justify-content: flex-start;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 20px;
+	width: 480px;
+	height: auto;
+	max-height: 250px;
+	border: 2px solid #FEC7B4;
+	border-radius: 15px;
+	margin-top: 20px;
+	overflow-y: auto;
 
-const OtherInput = styled.input`
-    margin-top: 10px;
-	width: 80%;
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 9px;
+	&::-webkit-scrollbar {
+		width: 8px; 
+		height: 6px;
+		right: 30px; 
+	}
+	
+	&::-webkit-scrollbar-thumb {
+		background-color: #FEC7B4;
+		border-radius: 15px;
+		backdrop-filter: blur(50px);
+		margin-right: 15px;
+	}
+	
+	
+`;
 
-	&:focus {
-        border: 1px solid rgb(252, 129, 158);
-        outline: none; 
-    }
+const NameItem = styled.div`
+	font-size: 21px;
+	font-family: Inter, sans-serif;
+	text-align: center;
+	padding: 8px;
+	border-radius: 8px;
+	cursor: pointer;
+	height: 26px;
+	width: 76px;
+	background-color: ${props => props.selected ? '#FEC7B4' : '#fff'};
 `;
 
 const SpeechBtn = styled.button`
@@ -194,7 +206,30 @@ const SpeechBtn = styled.button`
     background-color: rgb(252, 129, 158);
 	box-shadow: 0px 3px 2px 1px #a9a9a9;
     padding: 10px 20px;
-	width: 210px;
+	width: 280px;
+
+    &:hover {
+        background-color: white;
+        border: 2px solid rgb(252, 129, 158);
+        color: rgb(252, 129, 158);
+		width: 280px;
+    }
+`;
+
+const ResultBtn = styled.button`
+	display: flex;
+    align-items: center;
+	color: white;
+	font-size: 27px;
+	font-family: Inter, sans-serif;
+	font-weight: 600;
+	text-align: center;
+    border: 2px;
+    border-radius: 25px;
+    background-color: rgb(252, 129, 158);
+	box-shadow: 0px 3px 2px 1px #a9a9a9;
+    padding: 10px 20px;
+	width: 220px;
 
     &:hover {
         background-color: white;
@@ -289,14 +324,14 @@ const ResultWrapper = styled.div`
 const ResultText = styled.div`
     font-size: 23px;
     font-weight: bold;
-	margin-top: 10px;
+	margin-top: 40px;
 `;
 
 const NextBtn = styled.button`
 	display: flex;
     align-items: center;
 	color: rgb(252, 129, 158);
-	font-size: 29px;
+	font-size: 27px;
 	font-family: Inter, sans-serif;
 	font-weight: 600;
 	text-align: center;
@@ -306,20 +341,19 @@ const NextBtn = styled.button`
     border: 2px solid rgb(252, 129, 158);
 	box-shadow: 0px 3px 2px 1px #a9a9a9;
     padding: 10px 20px;
-	width: 210px;
+	width: 250px;
 	margin-top: 50px;
 
     &:hover {
         background-color: rgb(252, 129, 158);
         border: 2px solid rgb(252, 129, 158);
         color: white;
-		width: 220px;
+		width: 250px;
     }
 `;
 
 const NextBtnText = styled.span`
-    margin-left: 5px;
-	margin-right: 5px;
+    margin-left: 12px;
 `;
 
 
