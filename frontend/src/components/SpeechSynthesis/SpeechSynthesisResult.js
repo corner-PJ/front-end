@@ -1,5 +1,4 @@
-import React, { useState, useRef  } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect  } from "react";
 import { NameChart } from "./NameChart";
 import { VoiceChart } from "./VioceChart";
 
@@ -9,6 +8,11 @@ import { FiDownload } from "react-icons/fi";
 
 
 export function SpeechSynthesisResultPage() {
+
+	useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
 	
     return (
         <SpeechSynthesisResultWrapper>
@@ -130,7 +134,7 @@ const TextWrapper = styled.div`
     flex-direction: column;
     align-items: flex-start;
 	margin-top: 10px;
-	margin-bottom: 70px;
+	margin-bottom: 20px;
 	margin-left: 90px;
 `;
 
