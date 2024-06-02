@@ -33,7 +33,7 @@ export function SpeechSynthesisPage2() {
     const navigate = useNavigate();
 
     const goToResult = () => {
-        navigate('/SpeechResult/');
+        navigate('/speechSynthesis/result/');
     }
 
     const videoUpload = e => {
@@ -107,7 +107,7 @@ export function SpeechSynthesisPage2() {
 				</ResultWrapper>
 				
 				<NextBtn>
-					<NextBtnText>결과 전체 보기</NextBtnText>
+					<NextBtnText onClick={goToResult}>결과 전체 보기</NextBtnText>
 				</NextBtn>
             </ContentContainer>
             
