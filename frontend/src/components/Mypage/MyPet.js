@@ -3,9 +3,14 @@ import Choco from "../../assets/Choco.jpg"
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-
+import { useNavigate } from 'react-router-dom';
 
 export function MyPet() {
+    const navigate = useNavigate();
+
+    const moveToRegister = () => {
+        navigate('/mypage/petRegister/');
+    };
 
     return (
         <MyPetWrapper>
@@ -13,7 +18,7 @@ export function MyPet() {
                     <MypetHeader>나의 반려견 정보</MypetHeader>
                     <MypetRegisterBtn>
                         <FontAwesomeIcon icon={faPlus} />
-                        <MypetRegisterBtnText>반려견 등록하기</MypetRegisterBtnText>
+                        <MypetRegisterBtnText onClick={moveToRegister}>반려견 등록하기</MypetRegisterBtnText>
                     </MypetRegisterBtn>
                 </HeaderWrapper>
 
@@ -129,7 +134,7 @@ const MypetRegisterBtn = styled.button`
 
     &:hover {
         background-color: white;
-        border: 1px rgb(252, 129, 158);
+        border: 2px solid rgb(252, 129, 158);
         color: rgb(252, 129, 158);
     }
 `;
