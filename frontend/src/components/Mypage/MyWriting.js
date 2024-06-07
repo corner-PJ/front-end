@@ -6,7 +6,7 @@ import Choco from "../../assets/Choco.jpg"
 export function MyWriting() {
 
     return (
-            <WritingWrapper>
+        <WritingWrapper>
             <ProtectionWriting>
                 <ProtectionHeader>작성한 임시 보호 글</ProtectionHeader>
                 <ProtectionContent>
