@@ -12,6 +12,10 @@ export function MyPet() {
         navigate('/mypage/petRegister/');
     };
 
+    const moveToEmotionHistory = () => {
+        navigate('/mypage/emotionHistory/');
+    };
+
     return (
         <MyPetWrapper>
                 <HeaderWrapper>
@@ -42,7 +46,7 @@ export function MyPet() {
                                     </ContentContainer>
                                 </MypetRectangle>
                             </MypetContent>
-                            <MypetHistoryBtn>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
+                            <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
                         </MypetContainer>
 
                         <MypetContainer>
@@ -63,7 +67,7 @@ export function MyPet() {
                                     </ContentContainer>
                                 </MypetRectangle>
                             </MypetContent>
-                            <MypetHistoryBtn>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
+                            <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
                         </MypetContainer>
 
                         <MypetContainer>
@@ -84,7 +88,7 @@ export function MyPet() {
                                     </ContentContainer>
                                 </MypetRectangle>
                             </MypetContent>
-                            <MypetHistoryBtn>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
+                            <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
                         </MypetContainer>
                     </MyPetWrapperFlex>
                 </ScrollContainer>

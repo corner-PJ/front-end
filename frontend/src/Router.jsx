@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Mypages from './pages/Mypage';
 import { PasswordChange } from './components/Mypage/PasswordChange';
 import MypetRegister from './pages/MypageRegister';
+import EmotionHistory from './pages/EmotionHistory';
 
 function AppNavigation() {
   return (
@@ -15,6 +16,7 @@ function AppNavigation() {
           <Route path="/mypage" element={<Mypages />} />  
           <Route path="/mypage/passwordChange" element={<PasswordChange />} />
           <Route path="/mypage/petRegister" element={<MypetRegister />} />  
+          <Route path="/mypage/emotionHistory" element={<EmotionHistory />} />
         </Routes>
     </>
   );
