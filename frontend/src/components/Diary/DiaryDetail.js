@@ -1,18 +1,11 @@
 import React from "react";
 import styled from 'styled-components';
 import Choco from "../../assets/Choco.jpg"
-import { useNavigate, useLocation } from 'react-router-dom';
-import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 
-export function DiaryListPage() {
+export function DiaryDetailPage() {
     const navigate = useNavigate();
-    const maxLength = 80;
-    const content = "장난감을 물고 다닐 때마다 이렇게 놀고 싶어하는지 알아주지 못 한 것 같다.. 산책가고 싶다는 것도 놀고 싶다는 것일까? 산책 가고 싶다는 줄 알았다.";
-    
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const selectedDate = queryParams.get('date');
 
     const handleReadMore = () => {
         navigate('/diary/detail');
@@ -21,40 +14,14 @@ export function DiaryListPage() {
     return (
         <WritingWrapper>
             <ListWriting>
-                <ListHeader>{format(selectedDate, "yyyy년 MM월 dd일")}</ListHeader>
+                <ListHeader>초코의 감정 해독 결과 목록</ListHeader>
                 <ContentContainer>
                     <ListContentWrapper>
                         <ListImg src={Choco} />
                         <ListRectangle>
-                            <ListDate>2024.06.02 16:04</ListDate>
+                            <ListDate>2024.03.17 16:04</ListDate>
                             <ListContentHeader>놀고 싶어요 상태에 대한 기록</ListContentHeader>
-                            <ListContent>
-                                {content.length > maxLength ? (
-                                    <>
-                                        {content.substring(0, maxLength)}
-                                        <ReadMoreButton onClick={handleReadMore}>...더보기</ReadMoreButton>
-                                    </>
-                                ) : (
-                                    content
-                                )}
-                            </ListContent>
-                        </ListRectangle>
-                    </ListContentWrapper>
-                    <ListContentWrapper>
-                        <ListImg src={Choco} />
-                        <ListRectangle>
-                            <ListDate>2024.06.02 16:04</ListDate>
-                            <ListContentHeader>놀고 싶어요 상태에 대한 기록</ListContentHeader>
-                            <ListContent>
-                                {content.length > maxLength ? (
-                                    <>
-                                        {content.substring(0, maxLength)}
-                                        <ReadMoreButton onClick={handleReadMore}>...더보기</ReadMoreButton>
-                                    </>
-                                ) : (
-                                    content
-                                )}
-                            </ListContent>
+                            <ListContent>장난감을 물고 다닐 때마다 이렇게 놀고 싶어하는지 알아주지 못 한 것 같다.. 산책가고 싶다는 것도 놀고 싶다는 것일까? 산책 가고 싶다는</ListContent>
                         </ListRectangle>
                     </ListContentWrapper>
                 
@@ -113,7 +80,7 @@ const ListContentWrapper = styled.div`
     display: flex;
     flex-direction: row; 
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
     align-self: space-between;
 	margin-bottom: 7px;
     margin-top: 10px;
@@ -130,10 +97,9 @@ const ListContentWrapper = styled.div`
 
 
 const ListImg = styled.img`
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     object-fit: cover;
-    align-self: center;
     border-radius: 50%; 
     margin-right: 25px; 
     margin-left: 15px; 
@@ -142,7 +108,7 @@ const ListImg = styled.img`
 const ListRectangle = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.40);
     border-radius: 16px; 
@@ -176,17 +142,4 @@ const ListContent = styled.span`
 	font-weight: 500;
 	text-align: left;
     margin-left: 10px;
-`;
-
-const ReadMoreButton = styled.button`
-    color: black;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    margin-left: 5px;
-
-    &:hover {
-        text-decoration: underline;
-    }
 `;

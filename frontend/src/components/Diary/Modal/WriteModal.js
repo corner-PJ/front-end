@@ -9,7 +9,7 @@ export function WriteModal({ isModalOpen, closeModal}) {
     const MoveToEmotion = async() => {
         closeModal();
         
-        navigate(`/emotionTestUrl`);
+        navigate(`/diary`);
     }
     
     return (

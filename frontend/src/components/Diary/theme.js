@@ -1,5 +1,3 @@
-import styled from 'styled-components';
-
 export const theme = {
     mainColor: '#FC819E',
     subColor: '#FEC7B4',
