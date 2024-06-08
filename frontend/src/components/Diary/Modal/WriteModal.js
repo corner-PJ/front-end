@@ -106,7 +106,7 @@ const OkBtn = styled.button`
     font-family: Inter, sans-serif;
     font-weight: 600;
     text-align: right;
-    border: 2px;
+    border: 2px solid #E1AFD1;
     border-radius: 16px;
     background-color: #E1AFD1;
     padding: 15px 35px;
@@ -126,7 +126,7 @@ const CancleBtn = styled.button`
     font-family: Inter, sans-serif;
     font-weight: 600;
     text-align: right;
-    border: 2px;
+    border: 2px solid #E1AFD1;
     border-radius: 16px;
     background-color: #E1AFD1;
     padding: 15px 25px;

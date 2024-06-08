@@ -78,7 +78,7 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
                             : 'valid'
                     }`}
                     key={day}
-                    onClick={() => onDateClick(format(cloneDay, 'yyyy-MM-dd'))}
+                    onClick={() => onDateClick(format(cloneDay, 'yyyy-MM-dd'), entryCount)}
                 >
                     <span
                         className={
@@ -137,9 +137,11 @@ export const DiaryPage = () => {
         setCurrentMonth(addMonths(currentMonth, 1));
     };
 
-    const onDateClick = (day) => {
+    const onDateClick = (day, entryCount) => {
         setSelectedDate(day);
-        openModal(day);
+        if (entryCount === 0) {  // 글이 없는 경우에만 모달 표시
+            openModal(day);
+        }
     };
 
     return(
