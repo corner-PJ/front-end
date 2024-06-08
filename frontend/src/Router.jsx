@@ -6,6 +6,7 @@ import Diary from './pages/Diary';
 import DiaryList from './pages/DiaryList';
 import EmotionTest from './pages/EmotionTest';
 import DiaryDetail from './pages/DiaryDetail';
+import DiaryWrite from './pages/DiaryWrite';
 
 function AppNavigation() {
   return (
@@ -16,6 +17,7 @@ function AppNavigation() {
           <Route path="/diary" element={<Diary />} />  
           <Route path="/diary/list" element={<DiaryList />} />
           <Route path="/diary/detail" element={<DiaryDetail />} />
+          <Route path="/diary/new" element={<DiaryWrite />} />
           <Route path="/emotionTestUrl" element={<EmotionTest />} />    
         </Routes>
     </>

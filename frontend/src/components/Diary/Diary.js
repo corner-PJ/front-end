@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import DiaryDogImg from "../../assets/diaryDogIcon.png"
 import { FaCirclePlus } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
-import { WriteModal } from './Modal/WriteModal';
+import { MoveModal } from './Modal/MoveModal';
 
 
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
@@ -143,7 +143,7 @@ export const DiaryPage = () => {
         if (entryCount === 0) {  // 글이 없는 경우 모달
             openModal(day);
         } else if (entryCount === 1) { // 글 하나인 경우 상세페이지
-            navigate(`/diary/${day}`);
+            navigate(`/diary/detail?date=${day}`);
         } else if (entryCount > 1) { // 글 2개 이상인 경우 목록
             navigate(`/diary/list?date=${day}`);
         }
@@ -166,7 +166,7 @@ export const DiaryPage = () => {
                 />
             </CalendarWrapper>
             {selectedDate && (
-                <WriteModal
+                <MoveModal
                     isModalOpen={isModalOpen}
                     closeModal={closeModal}
                 />

@@ -3,13 +3,13 @@ import styled from "@emotion/styled";
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-export function WriteModal({ isModalOpen, closeModal}) {
+export function MoveModal({ isModalOpen, closeModal}) {
     const navigate = useNavigate();
 
-    const MoveToList = async() => {
+    const MoveToEmotion = async() => {
         closeModal();
         
-        navigate(`/diary/list/`);
+        navigate(`/diary/emotionTestUrl/`);
     }
     
     return (
@@ -19,11 +19,12 @@ export function WriteModal({ isModalOpen, closeModal}) {
                     <RootWrapper>
                         <ContentRectangle>
                             <ContentText>
-                                내용을 등록하시겠습니까?
+                                감정 추적 전입니다!<br/>
+                                감정 추적 페이지로 이동하시겠습니까?
                             </ContentText>
                 
                             <ButtonWrapper>
-                                <OkBtn onClick={MoveToList}>예</OkBtn>
+                                <OkBtn onClick={MoveToEmotion}>예</OkBtn>
                                 <CancleBtn onClick={closeModal}>아니오</CancleBtn>
                             </ButtonWrapper>
                         </ContentRectangle>
@@ -35,7 +36,7 @@ export function WriteModal({ isModalOpen, closeModal}) {
 }
 
 // PropTypes 추가
-WriteModal.propTypes = {
+MoveModal.propTypes = {
     isModalOpen: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
 };
