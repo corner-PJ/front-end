@@ -9,6 +9,7 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { WriteModal } from './Modal/WriteModal';
 
+
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
     return (
         <HeaderWrapper>
@@ -116,7 +117,10 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
 };
 
 export const DiaryPage = () => {
+    const [currentMonth, setCurrentMonth] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigate = useNavigate();
 
     const openModal = (day) => {
         setIsModalOpen(true);
@@ -125,9 +129,6 @@ export const DiaryPage = () => {
     const closeModal = () => {
         setIsModalOpen(false);
     };
-
-    const [currentMonth, setCurrentMonth] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const prevMonth = () => {
         setCurrentMonth(subMonths(currentMonth, 1));
@@ -139,10 +140,15 @@ export const DiaryPage = () => {
 
     const onDateClick = (day, entryCount) => {
         setSelectedDate(day);
-        if (entryCount === 0) {  // 글이 없는 경우에만 모달 표시
+        if (entryCount === 0) {  // 글이 없는 경우 모달
             openModal(day);
+        } else if (entryCount === 1) { // 글 하나인 경우 상세페이지
+            navigate(`/diary/${day}`);
+        } else if (entryCount > 1) { // 글 2개 이상인 경우 목록
+            navigate(`/diary/list?date=${day}`);
         }
     };
+
 
     return(
         <PageWrapper>
@@ -165,6 +171,7 @@ export const DiaryPage = () => {
                     closeModal={closeModal}
                 />
             )}
+            
         </PageWrapper>
         
     )
