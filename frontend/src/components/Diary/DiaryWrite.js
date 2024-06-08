@@ -1,17 +1,13 @@
 import React, {useState} from "react";
 import styled from 'styled-components';
 import Choco from "../../assets/Choco.jpg"
-import { useNavigate, useLocation } from 'react-router-dom';
-import { format } from 'date-fns';
-import { DeleteModal } from "./Modal/DeleteModal";
+// import { useNavigate } from 'react-router-dom';
+import { WriteModal } from "./Modal/WriteModal";
 
 
-export function DiaryDetailPage() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const selectedDate = queryParams.get('date');
-
+export function DiaryWritePage() {
+    // const navigate = useNavigate();
+    const [content, setContent] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = (day) => {
@@ -22,18 +18,9 @@ export function DiaryDetailPage() {
         setIsModalOpen(false);
     };
 
-    const handleDelete = () => {
-        closeModal();
-        navigate('/diary');
-    };
-
-    const handleModify = () => {
-        navigate('/diary/');
-    };
-
     return (
         <DetailWrapper>
-            <DetailDate>{format(selectedDate, "yyyy년 MM월 dd일 EEEE")}</DetailDate>
+            <DetailDate>2024년 6월 1일 토요일</DetailDate>
             
             <HeaderWrapper>
                 <DetailImg src={Choco} />
@@ -49,19 +36,22 @@ export function DiaryDetailPage() {
                 </HeaderContent>
             </HeaderWrapper>
             
-            <DetailRectangle>
-                <ContentText>
-                    장난감을 물고 다닐 때마다 이렇게 놀고 싶어하는지 알아주지 못 한 것 같다.. 산책가고 싶다는 것도 놀고 싶다는 것일까? 산책 가고 싶다는 줄 알았다.
-                </ContentText>
-            </DetailRectangle>
+            <ContentContainer>
+                <DetailRectangle>
+                    <ContentTextArea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="여기에 내용을 작성하세요..."
+                    />
+                </DetailRectangle>
+            </ContentContainer>
             
             <ButtonWrapper>
-                <ModifyBtn onClick={handleModify}>수정</ModifyBtn>
-                <DeleteBtn onClick={openModal}>삭제</DeleteBtn>
+                <RegisterBtn onClick={openModal}>등록</RegisterBtn>
             </ButtonWrapper>
 
             {isModalOpen && (
-                <DeleteModal
+                <WriteModal
                     isModalOpen={isModalOpen}
                     closeModal={closeModal}
                 />
@@ -165,24 +155,54 @@ const ExplainText = styled.span`
 	text-align: left;
 	width: 100%;
 `;
+const ContentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 7px;
+    margin-top: 10px;
+    width: 60%;
+    height: 210px;
+`;
 
 const DetailRectangle = styled.div`
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    margin-bottom: 7px;
-    margin-top: 10px;
+    align-items: flex-start;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25),0px 2px 3px 0px rgba(0, 0, 0, 0.03);
     border: solid 1px rgb(235, 235, 235);
     border-radius: 16px;
-    width: 60%;
+    width: 100%;
     height: 210px;
     background-color: #FFF3C7;
     box-sizing: border-box;
     padding: 30px;
     flex-shrink: 0;
+`;
+
+const ContentTextArea = styled.textarea`
+	color: black;
+	font-size: 19px;
+	font-family: Inter, sans-serif;
+	font-weight: 400;
     overflow-y: auto;
-    
+    background-color: transparent;
+    width: 100%;
+    height: 80%;
+    border: none;
+    resize: none; 
+    outline: none; 
+
+    &::placeholder {
+        color: #A1A0A0;
+        font-size: 15px;
+    }
+    &:focus {
+        outline: none; 
+    }
+
     &::-webkit-scrollbar {
 		width: 10px; 
         height: 8px;
@@ -197,14 +217,6 @@ const DetailRectangle = styled.div`
 	}
 `;
 
-const ContentText = styled.span`
-	color: black;
-	font-size: 19px;
-	font-family: Inter, sans-serif;
-	font-weight: 400;
-	text-align: left;
-`;
-
 const ButtonWrapper = styled.div`
     display: flex;
     flex-direction: row;
@@ -214,30 +226,7 @@ const ButtonWrapper = styled.div`
     width: 60%;
 `;
 
-const ModifyBtn = styled.button`
-    display: flex;
-	color: white;
-	font-size: 19px;
-	font-family: Inter, sans-serif;
-	font-weight: 600;
-	justify-content: center;
-	border: 2px;
-	border-radius: 30px;
-	background-color: rgb(252, 129, 158);
-	box-shadow: 0px 3px 2px 1px #a9a9a9;
-	padding: 10px 20px;
-	width: 90px;
-	margin-left: 30px;
-
-	&:hover {
-		background-color: white;
-		border: 2px solid rgb(252, 129, 158);
-		color: rgb(252, 129, 158);
-		width: 90px;
-	}
-`;
-
-const DeleteBtn = styled.button`
+const RegisterBtn = styled.button`
     display: flex;
     color: white;
     font-size: 19px;

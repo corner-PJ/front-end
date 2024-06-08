@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 export function WriteModal({ isModalOpen, closeModal}) {
     const navigate = useNavigate();
 
-    const MoveToEmotion = async() => {
+    const MoveToDiaryMain = async() => {
         closeModal();
         
         navigate(`/diary`);
@@ -19,13 +19,12 @@ export function WriteModal({ isModalOpen, closeModal}) {
                     <RootWrapper>
                         <ContentRectangle>
                             <ContentText>
-                                감정 추적 전입니다!<br/>
-                                감정 추적 페이지로 이동하시겠습니까?
+                                내용을 등록하시겠습니까?
                             </ContentText>
                 
                             <ButtonWrapper>
-                                <OkBtn onClick={MoveToEmotion}>예</OkBtn>
-                                <CancleBtn onClick={closeModal}>아니오</CancleBtn>
+                                <OkBtn onClick={MoveToDiaryMain}>확인</OkBtn>
+                                <CancleBtn onClick={closeModal}>취소</CancleBtn>
                             </ButtonWrapper>
                         </ContentRectangle>
                     </RootWrapper>
