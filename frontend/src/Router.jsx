@@ -2,6 +2,8 @@ import {  Route, Routes } from 'react-router-dom';
 
 import Signin from './pages/Siginin';
 import Login from './pages/Login';
+import Diary from './pages/Diary';
+import EmotionTest from './pages/EmotionTest';
 
 function AppNavigation() {
   return (
@@ -9,10 +11,16 @@ function AppNavigation() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<Signin />} />  
+          <Route path="/diary" element={<Diary />} />  
+          
+
+          <Route path="/emotionTestUrl" element={<EmotionTest />} />    
         </Routes>
     </>
   );
 }
+
+// <Route path="/diary/diarylist" element={<Diary />} />
 
 
 export default function Router() {
