@@ -1,24 +1,11 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useReviewContext } from '../ReviewContext';
 
 
 function ListComment() {
-    const [comments, setComments] = useState([
-        {
-            id: 'HANA21',
-            text: '해피에 대해서 더 궁금한게 있는데 연락드려도 될까요?',
-            date: '2024.04.02.9:12',
-            isSecret: false,
-            replies: []
-        },
-        {
-            id: '초이PARK',
-            text: '해피 ~',
-            date: '2024.04.01.10:07',
-            isSecret: false,
-            replies: []
-        }
-    ]);    const [isSecret, setIsSecret] = useState(false);
+    const { reviewsComments, addReviewComment, addReviewReply } = useReviewContext();
+    const [isSecret, setIsSecret] = useState(false);
     const [replyIndex, setReplyIndex] = useState(null);
     const [newComment, setNewComment] = useState('');
     const [replyText, setReplyText] = useState('');
@@ -40,44 +27,32 @@ function ListComment() {
     };
 
     const handleCommentSubmit = () => {
+        if (!newComment) return;
+
         const commentData = {
             text: newComment,
             isSecret: isSecret,
-            date: new Date().toLocaleString(),
-            id: '댓글단 사람',
-            replies: []
         };
 
-        setComments([...comments, commentData]);
+        console.log("새로운 댓글:", newComment);
+
+
+        addReviewComment(commentData);
         setNewComment('');
         setIsSecret(false);
     };
 
     const handleReplySubmit = (parentIndex) => {
-        const replyData = {
-            text: replyText,
-            date: new Date().toLocaleString(),
-            id: '답글한 사람' 
-        };
+        if (!replyText) return;
 
-        const updatedComments = comments.map((comment, index) => {
-            if (index === parentIndex) {
-                return {
-                    ...comment,
-                    replies: [...comment.replies, replyData]
-                };
-            }
-            return comment;
-        });
-
-        setComments(updatedComments);
+        addReviewReply(parentIndex, replyText);
         setReplyText('');
         setReplyIndex(null);
     };
 
     return(
         <CommentContainer>
-            {comments.map((comment, index) => (
+            {reviewsComments.map((comment, index) => (
                 <Comment key={index}>
                     <CommentHeader>
                         <CommentId>ID. {comment.isSecret ? '익명' : comment.id}</CommentId>
@@ -93,7 +68,7 @@ function ListComment() {
                             <ReplySubmitButton  onClick={() => handleReplySubmit(index)}>답글 달기</ReplySubmitButton>
                         </ReplyInputContainer>
                     )}
-                    {comment.reply && comment.reply.map((reply, idx) => (
+                    {comment.replies && comment.replies.map((reply, idx) => (
                         <ReplyBox key={idx}>
                             <ReplyId>ID. {reply.id}</ReplyId>
                             <ReplyText>{reply.text}</ReplyText>
