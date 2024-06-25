@@ -1,13 +1,17 @@
-import { useRef, useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import WriteText from './WriteText';
-import ImgIcon from '../../assets/InputImg.png'
+import ImgIcon from '../../assets/dogLogo.png'
+import { useReviewContext } from '../ReviewContext';
 
 function ReviewWrite() {
     const [content, setContent] = useState("");
-
     const [dogImg, setDogImg] = useState([]);
     const fileInputRef = useRef(null);
+    const { addReview } = useReviewContext();
+    const navigate = useNavigate();
+    const [nickName, setNickName] = useState("test");
 
     const ImgUpload = e => {
         const selectedImg = e.target.files;
@@ -33,6 +37,18 @@ function ReviewWrite() {
         setDogImg(prevImages => prevImages.filter((_, i) => i !== index));
     }
 
+    const handlePost = () => {
+        const newReview = {
+            id: Date.now(),
+            nickName,
+            update: new Date().toISOString().split('T')[0],
+            content,
+            img: dogImg
+        };
+        addReview(newReview);
+        navigate('/review');
+    };
+
     return (
         <WritePageContainer>
             <MainTitle>입양 후기</MainTitle>
@@ -55,7 +71,7 @@ function ReviewWrite() {
                         <Img key={index} src={imgSrc} onDoubleClick={() => handleRemoveButtonClick(index)} />
                     ))}
             </ImgContainer>
-            <PsotButton>등록하기</PsotButton>
+            <PsotButton onClick={handlePost}>등록하기</PsotButton>
         </WritePageContainer>
     )
 }
