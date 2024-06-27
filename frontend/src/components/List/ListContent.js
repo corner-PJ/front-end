@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 
-const ListContent = ({ data }) => {
-  const [isAdopted, setIsAdopted] = useState(false);
+const ListContent = ({ data, setData }) => {
   const navigate = useNavigate();
 
-  const goToDetail = (listId) => {
-    navigate(`/listDetail/${listId}`);
+  const goToDetail = (item) => {
+    console.log(item)
+    navigate(`/listDetail/${item.id}`, {state: {data: item}});
   }
-
+console.log(data)
   return (
     <ListContainer>
       {data.map((item) => (
-        <ListItem onClick={() => goToDetail(item.id)}>
-          <ListImg src={item.img} alt="dog" />
+        <ListItem onClick={() => goToDetail(item)}>
+          <ListImg src={item.img[0]} alt="dog" />
           <ListText>
-            <ItemText>이름: {item.nickName}</ItemText>
-            <ItemText>품종: {item.temperature}</ItemText>
-            <ItemText>추정나이: {item.userEmail}</ItemText>
-            {item.title ? <ItemText>임시 보호기간: {item.title}</ItemText> : null}
-            {isAdopted ? <ItemText>입양됨</ItemText> : <ItemText>입양 안 됨</ItemText>}
+            <ItemText>이름: {item.dogName}</ItemText>
+            <ItemText>품종: {item.species}</ItemText>
+            <ItemText>추정나이: {item.age}살</ItemText>
+            {item.type === "Adopt"? <ItemText>임시 보호기간: {item.period}개월</ItemText> : null }
+            {item.isAdopted ? <ItemText>입양됨</ItemText> : <ItemText>입양 안 됨</ItemText>}
           </ListText>
         </ListItem>
       ))}
@@ -47,16 +47,21 @@ const ListItem = styled.div`
 
 const ListImg = styled.img`
     width: 100%;
-    height: 150px;
+    height: 180px;
     object-fit: contain;
-    margin-bottom: 15px;
+    margin: 10px 0;
 `
 
 const ListText = styled.div`
     width: 100%;
-    height: 150px;
+    height: auto;
+    padding: 10px 0;
     background: #FFFCFC;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
 `
 
 const ItemText = styled.div`
