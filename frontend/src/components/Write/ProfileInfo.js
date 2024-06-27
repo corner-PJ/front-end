@@ -1,13 +1,20 @@
 import styled from 'styled-components';
 
-function ProfileInfo({profile, setProfile}) {
+function ProfileInfo({ profile, setProfile }) {
 
     const stateHandler = (e) => {
-        setProfile({
-            ...profile,
-            [e.target.name]: e.target.value
-        });
-    }
+        if (e.target.name === 'tnr') {
+            setProfile({
+                ...profile,
+                tnr: e.target.value === 'true' ? true : false
+            });
+        } else {
+            setProfile({
+                ...profile,
+                [e.target.name]: e.target.value
+            });
+        }
+    };
 
     return (
         <ProfileInfoContainer>
@@ -50,22 +57,22 @@ function ProfileInfo({profile, setProfile}) {
                 />
                 <RadioGroup>
                     <TnrTitle>중성화 여부</TnrTitle>
-                    <label style={{fontSize: "1.3em"}}>
+                    <label style={{ fontSize: "1.3em" }}>
                         <TnrButton
                             type="radio"
-                            value="true"
                             name="tnr"
-                            checked={profile.tnr === "true"}
+                            value={true}
+                            checked={profile.tnr === true}
                             onChange={stateHandler}
                         />
                         예
                     </label>
-                    <label style={{fontSize: "1.3em"}}>
+                    <label style={{ fontSize: "1.3em" }}>
                         <TnrButton
                             type="radio"
-                            value="false"
                             name="tnr"
-                            checked={profile.tnr === "false"}
+                            value={false}
+                            checked={profile.tnr === false}
                             onChange={stateHandler}
                         />
                         아니요

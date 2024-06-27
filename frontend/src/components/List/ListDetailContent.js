@@ -1,54 +1,39 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { useListContext } from '../ListContext';
 
-const data = [
-    {
-      id: 1,
-      img: "https://flexible.img.hani.co.kr/flexible/normal/960/960/imgdb/resize/2019/0121/00501111_20190121.JPG",
-    },
-    {
-      id: 2,
-      img: "https://m.segye.com/content/image/2022/05/23/20220523519355.jpg",
-    },
-    {
-      id: 3,
-      img: "https://shop.peopet.co.kr/data/goods/388/2022/06/_temp_16557127733930view.jpg",
-    },
-    {
-      id: 4,
-      img: "https://cdn.mkhealth.co.kr/news/photo/202108/54607_56591_5215.jpg",
-    },
-    {
-      id: 5,
-      img: "https://www.fitpetmall.com/wp-content/uploads/2023/10/b37132cb-8757-4678-b8f6-9f9e25cb04ca-1.png",
-    },
-  ];
-function ListDetailContent() {
+function ListDetailContent() {  
     const [slideIndex, setSlideIndex] = useState(0);
-    const [isAdopted, setIsAdopted] = useState(false);
-        
+    const location = useLocation();
+    const { data } = location.state || {}; 
+    const { updateAdoptionStatus } = useListContext();
+
+    if (!data) {
+      return <div>데이터가 없습니다.</div>;
+    }   
+
     const moveToPrevSlide = () => {
-      setSlideIndex((prev) => (prev === 0 ? data.length - 1 : prev - 1));
+      setSlideIndex((prev) => (prev === 0 ? data.img.length - 1 : prev - 1));
     };
-  
+    
     const moveToNextSlide = () => {
-      setSlideIndex((prev) => (prev === data.length - 1 ? 0 : prev + 1));
+        setSlideIndex((prev) => (prev === data.img.length - 1 ? 0 : prev + 1));
     };
-  
+    
     const moveDot = (index) => {
-      setSlideIndex(index);
+        setSlideIndex(index);
     };
     
     const handleCheckboxChange = () => {
-      setIsAdopted(!isAdopted);
+      updateAdoptionStatus(data.id, !data.isAdopted);
     };
-
+console.log(data)
     return(
         <ListDetailContainer>
-            {/* 아이디, 작성된 날짜 */}
             <ListUser>
-                <ListId>ID.나무맘</ListId>
-                <ListTime>2024.03.03 23:10:09</ListTime>
+              {data.type === "Adopt"? <ListId>ID.{data.id}</ListId> : null }
+                <ListTime>{data.update}</ListTime>
             </ListUser>
             <ListData>
                 {/* 이미지와 입양 체크박스 */}
@@ -57,32 +42,30 @@ function ListDetailContent() {
                         ‹
                     </Arrow>
                     <Wrapper slideIndex={slideIndex}>
-                        {data.map((item) => (
-                        <ImgSlide key={item.id}>
-                            <Img
-                            src={process.env.PUBLIC_URL + `${item.img}`}
-                            />
-                        </ImgSlide>
+                        {data.img.map((item, index) => (
+                            <ImgSlide key={index}>
+                                <Img src={item} />
+                            </ImgSlide>
                         ))}
                     </Wrapper>
                     <Arrow direction="next" onClick={moveToNextSlide}>
                         ›
                     </Arrow>
                     <DotContainer>
-                        {data.map((item, index) => (
-                        <Dot
-                            key={item.id}
-                            className={index === slideIndex ? "active" : null}
-                            onClick={() => moveDot(index)}
-                        />
+                        {data.img.map((item, index) => (
+                            <Dot
+                                key={index}
+                                className={index === slideIndex ? "active" : null}
+                                onClick={() => moveDot(index)}
+                            />
                         ))}
                     </DotContainer>
                 </ImgContainer>
                 <AdoptionStatus onClick={handleCheckboxChange}>
                         <AdoptionCheckbox
                             type="checkbox"
-                            checked={isAdopted}
-                            onChange={() => setIsAdopted(!isAdopted)}
+                            checked={data.isAdopted}
+                            onChange={handleCheckboxChange} 
                         />
                         <AdoptionLabel>입양 완료</AdoptionLabel>
                 </AdoptionStatus>
@@ -92,16 +75,15 @@ function ListDetailContent() {
                   <ListInfo>
                     <InfoTitle>기본사항</InfoTitle>
                     <InfoTextContainer>
-                      <InfoText>이름: 해피</InfoText>
-                      <InfoText>품종:믹스견 </InfoText>
-                      <InfoText>임시 보호 기간: 3개월</InfoText>
-                      <InfoText>중성화 여부: o</InfoText>
-                      <InfoText>임시 보호자 연락처: 010-1517-5151</InfoText>
-                      <InfoText>추정나이: 3살</InfoText>
+                      <InfoText>이름: {data.dogName}</InfoText>
+                      <InfoText>품종: {data.species}</InfoText>
+                      {data.type === "Adopt" ? <InfoText>임시 보호 기간: {data.period}개월</InfoText> : <InfoText>보호소명: {data.shelterName}</InfoText> }                      
+                      <InfoText>중성화 여부: {data.tnr? "O" : "X"}</InfoText>
+                      <InfoText>{data.type === "Adopt" ? '임시 보호자' : '보호소' } 연락처: {data.phone}</InfoText>
+                      <InfoText>추정나이: {data.age}살</InfoText>
                     </InfoTextContainer>
                   </ListInfo>
-                  <ListText>안녕하세요. 해피를 3개월 동안 임시 보호하고 있는 임시 보호자 입니다. 
-저희 해피는 사진에서 보시는 것처럼 밝고, 잘 웃습니다. 그래서 해피가 주는 기쁨만큼 해피에게 과거에 행복했고 사랑받았던 일을 기억하게 해주고 싶습니다. 아래는 해피의 ai 분석 결과입니다. 그 결과는 아래에서 확인할 수 있습니다. 해피에게 행복한 일상을 선물해줄 주인을 기다립니다.  </ListText>
+                  <ListText>{data.text}</ListText>
               </ListDetail>
         </ListDetailContainer>
     )

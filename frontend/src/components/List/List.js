@@ -1,121 +1,33 @@
 import { useEffect, useState } from "react";
 import styled from 'styled-components';
 import ListContent from './ListContent';
-import hadogIog from '../../assets/dogLogo.png'; // 이미지 경로 임시
+import { useListContext } from '../ListContext';
+import { useNavigate } from 'react-router-dom';
 
 function ListPage() {
+    const { adoptList, shelterList, updateAdoptionStatus  } = useListContext();
     const [selectedButton, setSelectedButton] = useState('Adopt');
     const [listData, setListData] = useState([]);
+    const navigate = useNavigate();
 
-    const mockRequest = [
-        {
-            id: 1,
-            nickName: "도담",
-            temperature: 37.96,
-            userEmail: "123456@fdf",
-            title: "프린트",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 2,
-            nickName: "rer",
-            temperature: 37.96,
-            userEmail: "afdfadsfdsafa@dfdafd",
-            title: " 해주분",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 3,
-            nickName: "gddg",
-            temperature: 37.96,
-            userEmail: "adfasf@fdf",
-            title: "프dd분",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 4,
-            nickName: "도담",
-            temperature: 37.96,
-            userEmail: "123456@fdf",
-            title: "프린트",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 5,
-            nickName: "rer",
-            temperature: 37.96,
-            userEmail: "afdfadsfdsafa@dfdafd",
-            title: " 해주분",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 6,
-            nickName: "gddg",
-            temperature: 37.96,
-            userEmail: "adfasf@fdf",
-            title: "프dd분",
-            img: "../../assets/dogLogo.png"
-        }
-    ];
-    
-    const mockSherere = [
-        {
-            id: 1,
-            nickName: "ㄹㄹㄹㄹㄹㄹㄹㄹ",
-            temperature: 37.96,
-            userEmail: "123456@fdf",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 2,
-            nickName: "ㅇㄹㅇㄹㅇㄹㅇ",
-            temperature: 37.96,
-            userEmail: "ㅇㄴㄹㅇㄴㄹ@dfdafd",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 3,
-            nickName: "ㅇㄹㅇㄹㅇㄹ",
-            temperature: 37.96,
-            userEmail: "adㅇㄹㅇㄹㅇㄹf",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 4,
-            nickName: "ㄹㄹㄹㄹㄹㄹㄹㄹ",
-            temperature: 37.96,
-            userEmail: "123456@fdf",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 5,
-            nickName: "ㅇㄹㅇㄹㅇㄹㅇ",
-            temperature: 37.96,
-            userEmail: "ㅇㄴㄹㅇㄴㄹ@dfdafd",
-            img: "../../assets/dogLogo.png"
-        },
-        {
-            id: 6,
-            nickName: "ㅇㄹㅇㄹㅇㄹ",
-            temperature: 37.96,
-            userEmail: "adㅇㄹㅇㄹㅇㄹf",
-            img: "../../assets/dogLogo.png"
-        }
-    ];
-    
+    const goToWritePage = () => {
+        navigate('/write');
+    };   
 
 useEffect(() => {
     if (selectedButton === 'Adopt') {
-      setListData(mockRequest);
+      setListData(adoptList);
     } else if (selectedButton === 'Shelter') {
-      setListData(mockSherere);
+      setListData(shelterList);
     }
-  }, [selectedButton, mockRequest, mockSherere]);
+  }, [selectedButton, adoptList, shelterList]);
 
     return (
         <div>
             <Header>
                 <Title>입양하기</Title>
+                <UploadButton onClick={goToWritePage}>공고 작성하기</UploadButton>
+
                 <hr style={{width: '83%', margin: '50px 0 50px 160px'}}/>
             </Header>
             <ListContainer>
@@ -132,7 +44,7 @@ useEffect(() => {
                     >• 보호소
                     </Button>
                 </ListButton>
-                <ListContent data={listData}/>
+                <ListContent data={listData} updateAdoptionStatus={updateAdoptionStatus} />
             </ListContainer>
             
         </div>  
@@ -161,6 +73,20 @@ const Button = styled.div`
     font-size: ${(props) => (props.isSelected ? '1.3em' : '1em')};
     font-weight: ${(props) => (props.isSelected ? 'bold' : 'normal')};
     transition: all 0.3s ease;
+`
+
+
+const UploadButton = styled.button`
+    display: block;
+    margin-left: 64em;
+    padding: 15px 60px;
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #FC819E;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.3);    
 `
 
 export default ListPage;

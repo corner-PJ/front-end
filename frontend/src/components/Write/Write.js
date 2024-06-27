@@ -3,15 +3,20 @@ import styled from 'styled-components';
 import ProfileInfo from './ProfileInfo';
 import WriteText from './WriteText';
 import ImgIcon from '../../assets/InputImg.png'
+import { useListContext } from '../ListContext';
+import { useNavigate } from 'react-router-dom';
 
 function Write() {
+    const { addList } = useListContext();
+    const navigate = useNavigate();
+
     const [profile, setProfile] = useState({
         dogname: "",
         species: "",
         age: "",
         period: "",
         phonenum: "",
-        tnr: true
+        tnr: null,
     });
 
     const [content, setContent] = useState("");
@@ -42,6 +47,34 @@ function Write() {
     const handleRemoveButtonClick = (index) => {
         setDogImg(prevImages => prevImages.filter((_, i) => i !== index));
     }
+
+    const handleSubmit = () => {
+        if (!profile.dogname || !profile.species || !profile.age || !profile.phonenum || !content) {
+            alert("모든 필드를 작성해 주세요.");
+            return;
+        }
+
+        if (dogImg.length === 0) {
+            alert("이미지를 최소 1장 이상 업로드해야 합니다.");
+            return;
+        }
+        
+        const newPost = {
+            id: Date.now(), 
+            dogName: profile.dogname,
+            species: profile.species,
+            age: profile.age,
+            period: profile.period,
+            img: dogImg,  
+            text: content,
+            tnr: profile.tnr,
+            type: "Adopt"
+        };
+
+        const type = profile.period ? 'Adopt' : 'Shelter'; 
+        addList(newPost, type);
+        navigate('/list');
+    };
 
     const voicedata = [
         {
@@ -116,7 +149,7 @@ function Write() {
                         <Img key={index} src={imgSrc} onDoubleClick={() => handleRemoveButtonClick(index)} />
                     ))}
             </ImgContainer>
-            <PsotButton>등록하기</PsotButton>
+            <PsotButton onClick={handleSubmit}>등록하기</PsotButton>
         </WritePageContainer>
     )
 }
