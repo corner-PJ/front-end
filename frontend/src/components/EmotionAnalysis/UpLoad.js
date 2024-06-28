@@ -10,6 +10,10 @@ function UpLoad() {
     const navigate = useNavigate();
 
     const goToResult = () => {
+        if (video === null) {
+            alert("영상을 업로드 해주세요.");
+            return;
+        }
         navigate(`/result/`);
     }
 

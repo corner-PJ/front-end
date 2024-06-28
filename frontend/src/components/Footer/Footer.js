@@ -9,22 +9,22 @@ function Footer() {
             <hr />
             <div className={s.pageLink}>
                 <div>
-                    <Link>
+                    <Link to={"./"}>
                         <h5>이름찾기</h5>
                     </Link>
                 </div>
                 <div>
-                    <Link>
+                    <Link to={"./list"}>
                         <h5>입양공고</h5>
                     </Link>
                 </div>
                 <div>
-                    <Link>
+                    <Link to={"./emotionAnalysis"}>
                         <h5>해독하기</h5>
                     </Link>
                 </div>
                 <div>
-                    <Link>
+                    <Link to={"./"}>
                         <h5>다이어리</h5>
                     </Link>
                 </div>

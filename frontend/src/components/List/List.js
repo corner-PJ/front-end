@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import styled from 'styled-components';
 import ListContent from './ListContent';
 import { useListContext } from '../ListContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 
 function ListPage() {
-    const { adoptList, shelterList, updateAdoptionStatus  } = useListContext();
-    const [selectedButton, setSelectedButton] = useState('Adopt');
+    const { adoptList, shelterList, updateAdoptionStatus } = useListContext();
+    const [type, setType] = useState('adopt');
+    const location = useLocation();
     const [listData, setListData] = useState([]);
     const navigate = useNavigate();
 
@@ -14,13 +15,17 @@ function ListPage() {
         navigate('/write');
     };   
 
-useEffect(() => {
-    if (selectedButton === 'Adopt') {
-      setListData(adoptList);
-    } else if (selectedButton === 'Shelter') {
-      setListData(shelterList);
-    }
-  }, [selectedButton, adoptList, shelterList]);
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const queryType = searchParams.get('type') || 'adopt';
+        setType(queryType);
+
+        if (queryType === 'shelter') {
+            setListData(shelterList);
+        } else {
+            setListData(adoptList);
+        }
+    }, [location.search, adoptList, shelterList]);
 
     return (
         <div>
@@ -31,19 +36,10 @@ useEffect(() => {
                 <hr style={{width: '83%', margin: '50px 0 50px 160px'}}/>
             </Header>
             <ListContainer>
-                <ListButton>
-                    <Button
-                        isSelected={selectedButton === 'Adopt'}
-                        onClick={() => setSelectedButton('Adopt')}
-                    >
-                        • 임시보호
-                    </Button>
-                    <Button
-                        isSelected={selectedButton === 'Shelter'}
-                        onClick={() => setSelectedButton('Shelter')}
-                    >• 보호소
-                    </Button>
-                </ListButton>
+                 <ListButton>
+                    <Button isSelected={type === 'adopt'} onClick={() => navigate(`?type=adopt`)}>• 임시보호</Button>
+                        <Button isSelected={type === 'shelter'} onClick={() => navigate(`?type=shelter`)}>• 보호소</Button>
+                    </ListButton>
                 <ListContent data={listData} updateAdoptionStatus={updateAdoptionStatus} />
             </ListContainer>
             
