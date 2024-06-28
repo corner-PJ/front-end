@@ -2,6 +2,7 @@ import {  Route, Routes } from 'react-router-dom';
 
 import Signin from './pages/Signin';
 import Login from './pages/Login';
+import HomePage from './pages/Home';
 
 import SpeechSynthesis from './pages/SpeechSynthesis';
 import SpeechSynthesis2 from './pages/SpeechSynthesis2';
@@ -24,11 +25,10 @@ function AppNavigation() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<Signin />} />  
-
+          <Route path="/" element={<HomePage />} />  
           <Route path="/speechSynthesis" element={<SpeechSynthesis />} />  
           <Route path="/speechSynthesis2" element={<SpeechSynthesis2 />} />
           <Route path="/speechSynthesis/result" element={<SpeechSynthesisResult />} /> 
-
           <Route path="/diary" element={<Diary />} />  
           <Route path="/diary/list" element={<DiaryList />} />
           <Route path="/diary/detail" element={<DiaryDetail />} />
@@ -38,7 +38,6 @@ function AppNavigation() {
           <Route path="/mypage/passwordChange" element={<PasswordChange />} />
           <Route path="/mypage/petRegister" element={<MypetRegister />} />  
           <Route path="/mypage/emotionHistory" element={<EmotionHistory />} />
-
         </Routes>
     </>
   );
