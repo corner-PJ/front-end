@@ -14,8 +14,8 @@ export function DiaryListPage() {
     const queryParams = new URLSearchParams(location.search);
     const selectedDate = queryParams.get('date');
 
-    const handleReadMore = () => {
-        navigate('/diary/detail');
+    const handleReadMore = (day) => {
+        navigate(`/diary/detail?date=${day}`);
     };
 
     return (
