@@ -1,4 +1,4 @@
-import { SigninPage } from "../components/Siginin/Sigin";
+import { SigninPage } from "../components/Signin/Signin";
 
 export default function Signin() {
     return (
