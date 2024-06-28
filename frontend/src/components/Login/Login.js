@@ -1,5 +1,5 @@
 import React from "react";
-import hadogIogo from "../../assets/Login_HADOG.png"
+import hadogIogo from "../../assets/Login_Logo.jpg"
 import GoogleLogo from "../../assets/GoogleLogo.png"
 import NaverLogo from "../../assets/NaverLogo.png"
 import KakaoLogo from "../../assets/KakaoLogo.png"
