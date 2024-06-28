@@ -1,0 +1,50 @@
+.home {
+    display: block;
+    text-align: center;
+}
+
+.main {
+    margin: 10em 0 15em 0;
+}
+
+.main > p {
+    display: block;
+    margin-top: 1em;
+    font-size: 1.8em;
+}
+
+.page > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8em 0;
+    gap: 10em;
+}
+
+.page > div > img {
+    width: 430px;
+    height: auto;
+}
+
+.page .content {
+    flex-direction: column;
+    text-align: left;
+    width: 510px;
+}
+
+.page .content > p {
+    margin: 1.8em 0;
+    font-size: 1.1em;
+}
+
+.page .pageButton {
+    display: inline-block;
+    padding: 0.5em;
+    background-color: #FC819E;
+    color: #FFFFFF;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.3em;
+}
