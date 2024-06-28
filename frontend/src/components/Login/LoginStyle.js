@@ -18,20 +18,17 @@ export const LogoContainer = styled.div`
 `;
 
 export const LogoImg = styled.img`
-	text-overflow: ellipsis;
-	font-size: 70px;
 	font-family: Knewave, sans-serif;
 	font-weight: 400;
 	text-align: left;
 	text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-	width: 216px;
+	width: 280px;
     margin-bottom: 20px;
     margin-top: 55px;
 `;
 
 export const Text1 = styled.span`
 	color: black;
-	text-overflow: ellipsis;
 	font-size: 21px;
 	font-family: Inter, sans-serif;
 	font-weight: light;
@@ -143,7 +140,6 @@ export const Line = styled.div`
 
 export const Text2 = styled.span`
 	color: rgb(217, 217, 217);
-	text-overflow: ellipsis;
 	font-size: 20px;
 	font-family: Inter, sans-serif;
 	font-weight: 400;
