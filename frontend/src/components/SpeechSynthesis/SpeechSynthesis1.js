@@ -1,9 +1,9 @@
 import React, { useState, useRef  } from "react";
 import { useNavigate } from 'react-router-dom';
-import { RadioGroup } from './RadioGroup';
-import { Radio } from './Radio';
 import { VoiceChart } from "./VioceChart";
-
+import ChildImg from "../../assets/child.png"
+import AdultImg from "../../assets/adult.png"
+import OldImg from "../../assets/old.png"
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp } from '@fortawesome/free-solid-svg-icons';
@@ -11,23 +11,9 @@ import { PiFilePlus } from "react-icons/pi";
 import { LuClipboardList } from "react-icons/lu";
 import { GrLinkNext } from "react-icons/gr";
 
+
 export function SpeechSynthesisPage1() {
-	const [gender, setGender] = useState(null);
-    const [ageGroup, setAgeGroup] = useState(null);
-    const [command, setCommand] = useState(null);
-	const [otherValue, setOtherValue] = useState("");
-	const [isOtherSelected, setIsOtherSelected] = useState(false);
 	const [showResult, setShowResult] = useState(false);
-
-	const handleCommandChange = (value) => {
-        setCommand(value);
-        if (value === "기타") {
-            setIsOtherSelected(true);
-        } else {
-            setIsOtherSelected(false);
-        }
-    };
-
 	const [video, setVideo] = useState(null);
     const fileInputRef = useRef(null);
 
@@ -56,43 +42,22 @@ export function SpeechSynthesisPage1() {
         <SpeechSynthesisWrapper>
             <SpeechHeader>STEP 1. 목소리 선택하기</SpeechHeader>
             <ContentContainer>
-				<ListenSpeech>
-					<RadioGroup label="성별" value={gender} onChange={setGender}>
-						<Radio value="남">남</Radio>
-						<Radio value="여">여</Radio>
-					</RadioGroup>
+				<ImageContent>
+					<ContentImg src={ChildImg} />
+					<ContentImg src={AdultImg} />
+					<ContentImg src={OldImg} />
+				</ImageContent>
 
-					<RadioGroup label="연령대" value={ageGroup} onChange={setAgeGroup}>
-						<Radio value="청소년">청소년</Radio>
-						<Radio value="청년">청년</Radio>
-						<Radio value="중장년">중장년</Radio>
-						<Radio value="노년">노년</Radio>
-					</RadioGroup>
-
-					<RadioGroup label="들려줄 단어" value={command} onChange={handleCommandChange}>
-						<Radio value="이리와">이리와</Radio>
-						<Radio value="앉아">앉아</Radio>
-						<Radio value="손">손</Radio>
-						<Radio value="산책 갈까">산책 갈까</Radio>
-						<Radio value="기타">
-							<OtherInput
-									type="text"
-									value={otherValue}
-									onChange={(e) => setOtherValue(e.target.value)}
-									disabled={!isOtherSelected}
-								/>
-						</Radio>
-					</RadioGroup>
-				</ListenSpeech>
 				<SpeechBtn>
 					<FontAwesomeIcon icon={faVolumeUp} style={{ marginLeft: '6px' }}/>
 					<SpeechBtnText>음성 듣기</SpeechBtnText>
 				</SpeechBtn>
 
 				<ExplanationText>
-					유기견에게 음성을 성별과 연령대별로 음성을 차례로 들려주면서<br/>
-					동영상을 촬영하고, 해당 동영상을 첨부해주세요!<br/>
-					<br/>유기견의 반응을 분석하여, 먼저 선호하는 목소리를 선정합니다.
+					소아, 성인, 노년층의 음성이 첨부되어있습니다.<br/>
+					가이드에 맞게 유기견에게 음성을 들려주며<br/>
+					동영상을 촬영하고, 해당 동영상을 첨부해주세요!<br/><br/>
+					유기견의 반응을 분석하여, 먼저 선호하는 목소리를 선정합니다.
 				</ExplanationText>
                 
 				<VideoWrapper>
@@ -164,29 +129,23 @@ const ContentContainer = styled.div`
     align-items: center;
 `;
 
-const ListenSpeech = styled.div`
+const ImageContent = styled.div`
     width: 100%;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-	align-items: center;
-	margin-bottom: 50px;
+	justify-content: center;
+    align-items: center;
+	margin-bottom: 100px;
+	gap: 130px;
 `;
 
-
-const OtherInput = styled.input`
-    margin-top: 10px;
-	width: 80%;
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 9px;
-
-	&:focus {
-        border: 1px solid rgb(252, 129, 158);
-        outline: none; 
-    }
+const ContentImg = styled.img`
+    width: 290px;
+    height: 290px;
+    object-fit: cover;
+    border-radius: 50%; 
+    margin-top: 50px;
 `;
+
 
 const SpeechBtn = styled.button`
 	display: flex;
