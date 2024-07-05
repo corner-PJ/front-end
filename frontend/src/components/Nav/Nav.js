@@ -1,14 +1,20 @@
 import s from'./Nav.module.css'
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import hadogIog from '../../assets/HADOG.png'
 import defaultImage from '../../assets/defaultImage.png'
 import { useState } from 'react';
 
 function Nav() {
-    const [isLogin, setIsLogin] = useState(true);
+    const navigate = useNavigate();
+    const [isLogin, setIsLogin] = useState(false);
 
     const handleLogoutButtonClick = () => {
-        setIsLogin(!isLogin)
+        if (isLogin) {
+            navigate(`/`);
+        } else {
+            navigate(`/login`);
+        }
+       setIsLogin(!isLogin);
     }
 
     return (
@@ -20,7 +26,7 @@ function Nav() {
             </div>
             <div className={s.pageLink}>
                 <div>
-                    <Link to={"./"}>
+                    <Link to={"./speechSynthesis"}>
                         <strong>이름찾기</strong>
                     </Link>
                 </div>
@@ -40,7 +46,7 @@ function Nav() {
                     </Link>
                 </div>
                 <div>
-                    <Link>
+                    <Link to={"./diary"}>
                         <strong>다이어리</strong>
                     </Link>
                 </div>
@@ -50,9 +56,9 @@ function Nav() {
                 {isLogin ? (
                     <>
                     <div className={s.dropmenu}>
-                        <strong>유저이름</strong>
+                        <strong>홍길동</strong>
                         <div className={s.dropContent}>
-                            <Link><h4>마이페이지</h4></Link>
+                            <Link to={"./mypage"}><h4>마이페이지</h4></Link>
                             <hr />
                            <h4 onClick={handleLogoutButtonClick}>로그아웃</h4>
                         </div>                
@@ -62,9 +68,7 @@ function Nav() {
                     
                 ) : (
                     <>
-                    <Link>
-                        <strong onClick={handleLogoutButtonClick}>로그인</strong>
-                    </Link>
+                    <strong onClick={handleLogoutButtonClick}>로그인</strong>
                     <img className={s.profileImg} alt='profileImg' src={defaultImage}/>
                     </>
                     

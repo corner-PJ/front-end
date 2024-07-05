@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useListContext } from '../ListContext';
-
+import AIResult from './AIResult';
 function ListDetailContent() {  
     const [slideIndex, setSlideIndex] = useState(0);
     const location = useLocation();
@@ -32,7 +32,7 @@ console.log(data)
     return(
         <ListDetailContainer>
             <ListUser>
-              {data.type === "Adopt"? <ListId>ID.{data.id}</ListId> : null }
+              {data.type === "Adopt"? <ListId>ID. {data.nickName}</ListId> : null }
                 <ListTime>{data.update}</ListTime>
             </ListUser>
             <ListData>
@@ -84,6 +84,7 @@ console.log(data)
                     </InfoTextContainer>
                   </ListInfo>
                   <ListText>{data.text}</ListText>
+                  {data.type === "Adopt"? <AIResult /> : null }
               </ListDetail>
         </ListDetailContainer>
     )
@@ -230,11 +231,13 @@ const InfoTitle = styled.div`
 const InfoTextContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 10px 100px;
+  margin-bottom: 20px;
 `;  
 
 const InfoText = styled.div`
-  margin: 5px 80px;
+  margin: 5px 100px;
+  font-size: 1.2em;
 `;
 
 const ListText = styled.div`
@@ -243,7 +246,9 @@ const ListText = styled.div`
   border-radius: 10px;
   margin-bottom: 20px;
   line-height: 1.5;
-
+  font-size: 1.2em;
+  word-break: keep-all;
+  white-space: pre-line;
 `;
 
 export default ListDetailContent;

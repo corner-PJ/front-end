@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import WriteText from './WriteText';
-import ImgIcon from '../../assets/dogLogo.png'
+import ImgIcon from '../../assets/InputImg.png'
 import { useReviewContext } from '../ReviewContext';
 
 function ReviewWrite() {
@@ -11,7 +11,6 @@ function ReviewWrite() {
     const fileInputRef = useRef(null);
     const { addReview } = useReviewContext();
     const navigate = useNavigate();
-    const [nickName, setNickName] = useState("test");
 
     const ImgUpload = e => {
         const selectedImg = e.target.files;
@@ -40,7 +39,7 @@ function ReviewWrite() {
     const handlePost = () => {
         const newReview = {
             id: Date.now(),
-            nickName,
+            nickName: "홍길동",
             update: new Date().toISOString().split('T')[0],
             content,
             img: dogImg

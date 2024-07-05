@@ -4,10 +4,12 @@ import { VoiceChart } from "./VioceChart";
 
 import styled from "@emotion/styled";
 import { FiDownload } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 
 
 export function SpeechSynthesisResultPage() {
+    const navigate = useNavigate();
 
 	useEffect(() => {
         window.scrollTo(0, 0);
@@ -42,8 +44,8 @@ export function SpeechSynthesisResultPage() {
 				</ResultRectangle>
 				
 				<ButtonWrapper>
-					<NextBtn>글쓰러 가기</NextBtn>
-					<BackBtn>돌아가기</BackBtn>
+					<NextBtn onClick={() => navigate(`/write`)}>글쓰러 가기</NextBtn>
+					<BackBtn onClick={() => navigate(`/`)}>돌아가기</BackBtn>
 				</ButtonWrapper>
 				
 				
