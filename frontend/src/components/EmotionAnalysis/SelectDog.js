@@ -17,7 +17,7 @@ function SelectDog() {
         {
             id: 2,
             dogname: "뭉치",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIw9-C6uc-OzhgL4bXAb2gjc1ubu8el29xEA&s"
+            img: "https://scontent-ssn1-1.xx.fbcdn.net/v/t1.6435-9/105050805_1280480938965267_4329762517066303827_n.jpg?stp=dst-jpg_p526x296&_nc_cat=103&ccb=1-7&_nc_sid=13d280&_nc_ohc=X7uOp4VaDpcQ7kNvgHP1Vsv&_nc_ht=scontent-ssn1-1.xx&oh=00_AYBBxE155pPYYAiUAGOcPJEpuzenfW1mq15-feU_hAeXSw&oe=66AE51F7"
         },
         {
             id: 3,

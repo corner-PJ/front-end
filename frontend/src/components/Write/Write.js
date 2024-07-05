@@ -63,6 +63,7 @@ function Write() {
             id: Date.now(), 
             dogName: profile.dogname,
             species: profile.species,
+            nickName: "홍길동",
             age: profile.age,
             period: profile.period,
             img: dogImg,  
@@ -79,11 +80,11 @@ function Write() {
     const voicedata = [
         {
             id: 1,
-            name: "중/장년 - 남",
+            name: "청년 - 여",
         },
         {
             id: 2,
-            name: "청소년 - 여",
+            name: "중/장년 - 남",
         },
         {
             id: 3,
@@ -94,15 +95,15 @@ function Write() {
     const namedata = [
         {
             id: 1,
-            name: "초코",
+            name: "별이",
         },
         {
             id: 2,
-            name: "까미",
+            name: "설이",
         },
         {
             id: 3,
-            name: "쿠키",
+            name: "몽이",
         },
     ]
 

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import backgroundImg from '../../assets/Emotionbackground.png'
+import Choco from "../../assets/Choco.jpg"
 
 function AnalysisResult() {
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ function AnalysisResult() {
                 <ResultDate>감정 해독 시각: 2024.03.15 금요일 오후 3시 12분</ResultDate>
             </Header>
             <ImgContainer>                
-                <CurrentImg src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIw9-C6uc-OzhgL4bXAb2gjc1ubu8el29xEA&s"} style={{ top: '15%', left: '18%' }} />
+                <CurrentImg src={Choco} style={{ top: '15%', left: '18%' }} />
             </ImgContainer>
             <TextContainer>
                 <Text>뭉치의 지금 기분은 </Text>
@@ -35,7 +36,7 @@ function AnalysisResult() {
                 <ResultButton>
                     이미지로 저장하기
                 </ResultButton>
-                <ResultButton>
+                <ResultButton onClick={() => navigate(`/diary/new`)}>
                     감정 일기 기록하기
                 </ResultButton>
            </ButtonContainer>

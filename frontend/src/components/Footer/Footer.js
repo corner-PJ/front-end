@@ -9,7 +9,7 @@ function Footer() {
             <hr />
             <div className={s.pageLink}>
                 <div>
-                    <Link to={"./"}>
+                    <Link to={"./speechSynthesis"}>
                         <h5>이름찾기</h5>
                     </Link>
                 </div>
@@ -24,7 +24,7 @@ function Footer() {
                     </Link>
                 </div>
                 <div>
-                    <Link to={"./"}>
+                    <Link to={"./diary"}>
                         <h5>다이어리</h5>
                     </Link>
                 </div>

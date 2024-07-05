@@ -5,10 +5,12 @@ import NaverLogo from "../../assets/NaverLogo.png"
 import KakaoLogo from "../../assets/KakaoLogo.png"
 import * as L from "./LoginStyle";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function LoginPage() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   return (
     <L.LoginRootWrapper>
@@ -35,11 +37,12 @@ export function LoginPage() {
         <L.LoginButton
             //onClick={handleLogin}
             disabled={!id || !password}
+            onClick={() => navigate(`/`)}
           >
             로그인
         </L.LoginButton>
 
-        <L.SigninButton Link to="/signin">
+        <L.SigninButton onClick={() => navigate(`/signin`)}>
           회원가입
         </L.SigninButton>
         
