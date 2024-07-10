@@ -2,16 +2,35 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import backgroundImg from '../../assets/Emotionbackground.png'
 import Choco from "../../assets/Choco.jpg"
+import html2canvas from "html2canvas";
 
 function AnalysisResult() {
     const navigate = useNavigate();
-    
+
+    const onClickDownloadButton = () => {
+        const target = document.getElementById("download");
+        if (!target) {
+          return alert("사진 저장에 실패했습니다.");
+        }
+        html2canvas(target, {
+            ignoreElements: (element) => {
+                return element.id === 'button';
+            }
+        }).then((canvas) => {
+          const link = document.createElement("a");
+          document.body.appendChild(link);
+          link.href = canvas.toDataURL("image/png");
+          link.download = "뭉치result.png"; // 다운로드 이미지 이름 -> 변경 필요 
+          link.click();
+          document.body.removeChild(link);
+        });
+      };
 
     return(
-        <AnalysisResultContainer>
+        <AnalysisResultContainer id="download">
             <Header>
                 <Title>뭉치의 감정 해독 결과</Title>
-                <ResultDate>감정 해독 시각: 2024.03.15 금요일 오후 3시 12분</ResultDate>
+                <ResultDate>감정 해독 시각: 2024.07.07 일요일 오전 3시 12분</ResultDate>
             </Header>
             <ImgContainer>                
                 <CurrentImg src={Choco} style={{ top: '15%', left: '18%' }} />
@@ -32,8 +51,8 @@ function AnalysisResult() {
  그럴 때 주인으로서 어떤 행동을 취할지에 대해 생각해 봅시다. 우선적으로, 놀이 시간을 지정하는 것이 중요합니다. 규칙적인 운동은 반려견의 건강을 유지하는 데 도움이 됩니다. 또한, 반려견이 놀기를 원할 때는 주인이 이를 지원하고 적극적으로 참여해야 합니다. 이를 통해 주인과 반려견 간의 유대감이 강화될 뿐만 아니라, 반려견은 더욱 행복하고 만족스러운 삶을 살게 될 것입니다.
                 </ResultDetail>
            </ExplainResult>
-           <ButtonContainer>
-                <ResultButton>
+           <ButtonContainer id="button">
+                <ResultButton onClick={onClickDownloadButton}>
                     이미지로 저장하기
                 </ResultButton>
                 <ResultButton onClick={() => navigate(`/diary/new`)}>
