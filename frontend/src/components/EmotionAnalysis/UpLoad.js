@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { useState, useRef } from 'react';
 import UpLoadIcon from '../../assets/UpLoadIcon.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function UpLoad() {
     const [video, setVideo] = useState(null);
     const fileInputRef = useRef(null);
-
+    const { selectedDog } = useParams();
     const navigate = useNavigate();
 
     const goToResult = () => {
@@ -14,7 +14,8 @@ function UpLoad() {
             alert("영상을 업로드 해주세요.");
             return;
         }
-        navigate(`/result/`);
+        console.log(selectedDog);
+        navigate(`/result/${selectedDog}`);
     }
 
     const videoUpload = e => {

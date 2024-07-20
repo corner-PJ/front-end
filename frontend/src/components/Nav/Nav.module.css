@@ -12,9 +12,9 @@
 }
 
 .navbar .logo {
-    width: 5.8em;
-    height: 1.6em;
-    padding: 0 4em 0 1.5em;
+    width: 150px;
+    height: 45px;
+    padding: 0 3em 0 1.5em;
 }
 
 .navbar .pageLink {
@@ -77,6 +77,7 @@
 .navbar .profileImg {
     margin-left: 15px;
     margin-top: 3px;
-    width: 2em;
-    height: 2em;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
