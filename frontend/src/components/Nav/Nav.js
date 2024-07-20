@@ -2,6 +2,7 @@ import s from'./Nav.module.css'
 import {Link, useNavigate} from "react-router-dom"
 import hadogIog from '../../assets/HADOG.png'
 import defaultImage from '../../assets/defaultImage.png'
+import Choco from "../../assets/Choco.jpg"
 import { useState } from 'react';
 
 function Nav() {
@@ -63,7 +64,7 @@ function Nav() {
                            <h4 onClick={handleLogoutButtonClick}>로그아웃</h4>
                         </div>                
                     </div>
-                    <img className={s.profileImg} alt='profileImg' src={defaultImage}/>
+                    <img className={s.profileImg} alt='profileImg' src={Choco}/>
                     </>
                     
                 ) : (

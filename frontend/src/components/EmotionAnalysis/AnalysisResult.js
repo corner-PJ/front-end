@@ -2,12 +2,24 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import backgroundImg from '../../assets/Emotionbackground.png'
 import Choco from "../../assets/Choco.jpg"
+import Loading from "../Loading/Loading"
+import { useState, useEffect } from 'react';
 
 function AnalysisResult() {
     const navigate = useNavigate();
-    
+    const [isLoading, setIsLoading] = useState(true);
+    const [progress, setProgress] = useState(50); // 로딩바 길이 임의로 지정
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     return(
+        <>{ isLoading? <Loading text="감정분석중 · · ·" progress={progress} /> :
         <AnalysisResultContainer>
             <Header>
                 <Title>뭉치의 감정 해독 결과</Title>
@@ -42,6 +54,8 @@ function AnalysisResult() {
            </ButtonContainer>
             
         </AnalysisResultContainer>
+        }
+        </>
     )
 }
 

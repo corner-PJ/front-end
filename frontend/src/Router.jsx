@@ -51,7 +51,7 @@ function AppNavigation() {
           <Route path="/emotionAnalysis" element={<EmotionAnalysis />} />  
           <Route path="/analysis" element={<SelectDog />} />  
           <Route path="/analysis/:selectedDog" element={<UpLoad />} />
-          <Route path="/result/" element={<AnalysisResult />} />  
+          <Route path="/result/:selectedDog" element={<AnalysisResult />} />  
           <Route path="/review" element={<Review />} />  
           <Route path="/reviewWrite" element={<ReviewWrite />} />  
           <Route path="/reviewDetail/:listId" element={<ReviewDetail />} /> 

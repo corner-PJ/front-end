@@ -115,8 +115,11 @@ function Write() {
                 <Reaction>
                     <ResultTilte>목소리 반응 결과</ResultTilte>
                     <ResultItme>
-                        {voicedata.map((item) => (
-                        <Result>{item.name}</Result>
+                        {voicedata.map((item, index) => (
+                            <ResultRank>
+                            <Result>{item.name}</Result>
+                            <Rank>{index + 1}순위</Rank>
+                        </ResultRank>
                     ))}
                     </ResultItme>              
                 </Reaction>
@@ -124,8 +127,11 @@ function Write() {
                 <Reaction>
                     <ResultTilte>이름 반응 결과</ResultTilte>
                     <ResultItme>
-                        {namedata.map((item) => (
-                        <Result>{item.name}</Result>
+                        {namedata.map((item, index ) => (
+                        <ResultRank>
+                            <Result>{item.name}</Result>
+                            <Rank>{index + 1}순위</Rank>
+                        </ResultRank>
                     ))}
                     </ResultItme>
                     
@@ -192,17 +198,34 @@ const ResultTilte = styled.div`
 const ResultItme = styled.div`
     display: flex;
     flex-wrap: wrap;
-    margin: 50px 0 0 20px;
     gap: 20px;
+    flex-wrap: nowrap;
+    justify-content: center;
+`
+
+const ResultRank = styled.div`
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    margin-top: 30px;
 `
 
 const Result = styled.div`
     display: inline-block;
     font-size: 1.3em;
-    padding: 10px 20px;
+    padding: 10px 15px;
     background: #FFF3C7;
     border: none;
     border-radius: 20px;
+    width: 5.6em;
+    box-shadow: 0 5px 5px 0px rgba(0, 0, 0, 0.3);    
+`
+
+const Rank = styled.div`
+    display: inline-block;
+    font-size: 1.3em;
+    padding: 10px 15px;
+    width: 5.6em;
 `
 
 const ImgContainer = styled.div`

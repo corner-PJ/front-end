@@ -60,7 +60,7 @@ function SelectDog() {
                     </ListItem>
                 ))}
             </ImgOption>
-            <NextButton onClick={() => goToAnalysis()} disabled={!selectedDog}>다음</NextButton>
+            <NextButton onClick={goToAnalysis} disabled={!selectedDog}>다음</NextButton>
         </SelectDogConatiner>
     )
 }
