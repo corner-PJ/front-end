@@ -25,6 +25,7 @@ import AnalysisResult from './pages/AnalysisResult';
 import Review from './pages/Review';
 import ReviewWrite from './pages/ReviewWrite'
 import ReviewDetail from './pages/ReviewDetail';
+import { MypetEditPage } from './components/Mypage/MypetEdit';
 
 function AppNavigation() {
   return (
@@ -43,7 +44,8 @@ function AppNavigation() {
           <Route path="/emotionTestUrl" element={<EmotionTest />} />    
           <Route path="/mypage" element={<Mypages />} />  
           <Route path="/mypage/passwordChange" element={<PasswordChange />} />
-          <Route path="/mypage/petRegister" element={<MypetRegister />} />  
+          <Route path="/mypage/petRegister" element={<MypetRegister />} />
+          <Route path="/mypage/petEdit" element={<MypetEditPage /> }/>
           <Route path="/mypage/emotionHistory" element={<EmotionHistory />} />
           <Route path="/write" element={<Write />} />  
           <Route path="/list" element={<List />} />  
