@@ -21,7 +21,7 @@ export function DiaryListPage() {
     return (
         <WritingWrapper>
             <ListWriting>
-                <ListHeader>{format(selectedDate, "yyyy년 MM월 dd일")}</ListHeader>
+                <ListHeader>{format(new Date(selectedDate), "yyyy년 MM월 dd일")}</ListHeader>
                 <ContentContainer>
                     <ListContentWrapper>
                         <ListImg src={Choco} />
@@ -32,7 +32,7 @@ export function DiaryListPage() {
                                 {content.length > maxLength ? (
                                     <>
                                         {content.substring(0, maxLength)}
-                                        <ReadMoreButton onClick={handleReadMore}>...더보기</ReadMoreButton>
+                                        <ReadMoreButton onClick={() => handleReadMore(selectedDate)}>...더보기</ReadMoreButton>
                                     </>
                                 ) : (
                                     content
