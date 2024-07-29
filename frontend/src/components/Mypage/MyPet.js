@@ -3,7 +3,7 @@ import Choco from "../../assets/Choco.jpg"
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export function MyPet() {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ export function MyPet() {
     };
 
     const moveToEdit = () => {
-        <Link to="/mypage/petEdit/" />
+        navigate('/mypage/petEdit/');
     };
 
     const moveToEmotionHistory = () => {
@@ -59,7 +59,7 @@ export function MyPet() {
                                 <MypetRectangle>
                                     <MypetBoxContainer>
                                         <Mypetname>초코</Mypetname>
-                                        <MypetEditBtn>프로필 수정</MypetEditBtn>
+                                        <MypetEditBtn onClick={moveToEdit}>프로필 수정</MypetEditBtn>
                                     </MypetBoxContainer>
 
                                     <ContentContainer>
@@ -80,7 +80,7 @@ export function MyPet() {
                                 <MypetRectangle>
                                     <MypetBoxContainer>
                                         <Mypetname>초코</Mypetname>
-                                        <MypetEditBtn>프로필 수정</MypetEditBtn>
+                                        <MypetEditBtn onClick={moveToEdit}>프로필 수정</MypetEditBtn>
                                     </MypetBoxContainer>
 
                                     <ContentContainer>
