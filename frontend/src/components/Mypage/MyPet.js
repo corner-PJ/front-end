@@ -3,13 +3,17 @@ import Choco from "../../assets/Choco.jpg"
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export function MyPet() {
     const navigate = useNavigate();
 
     const moveToRegister = () => {
         navigate('/mypage/petRegister/');
+    };
+
+    const moveToEdit = () => {
+        <Link to="/mypage/petEdit/" />
     };
 
     const moveToEmotionHistory = () => {
@@ -34,7 +38,7 @@ export function MyPet() {
                                 <MypetRectangle>
                                     <MypetBoxContainer>
                                         <Mypetname>초코</Mypetname>
-                                        <MypetEdit>프로필 수정</MypetEdit>
+                                        <MypetEditBtn onClick={moveToEdit}>프로필 수정</MypetEditBtn>
                                     </MypetBoxContainer>
 
                                     <ContentContainer>
@@ -55,7 +59,7 @@ export function MyPet() {
                                 <MypetRectangle>
                                     <MypetBoxContainer>
                                         <Mypetname>초코</Mypetname>
-                                        <MypetEdit>프로필 수정</MypetEdit>
+                                        <MypetEditBtn>프로필 수정</MypetEditBtn>
                                     </MypetBoxContainer>
 
                                     <ContentContainer>
@@ -76,7 +80,7 @@ export function MyPet() {
                                 <MypetRectangle>
                                     <MypetBoxContainer>
                                         <Mypetname>초코</Mypetname>
-                                        <MypetEdit>프로필 수정</MypetEdit>
+                                        <MypetEditBtn>프로필 수정</MypetEditBtn>
                                     </MypetBoxContainer>
 
                                     <ContentContainer>
@@ -233,7 +237,7 @@ const Mypetname = styled.span`
 	text-align: left;
 `;
 
-const MypetEdit = styled.button`
+const MypetEditBtn = styled.button`
 	color: rgb(252, 129, 158);
 	font-size: 14px;
 	font-family: Inter, sans-serif;
