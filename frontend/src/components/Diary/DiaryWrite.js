@@ -1,14 +1,27 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from 'styled-components';
 import Choco from "../../assets/Choco.jpg"
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import { WriteModal } from "./Modal/WriteModal";
+import { format } from 'date-fns';
 
 
 export function DiaryWritePage() {
-    // const navigate = useNavigate();
-    const [content, setContent] = useState("");
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { state } = location;
+    const { selectedDate, content: initialContent } = state || {};
+    // const selectedDate = new Date(initialDateStr);
+
+    const [content, setContent] = useState(initialContent || "");
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        // 상태가 변경된 경우, content를 초기화
+        if (initialContent) {
+            setContent(initialContent);
+        }
+    }, [initialContent]);
 
     const openModal = (day) => {
         setIsModalOpen(true);
@@ -18,9 +31,15 @@ export function DiaryWritePage() {
         setIsModalOpen(false);
     };
 
+    // const handleRegister = () => {
+    //     // 백엔드에 데이터 전달 로직 추가
+
+    //     openModal();
+    // };
+
     return (
         <DetailWrapper>
-            <DetailDate>2024년 6월 1일 토요일</DetailDate>
+            <DetailDate>{format(selectedDate, "yyyy년 MM월 dd일 EEEE")}</DetailDate>
             
             <HeaderWrapper>
                 <DetailImg src={Choco} />

@@ -49,7 +49,7 @@ export function DiaryListPage() {
                                 {content.length > maxLength ? (
                                     <>
                                         {content.substring(0, maxLength)}
-                                        <ReadMoreButton onClick={handleReadMore}>...더보기</ReadMoreButton>
+                                        <ReadMoreButton onClick={() => handleReadMore(selectedDate)}>...더보기</ReadMoreButton>
                                     </>
                                 ) : (
                                     content
@@ -155,7 +155,6 @@ const ListDate = styled.span`
 	font-size: 15px;
 	font-family: Inter, sans-serif;
 	font-weight: 500;
-    margin-left: 10px;
 
 `;
 
@@ -165,17 +164,15 @@ const ListContentHeader = styled.span`
 	font-family: Inter, sans-serif;
 	font-weight: 600;
 	text-align: left;
-    margin-left: 10px;
     margin-bottom: 6px;
 `;
 
 const ListContent = styled.span`
 	color: black;
-	font-size: 18px;
+	font-size: 17px;
 	font-family: Inter, sans-serif;
 	font-weight: 500;
 	text-align: left;
-    margin-left: 10px;
 `;
 
 const ReadMoreButton = styled.button`
@@ -183,8 +180,7 @@ const ReadMoreButton = styled.button`
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 18px;
-    margin-left: 5px;
+    font-size: 17px;
 
     &:hover {
         text-decoration: underline;
