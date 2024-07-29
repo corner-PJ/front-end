@@ -10,7 +10,8 @@ export function DiaryDetailPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const selectedDate = queryParams.get('date');
+    const selectedDateStr = queryParams.get('date');
+    const selectedDate = new Date(selectedDateStr);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -28,7 +29,8 @@ export function DiaryDetailPage() {
     };
 
     const handleModify = () => {
-        navigate('/diary/');
+        const content = "장난감을 물고 다닐 때마다 이렇게 놀고 싶어하는지 알아주지 못 한 것 같다.. 산책가고 싶다는 것도 놀고 싶다는 것일까? 산책 가고 싶다는 줄 알았다."; 
+        navigate('/diary/new', { state: { selectedDate, content } });
     };
 
     return (
