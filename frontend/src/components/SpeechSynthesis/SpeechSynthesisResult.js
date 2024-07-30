@@ -5,6 +5,7 @@ import { VoiceChart } from "./VioceChart";
 import styled from "@emotion/styled";
 import { FiDownload } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import html2canvas from "html2canvas";
 
 
 
@@ -15,14 +16,33 @@ export function SpeechSynthesisResultPage() {
         window.scrollTo(0, 0);
     }, []);
 
+	const onClickDownloadButton = () => {
+		const target = document.getElementById("download");
+		if (!target) {
+			return alert("사진 저장에 실패했습니다.");
+		}
+		html2canvas(target, {
+			ignoreElements: (element) => {
+				return element.id === 'button';
+			}
+		}).then((canvas) => {
+			const link = document.createElement("a");
+			document.body.appendChild(link);
+			link.href = canvas.toDataURL("image/png");
+			link.download = "result.png"; // 다운로드 이미지 이름 
+			link.click();
+			document.body.removeChild(link);
+		});
+		};
+
 	
     return (
-        <SpeechSynthesisResultWrapper>
+        <SpeechSynthesisResultWrapper >
             <ResultHeader>결과 확인</ResultHeader>
 			<ContentContainer>
-				<ResultRectangle>
-					<IconWrapper>
-						<FiDownload size={30}/>
+				<ResultRectangle id="download">
+					<IconWrapper id="button">
+						<FiDownload onClick={onClickDownloadButton} size={30}/>
 					</IconWrapper>
 					<VoiceResult>
 						<TextWrapper>

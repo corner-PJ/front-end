@@ -116,12 +116,14 @@ export function SpeechSynthesisPage2() {
 					<ResultWrapper>
 						<ResultText>해당 유기견이 선호하는 이름은 별이입니다.</ResultText>
 						<NameChart />
+
+						<NextBtn onClick={goToResult}>
+							<NextBtnText>결과 전체 보기</NextBtnText>
+						</NextBtn>
 					</ResultWrapper>
 				)}
 				
-				<NextBtn>
-					<NextBtnText onClick={goToResult}>결과 전체 보기</NextBtnText>
-				</NextBtn>
+				
             </ContentContainer>
             
         </SpeechSynthesisWrapper>
@@ -229,29 +231,6 @@ const SpeechBtn = styled.button`
     }
 `;
 
-const ResultBtn = styled.button`
-	display: flex;
-    align-items: center;
-	color: white;
-	font-size: 27px;
-	font-family: Inter, sans-serif;
-	font-weight: 600;
-	text-align: center;
-    border: 2px;
-    border-radius: 25px;
-    background-color: rgb(252, 129, 158);
-	box-shadow: 0px 3px 2px 1px #a9a9a9;
-    padding: 10px 20px;
-	width: 220px;
-
-    &:hover {
-        background-color: white;
-        border: 2px solid rgb(252, 129, 158);
-        color: rgb(252, 129, 158);
-		width: 220px;
-    }
-`;
-
 const SpeechBtnText = styled.span`
     margin-left: 10px;
 `;
@@ -273,6 +252,7 @@ const VideoWrapper = styled.div`
     flex-direction: column;
     gap: 20px;
 	align-items: center;
+	padding: 20px;
 	margin-top: 90px;
 `;
 
@@ -285,7 +265,6 @@ const VideoRectangle = styled.div`
     border-radius: 20px; 
     width: 100%;
 	height: 100%;
-	margin-bottom: 6px;
 `;
 
 const VideoContainer = styled.div`
@@ -324,6 +303,30 @@ const FileText = styled.div`
 	margin-top: 10px;
 `;
 
+const ResultBtn = styled.button`
+	display: flex;
+    align-items: center;
+	color: white;
+	font-size: 27px;
+	font-family: Inter, sans-serif;
+	font-weight: 600;
+	text-align: center;
+    border: 2px;
+    border-radius: 25px;
+    background-color: rgb(252, 129, 158);
+	box-shadow: 0px 3px 2px 1px #a9a9a9;
+    padding: 10px 20px;
+	width: 220px;
+	margin-top: 50px;
+
+    &:hover {
+        background-color: white;
+        border: 2px solid rgb(252, 129, 158);
+        color: rgb(252, 129, 158);
+		width: 220px;
+    }
+`;
+
 const ResultWrapper = styled.div`
     width: 90%;
 	height: 500px;
@@ -331,7 +334,7 @@ const ResultWrapper = styled.div`
     flex-direction: column;
     gap: 20px;
 	align-items: center;
-	margin-top: 150px;
+	margin-top: 200px;
 `;
 
 const ResultText = styled.div`

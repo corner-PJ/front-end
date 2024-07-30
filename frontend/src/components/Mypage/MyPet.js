@@ -12,6 +12,10 @@ export function MyPet() {
         navigate('/mypage/petRegister/');
     };
 
+    const moveToEdit = () => {
+        navigate('/mypage/petEdit/');
+    };
+
     const moveToEmotionHistory = () => {
         navigate('/mypage/emotionHistory/');
     };
@@ -34,7 +38,7 @@ export function MyPet() {
                                 <MypetRectangle>
                                     <MypetBoxContainer>
                                         <Mypetname>초코</Mypetname>
-                                        <MypetEdit>프로필 수정</MypetEdit>
+                                        <MypetEditBtn onClick={moveToEdit}>프로필 수정</MypetEditBtn>
                                     </MypetBoxContainer>
 
                                     <ContentContainer>
@@ -55,7 +59,7 @@ export function MyPet() {
                                 <MypetRectangle>
                                     <MypetBoxContainer>
                                         <Mypetname>초코</Mypetname>
-                                        <MypetEdit>프로필 수정</MypetEdit>
+                                        <MypetEditBtn onClick={moveToEdit}>프로필 수정</MypetEditBtn>
                                     </MypetBoxContainer>
 
                                     <ContentContainer>
@@ -76,7 +80,7 @@ export function MyPet() {
                                 <MypetRectangle>
                                     <MypetBoxContainer>
                                         <Mypetname>초코</Mypetname>
-                                        <MypetEdit>프로필 수정</MypetEdit>
+                                        <MypetEditBtn onClick={moveToEdit}>프로필 수정</MypetEditBtn>
                                     </MypetBoxContainer>
 
                                     <ContentContainer>
@@ -233,7 +237,7 @@ const Mypetname = styled.span`
 	text-align: left;
 `;
 
-const MypetEdit = styled.button`
+const MypetEditBtn = styled.button`
 	color: rgb(252, 129, 158);
 	font-size: 14px;
 	font-family: Inter, sans-serif;
