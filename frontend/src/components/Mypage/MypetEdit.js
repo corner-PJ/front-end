@@ -6,7 +6,7 @@ import { PetRadioGroup } from './petRadioGroup';
 import { PetRadio } from './petRadio';
 
 
-export function MypetRegisterPage() {
+export function MypetEditPage() {
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
     const [breed, setBreed] = useState('');
@@ -35,7 +35,7 @@ export function MypetRegisterPage() {
 
     return (
         <MyPetWrapper>
-                <MypetHeader>반려견 등록하기</MypetHeader>
+                <MypetHeader>반려견 정보 수정하기</MypetHeader>
                 <ContentContainer>
                     <LeftContent>
                         <MypetImg onClick={handleUploadButtonClick}> 
@@ -99,7 +99,7 @@ export function MypetRegisterPage() {
                     </RightContent>
                 </ContentContainer>
                 
-                <MypetRegisterBtn onClick={moveToMypage}>등록하기</MypetRegisterBtn>
+                <MypetEditBtn onClick={moveToMypage}>수정하기</MypetEditBtn>
                 
 
         </MyPetWrapper>
@@ -223,7 +223,7 @@ const ContentInputBox = styled.input`
     }
 `;
 
-const MypetRegisterBtn = styled.button`
+const MypetEditBtn = styled.button`
 	color: white;
 	font-size: 30px;
 	font-family: Inter, sans-serif;
