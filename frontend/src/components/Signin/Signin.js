@@ -281,7 +281,7 @@ export function SigninPage() {
 				<S.SigninButton
 					type="submit"
 					onClick={handleSubmit}
-					disabled={!isButtonActive}
+					$disabled={!isButtonActive}
 				>
 					회원가입
 				</S.SigninButton>
