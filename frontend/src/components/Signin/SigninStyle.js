@@ -158,14 +158,13 @@ export const PasswordConfirmInputBox = styled.input`
 
 export const InfoText = styled.span`
 	color: rgb(252, 129, 158);
-	text-overflow: ellipsis;
 	font-size: 16px;
 	font-family: Inter, sans-serif;
 	font-weight: 400;
 	text-align: left;
-	position: absolute;
-	left: 544px;
-	top: 456px;
+    margin-top: 4px; 
+    display: block; 
+    margin-top: 4px; 
 `;
 
 export const PolicyContent = styled.div`
@@ -283,12 +282,13 @@ export const CheckboxLabel = styled.span`
 
 
 export const SigninButton = styled.button`
+    background-color: ${props => props.disabled ? '#d3d3d3' : 'rgb(252, 129, 158)'};
+    border: 3px solid ${props => props.disabled ? '#d3d3d3' : 'rgb(252, 129, 158)'};
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
     color: white;
     font-weight: bold;
     font-size: 18px;
-    background-color: rgb(252, 129, 158);
     border-radius: 5px;
-    border: 3px solid;
     margin-top: 10px;
 	margin-bottom: 300px;
     width: 100%;
@@ -298,11 +298,10 @@ export const SigninButton = styled.button`
 	justify-content: center;
 	align-items: center;
 
-
     &:hover {
+        background-color: ${props => props.disabled ? '#d3d3d3' : 'white'};
         background-color: white;
-        border: 3px solid rgb(252, 129, 158);
-        color: rgb(252, 129, 158);
+        color: ${props => props.disabled ? '#d3d3d3' : 'rgb(252, 129, 158)'};
         box-shadow: 0px 4px 4px 2px rgba(252, 129, 158, 0.25); 
     }
 `;

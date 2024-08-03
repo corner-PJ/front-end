@@ -1,159 +1,187 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import * as S from './SigninStyle';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 export function SigninPage() {
-	const [name, setName] = useState('');
-	const [id, setId] = useState('');
-	const [email, setEmail] = useState('');
-	const [nickname, setNickname] = useState('');
-	const [password, setPassword] = useState('');
-	const [passwordConfirm, setPasswordConfirm] = useState('');
+	// 로그인 formData 상태변수 
+	const [formData, setFormData] = useState({
+        name: "",
+        id: "",
+        email: "",
+        nickname: "",
+        password: "",
+        passwordConfirm: ""
+    });
 
-	// 유효성 검사
-	const [idError, setIdError] = useState('');
-	const [passwordError, setPasswordError] = useState('');
-	const [confirmError, setConfirmError] = useState('');
+	const navigate = useNavigate();
 
-	// const [isIdCheck, setIsIdCheck] = useState(false); // 중복 검사
-	const [isIdAvailable, setIsIdAvailable] = useState(false); // 아이디 사용 가능한지 아닌지
+	// 유효성 검사 
+	const [idError, setIdError] = useState("");
+    const [nicknameError, setNicknameError] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [confirmError, setConfirmError] = useState("");
 
-	const onChangeIdHandler = (e) => {
-		const idValue = e.target.value;
-		setId(idValue);
-		// idCheckHandler(idValue);
-	}
-
-	const onChangePasswordHandler = (e) => {
-		const { name, value } = e.target;
-		if (name === 'password') {
-			setPassword(value);
-			passwordCheckHandler(value, passwordConfirm);
-		} else {
-			setPasswordConfirm(value);
-			passwordCheckHandler(password, value);
-		}
-	}
-
-	// 아이디 유효성 검사 
-	// const idCheckHandler = async (id) => {
-	// 	const idRegex = /^[a-z\d]{5,10}$/;
-	// 	if (id === '') {
-	// 		setIdError('아이디를 입력해주세요.');
-	// 		setIsIdAvailable(false);
-	// 		return false;
-	// 	} else if (!idRegex.test(id)) {
-	// 		setIdError('아이디는 5~10자의 영소문자, 숫자만 입력 가능합니다.');
-	// 		setIsIdAvailable(false);
-	// 		return false;
-	// 	}
-	// 	try {
-	// 		const responseData = await idDuplicateCheck(id);
-	// 		if (responseData) {
-	// 			setIdError('사용 가능한 아이디입니다.');
-	// 			setIsIdCheck(true);
-	// 			setIsIdAvailable(true);
-	// 			return true;
-	// 		} else {
-	// 			setIdError('이미 사용중인 아이디입니다.');
-	// 			setIsIdAvailable(false);
-	// 			return false;
-	// 		}
-	// 	} catch (error) {
-	// 		alert('서버 오류입니다. 관리자에게 문의하세요.');
-	// 		console.error(error);
-	// 		return false;
-	// 	}
-	// }
-
-	// 비밀번호 유효성 검사
-	const passwordCheckHandler = (password, passwordConfirm) => {
-		const passwordRegex = /^[a-z\d!@*&-_]{8,16}$/;
-		if (password === '') {
-			setPasswordError('비밀번호를 입력해주세요.');
-			return false;
-		} else if (!passwordRegex.test(password)) {
-			setPasswordError('비밀번호는 8~16자의 영소문자, 숫자, !@*&-_만 입력 가능합니다.');
-			return false;
-		} else if (passwordConfirm !== password) {
-			setPasswordError('');
-			setConfirmError('비밀번호가 일치하지 않습니다.');
-			return false;
-		} else {
-			setPasswordError('');
-			setConfirmError('');
-			return true;
-		}
-	}
-
-	// 회원가입 정보 서버에 전달 (추후)
-	// const signupHandler = async (e) => {
-	// 	e.preventDefault();
-		
-	// 	const idCheckresult = await idCheckHandler(id);
-	// 	if (idCheckresult) setIdError('');
-	// 	else return;
-	// 	if (!isIdCheck || !isIdAvailable) {
-	// 		alert('아이디 중복 검사를 해주세요.');
-	// 		return;
-	// 	}
-	
-	// 	const passwordCheckResult = passwordCheckHandler(password, passwordConfirm);
-	// 	if (passwordCheckResult) { setPasswordError(''); setConfirmError(''); }
-	// 	else return;
-	
-	// 	try {
-	// 		const responseData = await signup(id, password, confirm);
-	// 		if (responseData) {
-	// 			localStorage.setItem('loginId', id);
-	// 			setOpenModal(true);
-	// 		} else {
-	// 			alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
-	// 		}
-	// 		} catch (error) {
-	// 			alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
-	// 			console.error(error);
-	// 	}
-	// }
-
-	// 체크박스 상태 관리 
+	// 체크박스 상태 변수
 	const [all, setAll] = useState(false);
 	const [age, setAge] = useState(false);
 	const [service, setService] = useState(false);
 	const [privacy, setPrivacy] = useState(false);
 
-	// 개별 항목 체크 시 전체 동의 체크 여부 판단 및 업데이트
-	useEffect(() => {
-        if (age && service && privacy) {
-            setAll(true);
-        } else {
-            setAll(false);
-        }
-    }, [age, service, privacy]);
-
-	const handleAllChange = (e) => {
-        const isChecked = e.target.checked;
-        setAll(isChecked);
-        setAge(isChecked);
-        setService(isChecked);
-        setPrivacy(isChecked);
+	// 폼에서 변경이벤트 처리
+	const handleChange = (e) => {
+        setFormData({
+			...formData,
+			[e.target.name]: e.target.value,
+		});
     };
 
+	// 중복 확인
+	const checkIdAvailability = async (id) => {
+        try {
+            const response = await axios.get(`/user/id`, { params: { id } });
+            return response.data.data;
+        } catch (error) {
+            console.error("아이디 중복 확인 중 오류 발생:", error);
+        }
+    };
+
+    const checkNicknameAvailability = async (nickname) => {
+        try {
+            const response = await axios.get(`/user/nickName`, { params: { nickName: nickname } });
+            return response.data.data;
+        } catch (error) {
+            console.error("닉네임 중복 확인 중 오류 발생:", error);
+        }
+    };
+
+    const checkEmailAvailability = async (email) => {
+        try {
+            const response = await axios.get(`/user/email`, { params: { email } });
+            return response.data.data;
+        } catch (error) {
+            console.error("이메일 중복 확인 중 오류 발생:", error);
+        }
+    };
+
+	const checkPasswordAvailability = (password) => {
+        const passwordRegex =  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+        if (!passwordRegex.test(password)) {
+            return "비밀번호는 8~16자 이내로 영문 대소문자, 숫자, 특수문자를 포함해야 합니다.";
+        }
+        return "";
+    };
+
+	// 유효성 검사 함수 
+	const validateForm = async () => {
+        let isValid = true;
+
+        // 아이디 중복 검사
+        const isIdAvailable = await checkIdAvailability(formData.id);
+        if (isIdAvailable) {
+            setIdError("이미 사용중인 아이디입니다.");
+            isValid = false;
+        } else {
+            setIdError("");
+        }
+
+        // 닉네임 중복 검사
+        const isNicknameAvailable = await checkNicknameAvailability(formData.nickname);
+        if (isNicknameAvailable) {
+            setNicknameError("이미 사용중인 닉네임입니다.");
+            isValid = false;
+        } else {
+            setNicknameError("");
+        }
+
+        // 이메일 중복 검사
+        const isEmailAvailable = await checkEmailAvailability(formData.email);
+        if (isEmailAvailable) {
+            setEmailError("이미 사용중인 이메일입니다.");
+            isValid = false;
+        } else {
+            setEmailError("");
+        }
+
+		// 비밀번호 유효성 검사
+        const ispasswordError = checkPasswordAvailability(formData.password);
+        if (ispasswordError) {
+            setPasswordError(ispasswordError);
+            isValid = false;
+        } else {
+            setPasswordError("");
+        }
+
+        // 비밀번호 확인
+        if (formData.password !== formData.passwordConfirm) {
+            setConfirmError("비밀번호가 일치하지 않습니다.");
+            isValid = false;
+        } else {
+            setConfirmError("");
+        }
+
+        return isValid;
+    };
+
+	// 전송 버튼 클릭 시 회원가입 진행
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		// 유효성 검사
+        const isValid = await validateForm();
+        if (!isValid) return;
+	
+		try {
+			const response = await axios.post(
+				"/user",
+				formData
+			);
+			// 페이지 이동 
+			navigate("/login");
+			console.log(response.data); 
+
+		} catch (error) {
+			console.error("데이터 전송 중 오류 발생:", error);
+		}
+	};
+
+	// 체크박스 상태 동기화 (개별 체크 - 전체 체크)
+	useEffect(() => {
+		if (age && service && privacy) {
+			setAll(true);
+		} else {
+			setAll(false);
+		}
+	}, [age, service, privacy]);
+	
+	// 전체 동의 체크박스 변경 핸들러 
+	const handleAllChange = (e) => {
+		const isChecked = e.target.checked;
+		setAll(isChecked);
+		setAge(isChecked);
+		setService(isChecked);
+		setPrivacy(isChecked);
+	};
+	
+	// 개별 체크박스 변경 핸들러
 	const handleCheckboxChange = (setState) => (e) => {
-        setState(e.target.checked);
+		setState(e.target.checked);
 	}
 
-	const isFormFilled = () => {
-        return !!name && !!id && !!email && !!nickname && !!password && !!passwordConfirm && age && service && privacy;
-    };
+	// 회원가입 버튼 활성화
+	const isFormFilled =  useCallback(() => {
+		return !!formData.name && !!formData.id && !!formData.email && !!formData.nickname &&
+			!!formData.password && !!formData.passwordConfirm && age && service && privacy;
+	}, [formData, age, service, privacy]);
 
-    const [isButtonActive, setIsButtonActive] = useState(false);
+	const [isButtonActive, setIsButtonActive] = useState(false);
 
-    useEffect(() => {
-        setIsButtonActive(isFormFilled());
-    }, [name, id, email, nickname, password, passwordConfirm, age, service, privacy]);
+	useEffect(() => {
+		setIsButtonActive(isFormFilled());
+	}, [formData, age, service, privacy, isFormFilled]);
 
-	
+
     return (
         <S.SigninRootWrapper>
 			<S.HeaderText> 회원가입 </S.HeaderText>
@@ -162,58 +190,66 @@ export function SigninPage() {
 				<S.BoxContainer>
 					<S.Text> 이름 </S.Text>
 					<S.NameInputBox
-						type="name"
-						value={name}
-						onChange={(e) => setName(e.target.value)}
+						type="text"
+						name="name"
+						value={formData.name}
+						onChange={handleChange}
 					/>
 				</S.BoxContainer>
 				
 				<S.BoxContainer>
 					<S.Text> 아이디 </S.Text>
 					<S.IdInputBox
-						type="id"
-						value={id}
-						onChange={onChangeIdHandler}
+						type="text"
+						name="id"
+						value={formData.id}
+						onChange={handleChange}
 					/>
-					{idError && <small className={isIdAvailable ? 'idAvailable' : ''}>{idError}</small>}
+					{idError && <S.InfoText>{idError}</S.InfoText>}
 				</S.BoxContainer>
 				
 				<S.BoxContainer>
 					<S.Text> 닉네임 </S.Text>
 					<S.NicknameInputBox
-						type="nickname"
-						value={nickname}
-						onChange={(e) => setNickname(e.target.value)}
+						type="text"
+						name="nickname"
+						value={formData.nickname}
+						onChange={handleChange}
 					/>
+					{nicknameError && <S.InfoText>{nicknameError}</S.InfoText>}
 				</S.BoxContainer>
 				
 				<S.BoxContainer>
 					<S.Text> 이메일 </S.Text>
 					<S.EmailInputBox
 						type="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
+						name="email"
+						value={formData.email}
+						onChange={handleChange}
 					/>
+					{emailError && <S.InfoText>{emailError}</S.InfoText>}
 				</S.BoxContainer>
 				
 				<S.BoxContainer>
 					<S.Text> 비밀번호 </S.Text>
 					<S.PasswordInputBox
 						type="password"
-						value={password}
-						onChange={onChangePasswordHandler}
+						name="password"
+						value={formData.password}
+						onChange={handleChange}
 					/>
-					{passwordError && <small>{passwordError}</small>}
+					{passwordError && <S.InfoText>{passwordError}</S.InfoText>}
 				</S.BoxContainer>		
 
 				<S.BoxContainer>
 					<S.Text> 비밀번호 확인 </S.Text>
 					<S.PasswordConfirmInputBox
-						type="passwordConfirm"
-						value={passwordConfirm}
-						onChange={onChangePasswordHandler}
+						type="password"
+						name="passwordConfirm"
+						value={formData.passwordConfirm}
+						onChange={handleChange}
 					/>
-					{confirmError && <small>{confirmError}</small>}
+					{confirmError && <S.InfoText>{confirmError}</S.InfoText>}
 				</S.BoxContainer>
 
 				<S.PolicyContent>
@@ -243,16 +279,13 @@ export function SigninPage() {
 				</S.PolicyContent>
 
 				<S.SigninButton
-					//onClick={handleLogin}
-					// disabled={!id || !password || password !== passwordConfirm}
-					as={Link} to="/login"
+					type="submit"
+					onClick={handleSubmit}
 					disabled={!isButtonActive}
 				>
 					회원가입
 				</S.SigninButton>
-
 			</S.ContentContainer>
-			{/*<InfoText> 이미 사용중인 아이디입니다.</InfoText>*/}
         </S.SigninRootWrapper>
     )
 }
