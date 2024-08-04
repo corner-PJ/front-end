@@ -18,10 +18,18 @@ export function MyInfo() {
     useEffect(() => {
         const fetchUserInfo = async () => {
         try {
-            const response = await axios.get(
-            "/mypage/userinfo",
-            );
-            setUserInfo(response.data.user);
+            const token = localStorage.getItem("authToken");
+            console.log("토큰:", token);
+
+            const response = await axios.get("/mypage/userinfo", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            console.log("서버 응답 데이터:", response.data);
+
+            setUserInfo(response.data.data);
         } catch (error) {
             console.error("사용자 정보를 불러오는 중 오류 발생:", error);
         }
