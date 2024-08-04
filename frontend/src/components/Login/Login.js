@@ -37,6 +37,11 @@ export function LoginPage() {
 
       if (response.data.success) {
         console.log("로그인 성공");
+
+        // 토큰 저장 
+        localStorage.setItem("authToken", response.data.data);
+        console.log("Your token", response.data.data);
+
         // 로그인 성공 시 메인페이지로 이동
         navigate("/");
 
