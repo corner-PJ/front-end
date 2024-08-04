@@ -64,7 +64,6 @@ export const modifyBtn = styled.button`
     color: black; 
     background: none;
     border: none;
-
     svg {
         font-size: 14px; 
     }
@@ -77,7 +76,6 @@ export const PasswordChangeButton = styled.button`
 	font-weight: bold;
     margin-left: 30px;
     border: none;
-
     &:hover {
         text-decoration: underline;
     }
@@ -91,8 +89,8 @@ export const WithdrawButton = styled.span`
     margin-left: 30px;
     margin-top: -8px;
     border: none;
-
     &:hover {
         text-decoration: underline;
     }
 `;
+
