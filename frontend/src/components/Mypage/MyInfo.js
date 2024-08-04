@@ -2,8 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import * as M from "./MypageStyle";
+import { FaPen } from "react-icons/fa";
+import { NicknameChangeModal } from './NicknameChangeModal';
 
 export function MyInfo() {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // 닉네임 변경 모달
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
 
     // 유저 정보 저장
     const [userInfo, setUserInfo] = useState({
@@ -38,7 +52,6 @@ export function MyInfo() {
         fetchUserInfo();
     }, []);
 
-
     return (
             <M.MyInfoWrapper>
                 <M.MyInfoHeader>내 정보</M.MyInfoHeader>
@@ -48,7 +61,12 @@ export function MyInfo() {
                         <M.InfoSpan data-info="name">{userInfo.name}</M.InfoSpan>
                     </M.BoxContainer>
                     <M.BoxContainer>
-                        <M.Text>닉네임</M.Text>
+                        <M.Text>
+                            닉네임
+                            <M.modifyBtn onClick={openModal}>
+                                <FaPen />
+                            </M.modifyBtn>
+                        </M.Text>
                         <M.InfoSpan data-info="nickname">{userInfo.nickname}</M.InfoSpan>
                     </M.BoxContainer>
                     <M.BoxContainer>
@@ -66,6 +84,14 @@ export function MyInfo() {
                         <M.WithdrawButton>탈퇴하기</M.WithdrawButton>
                     </M.BoxContainer>
                 </M.MyInfoRectangle>
+
+                {isModalOpen && (
+                    <NicknameChangeModal
+                        isModalOpen={isModalOpen}
+                        closeModal={closeModal}
+                        setUserInfo={setUserInfo}
+                    />
+                )}
             </M.MyInfoWrapper>
     );
 }

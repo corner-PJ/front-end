@@ -4,7 +4,7 @@ import GoogleLogo from "../../assets/GoogleLogo.png"
 import NaverLogo from "../../assets/NaverLogo.png"
 import KakaoLogo from "../../assets/KakaoLogo.png"
 import * as L from "./LoginStyle";
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
@@ -29,6 +29,7 @@ export function LoginPage() {
   // 서버로 사용자가 입력한 정보 전달
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axios.post(
 				"/user/login",
@@ -48,7 +49,7 @@ export function LoginPage() {
       } else {
         console.log("로그인 실패");
         // 실패 시에 알림 창 띄움
-        alert("로그인에 실패했습니다. 다시 시도하세요.");
+        alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인하세요.");
       }
 
     } catch (error) {
@@ -59,15 +60,7 @@ export function LoginPage() {
   };
 
   // 로그인 버튼 활성화
-	const isFormFilled =  useCallback(() => {
-		return !!formData.id && !!formData.password;
-	}, [formData]);
-
-	const [isButtonActive, setIsButtonActive] = useState(false);
-
-	useEffect(() => {
-		setIsButtonActive(isFormFilled());
-	}, [formData, isFormFilled]);
+	const isButtonActive = formData.id && formData.password;
 
 
   return (

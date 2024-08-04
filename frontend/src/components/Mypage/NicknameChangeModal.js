@@ -1,16 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import axios from "axios";
 
-export function WriteModal({ isModalOpen, closeModal}) {
+export function NicknameChangeModal({ isModalOpen, closeModal, setUserInfo}) {
+    const [newNickname, setNewNickname] = useState("");
     const navigate = useNavigate();
+    
+    const handleNicknameChange = (e) => {
+        setNewNickname(e.target.value);
+    };
+    
+    const handleNicknameSubmit = async () => {
+        try {
+            const token = localStorage.getItem("authToken");
+            console.log("토큰:", token);
 
-    const MoveToDiaryMain = async() => {
-        closeModal();
-        
-        navigate(`/diary`);
-    }
+            // URLSearchParams 객체 생성
+            const formData = new URLSearchParams();
+            formData.append("nickname", newNickname);
+
+            const response = await axios.put(
+                "/mypage/nickname",
+                null, 
+                {
+                    params: {
+                        newNickname: newNickname // 쿼리 파라미터로 닉네임 전달
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                }
+            );
+            
+            // 닉네임 변경 성공
+            if (response.data.success) { 
+                console.log("닉네임 변경 성공");
+
+                setUserInfo(prevInfo => ({
+                    ...prevInfo,
+                    nickname: newNickname,
+                }));
+                
+                alert(response.data.message);
+                closeModal();
+                navigate(`/mypage`);
+
+            } else {
+                alert("닉네임 변경에 실패했습니다.");
+            }
+
+        } catch (error) {
+            console.error("닉네임 변경 중 오류 발생:", error);
+        }
+    };
     
     return (
         <>
@@ -19,11 +64,18 @@ export function WriteModal({ isModalOpen, closeModal}) {
                     <RootWrapper>
                         <ContentRectangle>
                             <ContentText>
-                                내용을 등록하시겠습니까?
+                                수정할 닉네임을 입력하세요.
                             </ContentText>
-                
+
+                            <NicknameInputBox
+                                type="text"
+                                name="nickname"
+                                value={newNickname}
+                                onChange={handleNicknameChange}
+                            />
+                            
                             <ButtonWrapper>
-                                <OkBtn onClick={MoveToDiaryMain}>확인</OkBtn>
+                                <OkBtn onClick={handleNicknameSubmit}>확인</OkBtn>
                                 <CancleBtn onClick={closeModal}>취소</CancleBtn>
                             </ButtonWrapper>
                         </ContentRectangle>
@@ -35,9 +87,10 @@ export function WriteModal({ isModalOpen, closeModal}) {
 }
 
 // PropTypes 추가
-WriteModal.propTypes = {
+NicknameChangeModal.propTypes = {
     isModalOpen: PropTypes.bool.isRequired,
     closeModal: PropTypes.func.isRequired,
+    setUserInfo: PropTypes.func.isRequired,
 };
 
 const ModalOverlay = styled.div`
@@ -81,13 +134,30 @@ const ContentRectangle = styled.div`
 
 const ContentText = styled.span`
 	color: black;
-	font-size: 23px;
+	font-size: 21px;
 	font-family: Inter, sans-serif;
 	font-weight: 700;
 	text-align: center;
 	width: 537px;
 	min-height: 51px;
-    margin-top: 20px;
+    margin-top: 15px;
+`;
+
+export const NicknameInputBox = styled.input`
+	font-size: 17px;
+	border: solid 2px rgb(252, 129, 158);
+    background-color: #FFE6E6;
+	border-radius: 5px;
+	padding-left: 20px;
+	width: 80%; 
+	height: 50px;
+	max-width: 100%; 
+	box-sizing: border-box; 
+
+	&:focus {
+		border: 2px solid rgb(252, 129, 158);
+		outline: none; 
+	}
 `;
 
 const ButtonWrapper = styled.div`
@@ -129,6 +199,7 @@ const CancleBtn = styled.button`
     border-radius: 16px;
     background-color: #E1AFD1;
     padding: 15px 25px;
+    margin-left: 20px;
 
     &:hover {
         background-color: white;
