@@ -79,23 +79,25 @@ export function SpeechSynthesisPage1() {
 							/>
 						</VideoContainer>
 					</VideoRectangle>
-					<SpeechBtn>
+
+					<ResultBtn onClick={handleShowResult}>
 						<LuClipboardList size={40} />
-						<SpeechBtnText onClick={handleShowResult}>결과 보기</SpeechBtnText>
-					</SpeechBtn>
+						<SpeechBtnText>결과 보기</SpeechBtnText>
+					</ResultBtn>
 				</VideoWrapper>
 
 				{showResult && (
 					<ResultWrapper>
 						<ResultText>해당 유기견이 선호하는 목소리는 청년 여성입니다.</ResultText>
 						<VoiceChart />
+
+						<NextBtn onClick={goToNext}>
+							<NextBtnText>다음으로</NextBtnText>
+							<GrLinkNext size={35} />
+						</NextBtn>
 					</ResultWrapper>
 				)}
 				
-				<NextBtn>
-					<NextBtnText onClick={goToNext}>다음으로</NextBtnText>
-					<GrLinkNext size={35} />
-				</NextBtn>
             </ContentContainer>
             
         </SpeechSynthesisWrapper>
@@ -110,6 +112,7 @@ const SpeechSynthesisWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+	padding-bottom: 50px;
 `;
 
 const SpeechHeader = styled.span`
@@ -183,15 +186,15 @@ const ExplanationText = styled.span`
 	margin-top: 100px;
 `;
 
-
 const VideoWrapper = styled.div`
-    width: 40%;
+    width: 50%;
 	height: 330px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 	align-items: center;
-	margin-top: 90px;
+	padding: 20px;
+	margin-top: 50px;
 `;
 
 const VideoRectangle = styled.div`
@@ -203,7 +206,6 @@ const VideoRectangle = styled.div`
     border-radius: 20px; 
     width: 100%;
 	height: 100%;
-	margin-bottom: 6px;
 `;
 
 const VideoContainer = styled.div`
@@ -242,6 +244,30 @@ const FileText = styled.div`
 	margin-top: 10px;
 `;
 
+const ResultBtn = styled.button`
+	display: flex;
+    align-items: center;
+	color: white;
+	font-size: 27px;
+	font-family: Inter, sans-serif;
+	font-weight: 600;
+	text-align: center;
+    border: 2px;
+    border-radius: 25px;
+    background-color: rgb(252, 129, 158);
+	box-shadow: 0px 3px 2px 1px #a9a9a9;
+    padding: 10px 20px;
+	width: 210px;
+	margin-top: 50px;
+
+    &:hover {
+        background-color: white;
+        border: 2px solid rgb(252, 129, 158);
+        color: rgb(252, 129, 158);
+		width: 220px;
+    }
+`;
+
 const ResultWrapper = styled.div`
     width: 90%;
 	height: 500px;
@@ -249,7 +275,7 @@ const ResultWrapper = styled.div`
     flex-direction: column;
     gap: 20px;
 	align-items: center;
-	margin-top: 150px;
+	margin-top: 200px;
 `;
 
 const ResultText = styled.div`
