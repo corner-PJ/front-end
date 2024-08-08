@@ -40,6 +40,7 @@ const ResultSection = styled.div`
 const SectionTitle = styled.div`
   font-size: 18px;
   margin-bottom: 40px;
+  text-align: left;
 `;
 
 export default AIResult;
