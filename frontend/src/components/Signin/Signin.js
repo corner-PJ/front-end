@@ -15,7 +15,7 @@ export function SigninPage() {
 	const [passwordError, setPasswordError] = useState('');
 	const [confirmError, setConfirmError] = useState('');
 
-	const [isIdCheck, setIsIdCheck] = useState(false); // 중복 검사
+	// const [isIdCheck, setIsIdCheck] = useState(false); // 중복 검사
 	const [isIdAvailable, setIsIdAvailable] = useState(false); // 아이디 사용 가능한지 아닌지
 
 	const onChangeIdHandler = (e) => {
