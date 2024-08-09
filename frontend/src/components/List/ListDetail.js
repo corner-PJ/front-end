@@ -39,10 +39,13 @@ function ListDetail() {
         const DetailData = async () => {
             try {
                 const url = type === 'shelter'
-                    ? `/shelterPost?postId=${postId}`
-                    : `/adoptPost/post?postId=${postId}`;
+                    ? `/shelterPost`
+                    : `/adoptPost/post`;
                 
                 const response = await axios.get(url, {
+                    params: {
+                        postId: postId
+                    },
                     headers: {
                         'Authorization': `Bearer ${ACCESS_TOKEN}`,
                     }
@@ -66,7 +69,7 @@ function ListDetail() {
     return (
         <ListDetailContainer>
             <ListDetailContent data={data} postId={postId} />
-            {type == 'adopt' && <ListComment postId={postId} type={type} />}
+            {type === 'adopt' && <ListComment postId={postId} type={type} />}
         </ListDetailContainer>
     );
 }
