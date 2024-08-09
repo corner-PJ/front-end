@@ -13,9 +13,8 @@ const ReviewContent = ({reviews}) => {
             {reviews.map((item) => (
                 <ReviewItem key={item.reviewId} onClick={() => goToDetail(item.reviewId)}>
                     <ReviewImg  src={item.images[0].fileName} />
-                    {/* 백엔드에 유저 닉네임이 없어서 일단 id로 리뷰 이름 작성함  */}
                     <ReviewName>
-                        {item.reviewId} 님의 후기
+                        {item.authorName}님의 후기
                     </ReviewName> 
                 </ReviewItem>
             ))}

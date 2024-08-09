@@ -74,7 +74,7 @@ const ReviewDetail = () => {
     return (
         <ReviewDetailContainer>
             <ReviewHeader>
-                <ReviewTitle>{data.reviewId} 님의 후기</ReviewTitle>
+                <ReviewTitle>{data.authorName}님의 후기</ReviewTitle>
                 <ReviewUpdate>{formatDate(data.reviewDate)}</ReviewUpdate>
             </ReviewHeader>
             <ReviewMain>
