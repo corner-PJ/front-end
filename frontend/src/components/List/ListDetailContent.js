@@ -1,39 +1,74 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { useListContext } from '../ListContext';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AIResult from './AIResult';
-function ListDetailContent() {  
+import axios from 'axios';
+
+import { useTokenContext } from '../TokenContext';
+
+function ListDetailContent({ data, postId }) {
+    const navigate = useNavigate();
     const [slideIndex, setSlideIndex] = useState(0);
-    const location = useLocation();
-    const { data } = location.state || {}; 
-    const { updateAdoptionStatus } = useListContext();
+    const [adoptStatus, setAdoptStatus] = useState(data.adoptStatus)
+
+    // // localStorage에서 토큰 가져오기
+    // const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
+
+    // 임시로 context를 활용해 토큰 가져옴
+    const { ACCESS_TOKEN } = useTokenContext();
 
     if (!data) {
-      return <div>데이터가 없습니다.</div>;
-    }   
+        return <div>데이터가 없습니다.</div>;
+    }
+    // console.log("데이터확인",data);
 
     const moveToPrevSlide = () => {
-      setSlideIndex((prev) => (prev === 0 ? data.img.length - 1 : prev - 1));
+        setSlideIndex((prev) => (prev === 0 ? data.imageUrls.length - 1 : prev - 1));
     };
-    
+
     const moveToNextSlide = () => {
-        setSlideIndex((prev) => (prev === data.img.length - 1 ? 0 : prev + 1));
+        setSlideIndex((prev) => (prev === data.imageUrls.length - 1 ? 0 : prev + 1));
     };
-    
+
     const moveDot = (index) => {
         setSlideIndex(index);
     };
-    
-    const handleCheckboxChange = () => {
-      updateAdoptionStatus(data.id, !data.isAdopted);
-    };
-console.log(data)
-    return(
+
+    const handleCheckboxChange = async () => {
+      try {
+          const response = await axios.patch(`/adoptPost`, null,{ 
+            params: {
+              adoptPostId: postId,
+              isAdopt: !adoptStatus
+            }, 
+            headers: {
+              'Authorization': `Bearer ${ACCESS_TOKEN}`,
+            },
+          });
+          // console.log("값 확인", response);
+          if (response.status === 200) {
+            alert('입양 상태가 변경되었습니다.');
+            setAdoptStatus(!adoptStatus);
+          } else {
+            alert("데이터를 불러오는데 실패했습니다.");
+          }
+      } catch (error) {
+          console.error('입양 상태 변화 실패:', error);            
+          
+          // 토큰이 만료되었거나 유효하지 않을 때
+          if (error.response && error.response.status === 401) {
+              localStorage.removeItem('ACCESS_TOKEN');
+              alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+              navigate('/login');
+          }    
+      }
+  };
+
+  return (
         <ListDetailContainer>
             <ListUser>
-              {data.type === "Adopt"? <ListId>ID. {data.nickName}</ListId> : null }
-                <ListTime>{data.update}</ListTime>
+              {data.user && data.user.name ? <ListId>ID. {data.user.name}</ListId> : <ListId>ID. {data.center}</ListId> }
+              <ListTime>{data.update}</ListTime>
             </ListUser>
             <ListData>
                 {/* 이미지와 입양 체크박스 */}
@@ -42,9 +77,9 @@ console.log(data)
                         ‹
                     </Arrow>
                     <Wrapper slideIndex={slideIndex}>
-                        {data.img.map((item, index) => (
+                        {data.imageUrls && data.imageUrls.map((url, index) => (
                             <ImgSlide key={index}>
-                                <Img src={item} />
+                                <Img src={url} />
                             </ImgSlide>
                         ))}
                     </Wrapper>
@@ -52,7 +87,7 @@ console.log(data)
                         ›
                     </Arrow>
                     <DotContainer>
-                        {data.img.map((item, index) => (
+                        {data.imageUrls && data.imageUrls.map((_, index) => (
                             <Dot
                                 key={index}
                                 className={index === slideIndex ? "active" : null}
@@ -62,32 +97,32 @@ console.log(data)
                     </DotContainer>
                 </ImgContainer>
                 <AdoptionStatus onClick={handleCheckboxChange}>
-                        <AdoptionCheckbox
-                            type="checkbox"
-                            checked={data.isAdopted}
-                            onChange={handleCheckboxChange} 
-                        />
-                        <AdoptionLabel>입양 완료</AdoptionLabel>
+                    <AdoptionCheckbox
+                        type="checkbox"
+                        checked={adoptStatus}
+                        onChange={handleCheckboxChange}
+                    />
+                    <AdoptionLabel>입양 완료</AdoptionLabel>
                 </AdoptionStatus>
-              </ListData>
-                {/* 기본사항, 작성한 글 내용 */}
-              <ListDetail>
-                  <ListInfo>
+            </ListData>
+            {/* 기본사항, 작성한 글 내용 */}
+            <ListDetail>
+                <ListInfo>
                     <InfoTitle>기본사항</InfoTitle>
                     <InfoTextContainer>
-                      <InfoText>이름: {data.dogName}</InfoText>
-                      <InfoText>품종: {data.species}</InfoText>
-                      {data.type === "Adopt" ? <InfoText>임시 보호 기간: {data.period}개월</InfoText> : <InfoText>보호소명: {data.shelterName}</InfoText> }                      
-                      <InfoText>중성화 여부: {data.tnr? "O" : "X"}</InfoText>
-                      <InfoText>{data.type === "Adopt" ? '임시 보호자' : '보호소' } 연락처: {data.phone}</InfoText>
-                      <InfoText>추정나이: {data.age}살</InfoText>
+                        <InfoText>이름: {data.name ? data.name : data.title}</InfoText>
+                        {data.duration ? <InfoText>품종: {data.breed}</InfoText> : <InfoText>성별: {data.sex}</InfoText> }
+                        {data.duration ? <InfoText>임시 보호 기간: {data.duration}</InfoText> : <InfoText>보호소명: {data.department}</InfoText>}
+                        <InfoText>중성화 여부: {data.neutering ? "O" : "X"}</InfoText>
+                        {data.phone ? <InfoText>연락처: {data.phone}</InfoText> :  <InfoText>보호소 연락처: {data.centerPhone}</InfoText> }
+                        <InfoText>추정나이: {data.age}</InfoText>
                     </InfoTextContainer>
-                  </ListInfo>
-                  <ListText>{data.text}</ListText>
-                  {data.type === "Adopt"? <AIResult /> : null }
-              </ListDetail>
+                </ListInfo>
+                <ListText>{data.content}</ListText>
+                {data.name ? <AIResult /> : null}
+            </ListDetail>
         </ListDetailContainer>
-    )
+    );
 }
 
 const ListDetailContainer = styled.div`
@@ -99,10 +134,10 @@ const ListDetailContainer = styled.div`
 
 const ListUser = styled.div`
   display: flex;
-  flex-weap = weap;
+  flex-wrap: wrap;
   justify-content: space-between;
   font-size: 15px;
-  font-weight: blod;
+  font-weight: bold;
 `;
 
 const ListId = styled.div`
@@ -111,7 +146,7 @@ const ListId = styled.div`
   padding: 15px 35px;
 `;
 
-const ListTime =styled.div`
+const ListTime = styled.div`
   margin: 5px 15px 5px;
 `;
 
@@ -131,7 +166,7 @@ const ImgContainer = styled.div`
 const Wrapper = styled.div`
   height: 100%;
   display: flex;
-  transform: translateX(${({ slideIndex }) => slideIndex * -100 + "%"});
+  transform: translateX(${({ slideIndex }) => slideIndex * -100}%);
 `;
 
 const ImgSlide = styled.div`
@@ -218,14 +253,14 @@ const ListInfo = styled.div`
   padding: 30px  40px;
   border-radius: 10px;
   margin-bottom: 20px;
-  text-argin: center;
+  text-align: center;
 `;
 
 const InfoTitle = styled.div`
   font-weight: bold;
   font-size: 20px;
   margin-bottom: 20px;
-  text-align: center
+  text-align: center;
 `;
 
 const InfoTextContainer = styled.div`
@@ -233,7 +268,8 @@ const InfoTextContainer = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 10px 100px;
   margin-bottom: 20px;
-`;  
+  text-align: left;
+`;
 
 const InfoText = styled.div`
   margin: 5px 100px;
