@@ -4,7 +4,6 @@ import ListComment from './ListComment';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useTokenContext } from '../TokenContext';
 
 function ListDetail() {
     const { postId, type } = useParams();
@@ -30,10 +29,7 @@ function ListDetail() {
     });
 
     // // localStorage에서 토큰 가져오기
-    // const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
-    // 임시로 context를 활용해 토큰 가져옴
-    const { ACCESS_TOKEN } = useTokenContext();
+    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
 
     useEffect(() => {
         const DetailData = async () => {
@@ -65,7 +61,10 @@ function ListDetail() {
         DetailData();
     }, [postId, type, ACCESS_TOKEN]);
 
-
+	useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+    
     return (
         <ListDetailContainer>
             <ListDetailContent data={data} postId={postId} />

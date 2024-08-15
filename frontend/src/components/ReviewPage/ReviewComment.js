@@ -11,14 +11,11 @@ function ReviewComment({ reviewId }) {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
     const [replyText, setReplyText] = useState('');
-    // const [isSecret, setIsSecret] = useState(false); // 비밀댓글관련 부분이 백엔드에 없어서 적용되지 않음
+    // const [isSecret, setIsSecret] = useState(false); // 비밀댓글관련 부분이 없어서 적용되지 않음
     const [replyIndex, setReplyIndex] = useState(null);
 
     // // localStorage에서 토큰 가져오기
-    // const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
-    // 임시로 context를 활용해 토큰 가져옴
-    const { ACCESS_TOKEN } = useTokenContext();
+    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
 
     useEffect(() => {
         ReviewCommentsData();

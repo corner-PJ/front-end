@@ -5,8 +5,6 @@ import ImgIcon from '../../assets/InputImg.png';
 import WriteText from './WriteText';
 import axios from 'axios';
 
-import { useTokenContext } from '../TokenContext';
-
 function ReviewWrite() {
     const [content, setContent] = useState("");
     const [dogImg, setDogImg] = useState([]);
@@ -15,10 +13,7 @@ function ReviewWrite() {
     const navigate = useNavigate();
 
     // // localStorage에서 토큰 가져오기
-    // const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
-    // 임시로 context를 활용해 토큰 가져옴
-    const { ACCESS_TOKEN } = useTokenContext();
+    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
 
     const ImgUpload = e => {
         const selectedFiles = e.target.files;

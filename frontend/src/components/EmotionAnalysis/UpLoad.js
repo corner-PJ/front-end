@@ -15,7 +15,10 @@ function UpLoad() {
             return;
         }
         console.log(selectedDog);
-        navigate(`/result/${selectedDog}`);
+
+        // 결과 확인 시간 전달
+        const currentTime = new Date().toLocaleString(); 
+        navigate(`/result/${selectedDog}`, { state: { currentTime } }); 
     }
 
     const videoUpload = e => {

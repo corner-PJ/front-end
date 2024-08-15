@@ -4,8 +4,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReviewComment from './ReviewComment';
 import axios from 'axios';
 
-import { useTokenContext } from '../TokenContext';
-
 const ReviewDetail = () => {
     const navigate = useNavigate(); 
     const [slideIndex, setSlideIndex] = useState(0);
@@ -13,11 +11,12 @@ const ReviewDetail = () => {
     const { reviewId } = useParams();
 
     // // localStorage에서 토큰 가져오기
-    // const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
+    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
 
-    // 임시로 context를 활용해 토큰 가져옴
-    const { ACCESS_TOKEN } = useTokenContext();
-
+	useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+    
     useEffect(() => {
         // 리뷰 상세 조회
         const ReviewDetailData = async () => {

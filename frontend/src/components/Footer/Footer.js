@@ -14,7 +14,7 @@ function Footer() {
                     </Link>
                 </div>
                 <div>
-                    <Link to={"./list"}>
+                    <Link to={"./list?type=adopt"}>
                         <h5>입양공고</h5>
                     </Link>
                 </div>
@@ -30,7 +30,7 @@ function Footer() {
                 </div>
             </div>
             <div className={s.copyright}>
-                <h6>Copyright © HADOG</h6>
+                <h6>Copyright © Aeon</h6>
             </div>
         </div>
     );

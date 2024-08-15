@@ -15,7 +15,7 @@ import Mypages from './pages/Mypage';
 import { PasswordChange } from './components/Mypage/PasswordChange';
 import MypetRegister from './pages/MypageRegister';
 import EmotionHistory from './pages/EmotionHistory';
-import Write from './pages/Write';
+import ListWrite from './pages/ListWrite';
 import List from './pages/List';
 import ListDetail from './pages/ListDetail';
 import EmotionAnalysis from './pages/EmotionAnalysis';
@@ -53,8 +53,8 @@ function AppNavigation() {
           <Route path="/mypage/emotionHistory" element={<EmotionHistory />} />
           
           <Route path="/list" element={<List />} />  
-          <Route path="/list/write" element={<Write />} />  
-          <Route path="/list/:postId" element={<ListDetail />} />     
+          <Route path="/list/write" element={<ListWrite />} />  
+          <Route path="/list/:type/:postId" element={<ListDetail />} />      
           
           <Route path="/emotionAnalysis" element={<EmotionAnalysis />} />  
           <Route path="/analysis" element={<SelectDog />} />  
