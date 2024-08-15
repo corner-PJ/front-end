@@ -5,26 +5,26 @@ const ListContent = ({ data }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const goToDetail = (postId) => {
-    console.log(postId);
+  const goToDetail = (index) => {
+    console.log(index);
+    const postId = data.length - index;
     const searchParams = new URLSearchParams(location.search);
     const queryType = searchParams.get('type') || 'adopt';
     navigate(`/list/${queryType}/${postId}`);
   }
 
-console.log(data.index)
   return (
     <ListContainer>
       {data.map((item, index) => (
         // 공고 상세 페이지 id를 못 찾아서 일단 index로만 설정,,
-        <ListItem key={index} onClick={() => goToDetail(index + 1)}>
+        <ListItem key={index} onClick={() => goToDetail(index)}>
           <ListImg src={item.thumbnail} alt="dog" />
           <ListText>
             <ItemText>이름: {item.name || item.title}</ItemText>
             {item.duration ? <ItemText>품종: {item.breed}</ItemText> : <ItemText>성별: {item.sex}</ItemText> }
             <ItemText>추정나이: {item.age}</ItemText>
             {item.duration ? <ItemText>임시 보호기간: {item.duration}</ItemText> : null }
-            {item.isAdopt ? <ItemText>입양됨</ItemText> : <ItemText>입양 안 됨</ItemText>}
+            {/* {item.isAdopt ? <ItemText>입양됨</ItemText> : <ItemText>입양 안 됨</ItemText>} */}
           </ListText>
         </ListItem>
       ))}

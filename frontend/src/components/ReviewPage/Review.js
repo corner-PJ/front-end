@@ -5,17 +5,12 @@ import ReviewContent from './ReviewContnet';
 import ReviewMainImg from '../../assets/ReviewMainImg.png';
 import axios from 'axios';
 
-import { useTokenContext } from '../TokenContext'; // 토큰
-
 function ReviewPage() { 
     const navigate = useNavigate(); 
     const [reviews, setReviews] = useState([]);
 
     // // localStorage에서 토큰 가져오기
-    // const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
-    // 임시로 context를 활용해 토큰 가져옴
-    const { ACCESS_TOKEN } = useTokenContext();
+    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
 
     useEffect(() => {
         // 리뷰 목록 조회

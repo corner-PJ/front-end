@@ -37,6 +37,10 @@ export function LoginPage() {
 
       if (response.data.success) {
         console.log("로그인 성공");
+        
+        // 로그인 성공 시 토큰을 로컬 스토리지에 저장
+        localStorage.setItem('ACCESS_TOKEN', response.data.data);
+       
         // 로그인 성공 시 메인페이지로 이동
         navigate("/");
 

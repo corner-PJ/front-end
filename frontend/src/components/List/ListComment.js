@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import { useTokenContext } from '../TokenContext';
-
 function ListComment({ postId }) {
     const navigate = useNavigate();
     const [comments, setComments] = useState([]);
@@ -14,10 +12,7 @@ function ListComment({ postId }) {
     // const [isSecret, setIsSecret] = useState(false);
 
     // // localStorage에서 토큰 가져오기
-    // const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
-    // 임시로 context를 활용해 토큰 가져옴
-    const { ACCESS_TOKEN } = useTokenContext();
+    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
 
     useEffect(() => {          
         ListCommentsData();

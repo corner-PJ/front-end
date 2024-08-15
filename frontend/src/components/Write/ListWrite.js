@@ -6,8 +6,6 @@ import WriteText from './WriteText';
 import ImgIcon from '../../assets/InputImg.png';
 import axios from 'axios';
 
-import { useTokenContext } from '../TokenContext';
-
 function ListWrite() {
     const navigate = useNavigate();
     const [profile, setProfile] = useState({
@@ -18,17 +16,14 @@ function ListWrite() {
         phonenum: "",
         tnr: null,
     });
-
+    
     const [content, setContent] = useState("");
     const [dogImg, setDogImg] = useState([]);
     const [dogImgFiles, setDogImgFiles] = useState([]);
     const fileInputRef = useRef(null);
 
     // // localStorage에서 토큰 가져오기
-    // const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
-    // 임시로 context를 활용해 토큰 가져옴
-    const { ACCESS_TOKEN } = useTokenContext();
+    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
 
     const ImgUpload = e => {
         const selectedFiles = e.target.files;
@@ -70,7 +65,9 @@ function ListWrite() {
         }
 
         const formData = new FormData();
-
+        // console.log(profile);
+        // console.log(content);
+        
         // 내용 저장
         const blob = new Blob([JSON.stringify({
             content: content,

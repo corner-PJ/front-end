@@ -120,9 +120,9 @@ const ModalInner = styled.div`
     position: relative;
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.5);
     background-color: #fff;
-    border-radius: 5px;
+    border-radius: 5px; 
     width: 590px;
-    top: 50%;
+    top: 53%;
     transform: translateY(-50%);
     margin: 0 auto;
 `;

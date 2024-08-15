@@ -4,18 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import AIResult from './AIResult';
 import axios from 'axios';
 
-import { useTokenContext } from '../TokenContext';
-
 function ListDetailContent({ data, postId }) {
     const navigate = useNavigate();
     const [slideIndex, setSlideIndex] = useState(0);
     const [adoptStatus, setAdoptStatus] = useState(data.adoptStatus)
 
     // // localStorage에서 토큰 가져오기
-    // const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
-    // 임시로 context를 활용해 토큰 가져옴
-    const { ACCESS_TOKEN } = useTokenContext();
+    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
 
     if (!data) {
         return <div>데이터가 없습니다.</div>;
