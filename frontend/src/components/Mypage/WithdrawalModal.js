@@ -1,82 +1,53 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from "axios";
 
-export function NicknameChangeModal({ isNicknameModalOpen, closeNicknameModal, setUserInfo}) {
-    const [newNickname, setNewNickname] = useState("");
+export function WithdrawModal({ isWithdrawModalOpen, closeWithdrawModal}) {
     const navigate = useNavigate();
-    
-    const handleNicknameChange = (e) => {
-        setNewNickname(e.target.value);
-    };
-    
-    const handleNicknameSubmit = async () => {
+
+    // 회원 탈퇴 처리
+    const handleWithdraw = async () => {
+
         try {
             const token = localStorage.getItem("authToken");
-            console.log("토큰:", token);
+            const response = await axios.delete("/user", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-            // URLSearchParams 객체 생성
-            const formData = new URLSearchParams();
-            formData.append("nickname", newNickname);
-
-            const response = await axios.put(
-                "/mypage/nickname",
-                null, 
-                {
-                    params: {
-                        newNickname: newNickname // 쿼리 파라미터로 닉네임 전달
-                    },
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                }
-            );
-            
-            // 닉네임 변경 성공
-            if (response.data.success) { 
-                console.log("닉네임 변경 성공");
-
-                setUserInfo(prevInfo => ({
-                    ...prevInfo,
-                    nickname: newNickname,
-                }));
-                
-                alert(response.data.message);
-                closeNicknameModal();
-                navigate(`/mypage`);
+            if (response.data.success) {
+                alert("회원 탈퇴가 완료되었습니다.");
+                localStorage.removeItem("authToken");
+                navigate("/"); 
 
             } else {
-                alert("닉네임 변경에 실패했습니다.");
+                alert(response.data.message || "회원 탈퇴 실패");
             }
-
         } catch (error) {
-            console.error("닉네임 변경 중 오류 발생:", error);
+            console.error("회원 탈퇴 중 오류 발생:", error);
+            alert("회원 탈퇴 중 오류가 발생했습니다.");
         }
     };
+
     
     return (
         <>
-            {isNicknameModalOpen && (
+            {isWithdrawModalOpen && (
                 <ModalOverlay>
                     <RootWrapper>
                         <ContentRectangle>
                             <ContentText>
-                                수정할 닉네임을 입력하세요.
+                                정말 탈퇴하시겠어요?<br/>
+                                확인 버튼을 누르면 계정은 삭제되며,<br/>
+                                다시 복구되지 않습니다.
                             </ContentText>
-
-                            <NicknameInputBox
-                                type="text"
-                                name="nickname"
-                                value={newNickname}
-                                onChange={handleNicknameChange}
-                            />
-                            
+                
                             <ButtonWrapper>
-                                <OkBtn onClick={handleNicknameSubmit}>확인</OkBtn>
-                                <CancleBtn onClick={closeNicknameModal}>취소</CancleBtn>
+                                <OkBtn onClick={handleWithdraw}>확인</OkBtn>
+                                <CancleBtn onClick={closeWithdrawModal}>취소</CancleBtn>
                             </ButtonWrapper>
                         </ContentRectangle>
                     </RootWrapper>
@@ -87,10 +58,9 @@ export function NicknameChangeModal({ isNicknameModalOpen, closeNicknameModal, s
 }
 
 // PropTypes 추가
-NicknameChangeModal.propTypes = {
-    isNicknameModalOpen: PropTypes.bool.isRequired,
-    closeNicknameModal: PropTypes.func.isRequired,
-    setUserInfo: PropTypes.func.isRequired,
+WithdrawModal.propTypes = {
+    isWithdrawModalOpen: PropTypes.bool.isRequired,
+    closeWithdrawModal: PropTypes.func.isRequired,
 };
 
 const ModalOverlay = styled.div`
@@ -134,30 +104,13 @@ const ContentRectangle = styled.div`
 
 const ContentText = styled.span`
 	color: black;
-	font-size: 21px;
+	font-size: 23px;
 	font-family: Inter, sans-serif;
 	font-weight: 700;
 	text-align: center;
 	width: 537px;
 	min-height: 51px;
-    margin-top: 15px;
-`;
-
-export const NicknameInputBox = styled.input`
-	font-size: 17px;
-	border: solid 2px rgb(252, 129, 158);
-    background-color: #FFE6E6;
-	border-radius: 5px;
-	padding-left: 20px;
-	width: 80%; 
-	height: 50px;
-	max-width: 100%; 
-	box-sizing: border-box; 
-
-	&:focus {
-		border: 2px solid rgb(252, 129, 158);
-		outline: none; 
-	}
+    margin-top: 20px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -199,7 +152,6 @@ const CancleBtn = styled.button`
     border-radius: 16px;
     background-color: #E1AFD1;
     padding: 15px 25px;
-    margin-left: 20px;
 
     &:hover {
         background-color: white;
