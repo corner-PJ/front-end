@@ -36,7 +36,7 @@ export function MyInfo() {
         const fetchUserInfo = async () => {
         try {
             const token = localStorage.getItem("authToken");
-            console.log("토큰:", token);
+            // console.log("토큰:", token);
 
             const response = await axios.get("/mypage/userinfo", {
                 headers: {
