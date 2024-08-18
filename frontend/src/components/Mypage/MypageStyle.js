@@ -45,7 +45,6 @@ export const BoxContainer = styled.div`
 export const Text = styled.span`
     position: relative;
 	color: black;
-	text-overflow: ellipsis;
 	font-size: 20px;
 	font-family: Inter, sans-serif;
 	font-weight: bold;
@@ -54,22 +53,29 @@ export const Text = styled.span`
 
 export const InfoSpan = styled.span`
 	color: rgb(0, 0, 0, 0.6);
-	text-overflow: ellipsis;
 	font-size: 20px;
 	font-family: Inter, sans-serif;
 	font-weight: 500;
     margin-right: 30px;
 `;
 
+export const modifyBtn = styled.button`
+    cursor: pointer;
+    color: black; 
+    background: none;
+    border: none;
+    svg {
+        font-size: 14px; 
+    }
+`;
+
 export const PasswordChangeButton = styled.button`
 	color: black;
-	text-overflow: ellipsis;
 	font-size: 20px;
 	font-family: Inter, sans-serif;
 	font-weight: bold;
     margin-left: 30px;
     border: none;
-
     &:hover {
         text-decoration: underline;
     }
@@ -77,15 +83,14 @@ export const PasswordChangeButton = styled.button`
 
 export const WithdrawButton = styled.span`
 	color: rgba(0, 0, 0, 0.6);
-	text-overflow: ellipsis;
 	font-size: 16px;
 	font-family: Inter, sans-serif;
 	font-weight: 400;
     margin-left: 30px;
     margin-top: -8px;
     border: none;
-
     &:hover {
         text-decoration: underline;
     }
 `;
+

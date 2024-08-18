@@ -109,7 +109,7 @@ const OkBtn = styled.button`
     border: 2px solid #E1AFD1;
     border-radius: 16px;
     background-color: #E1AFD1;
-    padding: 15px 35px;
+    padding: 15px 25px;
     margin-right: 20px;
 
     &:hover {

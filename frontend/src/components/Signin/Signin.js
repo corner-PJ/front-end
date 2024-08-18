@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import * as S from './SigninStyle';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -170,17 +170,9 @@ export function SigninPage() {
 	}
 
 	// 회원가입 버튼 활성화
-	const isFormFilled =  useCallback(() => {
-		return !!formData.name && !!formData.id && !!formData.email && !!formData.nickname &&
-			!!formData.password && !!formData.passwordConfirm && age && service && privacy;
-	}, [formData, age, service, privacy]);
-
-	const [isButtonActive, setIsButtonActive] = useState(false);
-
-	useEffect(() => {
-		setIsButtonActive(isFormFilled());
-	}, [formData, age, service, privacy, isFormFilled]);
-
+	const isButtonActive = formData.name && formData.id && formData.email && formData.nickname && formData.password && formData.passwordConfirm &&
+	!idError && !nicknameError && !emailError && !passwordError && !confirmError &&
+	age && service && privacy;
 
     return (
         <S.SigninRootWrapper>

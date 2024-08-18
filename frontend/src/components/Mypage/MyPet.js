@@ -1,9 +1,9 @@
-import React from "react";
-import Choco from "../../assets/Choco.jpg"
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 export function MyPet() {
     const navigate = useNavigate();
@@ -12,13 +12,46 @@ export function MyPet() {
         navigate('/mypage/petRegister/');
     };
 
-    const moveToEdit = () => {
-        navigate('/mypage/petEdit/');
-    };
+    const moveToEdit = (petId) => {
+        console.log("이동할 petId:", petId);
+        navigate(`/mypage/petEdit/${petId}`);
+    };    
 
     const moveToEmotionHistory = () => {
         navigate('/mypage/emotionHistory/');
     };
+
+
+    // 반려견 정보 저장
+    const [petInfo, setPetInfo] = useState([]);
+
+    // 반려견 정보 서버로부터 가져옴
+    useEffect(() => {
+        const fetchPetInfo = async () => {
+            try {
+                const token = localStorage.getItem("authToken");
+                console.log("토큰:", token);
+
+                const response = await axios.get(`/mypage/petinfo`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                console.log("서버 응답 데이터:", response.data);
+
+                if (response.data.success) {
+                    setPetInfo(response.data.data);
+                } else {
+                    console.error("반려견 정보 조회 실패:", response.data.message);
+                }
+            } catch (error) {
+                console.error("반려견 정보를 불러오는 중 오류 발생:", error);
+            }
+        };
+
+        fetchPetInfo();
+    }, []);
 
     return (
         <MyPetWrapper>
@@ -26,75 +59,41 @@ export function MyPet() {
                     <MypetHeader>나의 반려견 정보</MypetHeader>
                     <MypetRegisterBtn>
                         <FontAwesomeIcon icon={faPlus} />
-                        <MypetRegisterBtnText onClick={moveToRegister}>반려견 등록하기</MypetRegisterBtnText>
+                        <MypetRegisterBtnText 
+                            onClick={moveToRegister}
+                            setPetInfo={setPetInfo}
+                        >
+                            반려견 등록하기
+                        </MypetRegisterBtnText>
                     </MypetRegisterBtn>
                 </HeaderWrapper>
 
                 <ScrollContainer>
                     <MyPetWrapperFlex>
-                        <MypetContainer>
-                            <MypetContent>
-                                <MypetImg src={Choco}/>
-                                <MypetRectangle>
-                                    <MypetBoxContainer>
-                                        <Mypetname>초코</Mypetname>
-                                        <MypetEditBtn onClick={moveToEdit}>프로필 수정</MypetEditBtn>
-                                    </MypetBoxContainer>
+                        {petInfo.map((pet, petId) => (
+                            
+                            <MypetContainer key={petId}>
+                                <MypetContent>
+                                    <MypetImg src={pet.image} alt={`${pet.name}'s 사진`}/>
+                                    <MypetRectangle>
+                                        <MypetBoxContainer>
+                                            <Mypetname>{pet.name}</Mypetname>
+                                            <MypetEditBtn onClick={() => moveToEdit(pet.petId)}>프로필 수정</MypetEditBtn>
+                                        </MypetBoxContainer>
 
-                                    <ContentContainer>
-                                        <MypetText>남</MypetText>
-                                        <MypetText>중성화 O</MypetText>
-                                        <MypetText>5살</MypetText>
-                                        <MypetText>믹스</MypetText>
-                                        <MypetText>크림입, 흰양말, 주황눈썹</MypetText>
-                                    </ContentContainer>
-                                </MypetRectangle>
-                            </MypetContent>
-                            <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
-                        </MypetContainer>
-
-                        <MypetContainer>
-                            <MypetContent>
-                                <MypetImg src={Choco}/>
-                                <MypetRectangle>
-                                    <MypetBoxContainer>
-                                        <Mypetname>초코</Mypetname>
-                                        <MypetEditBtn onClick={moveToEdit}>프로필 수정</MypetEditBtn>
-                                    </MypetBoxContainer>
-
-                                    <ContentContainer>
-                                        <MypetText>남</MypetText>
-                                        <MypetText>중성화 O</MypetText>
-                                        <MypetText>5살</MypetText>
-                                        <MypetText>믹스</MypetText>
-                                        <MypetText>크림입, 흰양말, 주황눈썹</MypetText>
-                                    </ContentContainer>
-                                </MypetRectangle>
-                            </MypetContent>
-                            <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
-                        </MypetContainer>
-
-                        <MypetContainer>
-                            <MypetContent>
-                                <MypetImg src={Choco}/>
-                                <MypetRectangle>
-                                    <MypetBoxContainer>
-                                        <Mypetname>초코</Mypetname>
-                                        <MypetEditBtn onClick={moveToEdit}>프로필 수정</MypetEditBtn>
-                                    </MypetBoxContainer>
-
-                                    <ContentContainer>
-                                        <MypetText>남</MypetText>
-                                        <MypetText>중성화 O</MypetText>
-                                        <MypetText>5살</MypetText>
-                                        <MypetText>믹스</MypetText>
-                                        <MypetText>크림입, 흰양말, 주황눈썹</MypetText>
-                                    </ContentContainer>
-                                </MypetRectangle>
-                            </MypetContent>
-                            <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
-                        </MypetContainer>
-                    </MyPetWrapperFlex>
+                                        <ContentContainer>
+                                            <MypetText>{pet.sex}</MypetText>
+                                            <MypetText>{pet.neuter}</MypetText>
+                                            <MypetText>{pet.age}</MypetText>
+                                            <MypetText>{pet.breed}</MypetText>
+                                            <MypetText>{pet.feature}</MypetText>
+                                        </ContentContainer>
+                                    </MypetRectangle>
+                                </MypetContent>
+                                <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
+                            </MypetContainer>
+                        ))}
+                        </MyPetWrapperFlex>
                 </ScrollContainer>
             </MyPetWrapper>
     );
@@ -193,9 +192,9 @@ const MypetContainer = styled.div`
 `;
 
 const MypetImg = styled.img`
-    width: 140px;
-    height: 140px;
-    object-fit: cover;
+    width: 140px !important;
+    height: 140px !important;
+    object-fit: cover !important; /* 비율을 유지하면서 잘라내기 */
     border-radius: 50%; 
     margin-right: 25px; 
     margin-left: 15px; 

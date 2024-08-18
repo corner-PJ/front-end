@@ -2,29 +2,52 @@ import React from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import axios from "axios";
 
-export function WriteModal({ isModalOpen, closeModal}) {
+export function WithdrawModal({ isWithdrawModalOpen, closeWithdrawModal}) {
     const navigate = useNavigate();
 
-    const MoveToDiaryMain = async() => {
-        closeModal();
-        
-        navigate(`/diary`);
-    }
+    // 회원 탈퇴 처리
+    const handleWithdraw = async () => {
+
+        try {
+            const token = localStorage.getItem("authToken");
+            const response = await axios.delete("/user", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.data.success) {
+                alert("회원 탈퇴가 완료되었습니다.");
+                localStorage.removeItem("authToken");
+                navigate("/"); 
+
+            } else {
+                alert(response.data.message || "회원 탈퇴 실패");
+            }
+        } catch (error) {
+            console.error("회원 탈퇴 중 오류 발생:", error);
+            alert("회원 탈퇴 중 오류가 발생했습니다.");
+        }
+    };
+
     
     return (
         <>
-            {isModalOpen && (
+            {isWithdrawModalOpen && (
                 <ModalOverlay>
                     <RootWrapper>
                         <ContentRectangle>
                             <ContentText>
-                                내용을 등록하시겠습니까?
+                                정말 탈퇴하시겠어요?<br/>
+                                확인 버튼을 누르면 계정은 삭제되며,<br/>
+                                다시 복구되지 않습니다.
                             </ContentText>
                 
                             <ButtonWrapper>
-                                <OkBtn onClick={MoveToDiaryMain}>확인</OkBtn>
-                                <CancleBtn onClick={closeModal}>취소</CancleBtn>
+                                <OkBtn onClick={handleWithdraw}>확인</OkBtn>
+                                <CancleBtn onClick={closeWithdrawModal}>취소</CancleBtn>
                             </ButtonWrapper>
                         </ContentRectangle>
                     </RootWrapper>
@@ -35,9 +58,9 @@ export function WriteModal({ isModalOpen, closeModal}) {
 }
 
 // PropTypes 추가
-WriteModal.propTypes = {
-    isModalOpen: PropTypes.bool.isRequired,
-    closeModal: PropTypes.func.isRequired,
+WithdrawModal.propTypes = {
+    isWithdrawModalOpen: PropTypes.bool.isRequired,
+    closeWithdrawModal: PropTypes.func.isRequired,
 };
 
 const ModalOverlay = styled.div`
