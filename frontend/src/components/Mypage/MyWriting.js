@@ -100,10 +100,10 @@ export function MyWriting() {
                     <TextX>작성한 임시 보호 글이 없습니다.</TextX>
                 ) : (
                     posts.slice(0, visiblePosts).map((post, index) => (
-                        <ProtectionContent key={index} onClick={() => handlePostClick(post.id)}>
+                        <ProtectionContent key={index} onClick={() => handlePostClick(post.adoptPostId)}>
                             <ProtectionImg src={post.imageUrls[0]} alt="pet" />
                             <ProtectionRectangle>
-                                <ProtectionDate>{post.createdAt || '날짜 정보 없음'}</ProtectionDate>
+                                <ProtectionDate>{formatDate(post.postDate)}</ProtectionDate>
                                 <ProtectionPetName>{post.name || '이름 없음'}</ProtectionPetName>
                             </ProtectionRectangle>
                         </ProtectionContent>
@@ -120,8 +120,8 @@ export function MyWriting() {
                     <TextX>작성한 입양 후기가 없습니다.</TextX>
                 ) : (
                     reviews.slice(0, visibleReviews).map((review, index) => (
-                        <ReviewContent key={index} onClick={() => handleReviewClick(review.id)}>
-                            <ReviewImg src={review.images[0]} alt="pet" />
+                        <ReviewContent key={index} onClick={() => handleReviewClick(review.reviewId)}>
+                            <ReviewImg src={review.images[0].fileName} alt="pet" />
                             <ReviewRectangle>
                             <ReviewDate>
                                 {formatDate(review.reviewDate)}
