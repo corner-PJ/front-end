@@ -10,8 +10,8 @@ function ReviewPage() {
     const [reviews, setReviews] = useState([]);
 
     // // localStorage에서 토큰 가져오기
-    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
+    const ACCESS_TOKEN = localStorage.getItem('authToken');
+    
     useEffect(() => {
         // 리뷰 목록 조회
         const ReviewsData = async () => {

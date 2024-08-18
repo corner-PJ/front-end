@@ -14,8 +14,8 @@ function ReviewComment({ reviewId }) {
     const [replyIndex, setReplyIndex] = useState(null);
 
     // // localStorage에서 토큰 가져오기
-    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
+    const ACCESS_TOKEN = localStorage.getItem('authToken');
+    
     useEffect(() => {
         ReviewCommentsData();
     }, [reviewId, navigate]);
