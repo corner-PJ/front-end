@@ -49,8 +49,8 @@ function AppNavigation() {
           <Route path="/mypage" element={<Mypages />} />  
           <Route path="/mypage/passwordChange" element={<PasswordChange />} />
           <Route path="/mypage/petRegister" element={<MypetRegister />} />
-          <Route path="/mypage/petEdit" element={<MypetEditPage /> }/>
-          <Route path="/mypage/emotionHistory" element={<EmotionHistory />} />
+          <Route path="/mypage/petEdit/:petId" element={<MypetEditPage /> }/>
+          <Route path="/mypage/emotionHistory/:petId" element={<EmotionHistory />} />
           
           <Route path="/list" element={<List />} />  
           <Route path="/list/write" element={<ListWrite />} />  
