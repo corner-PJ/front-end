@@ -119,13 +119,14 @@ const ContentRectangle = styled.div`
 
 const ContentText = styled.span`
 	color: black;
-	font-size: 23px;
+	font-size: 21px;
 	font-family: Inter, sans-serif;
 	font-weight: 700;
 	text-align: center;
 	width: 537px;
 	min-height: 51px;
     margin-top: 20px;
+    margin-bottom: 12px;
 `;
 
 const PasswordInputBox = styled.input`
