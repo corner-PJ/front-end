@@ -44,7 +44,7 @@ export function MyInfo() {
                 },
             });
 
-            console.log("서버 응답 데이터:", response.data);
+            // console.log("서버 응답 데이터:", response.data);
 
             setUserInfo(response.data.data);
         } catch (error) {

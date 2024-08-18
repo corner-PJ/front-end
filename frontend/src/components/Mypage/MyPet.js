@@ -30,7 +30,7 @@ export function MyPet() {
         const fetchPetInfo = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-                console.log("토큰:", token);
+                // console.log("토큰:", token);
 
                 const response = await axios.get(`/mypage/petinfo`, {
                     headers: {
@@ -38,7 +38,7 @@ export function MyPet() {
                     },
                 });
 
-                console.log("서버 응답 데이터:", response.data);
+                // console.log("서버 응답 데이터:", response.data);
 
                 if (response.data.success) {
                     setPetInfo(response.data.data);
