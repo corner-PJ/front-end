@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from "axios";
 
 export function WithdrawModal({ isWithdrawModalOpen, closeWithdrawModal}) {
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+    };
 
     // 회원 탈퇴 처리
     const handleWithdraw = async () => {
@@ -13,6 +18,9 @@ export function WithdrawModal({ isWithdrawModalOpen, closeWithdrawModal}) {
         try {
             const token = localStorage.getItem("authToken");
             const response = await axios.delete("/user", {
+                params: {
+                    password: password,  
+                },
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -40,10 +48,16 @@ export function WithdrawModal({ isWithdrawModalOpen, closeWithdrawModal}) {
                     <RootWrapper>
                         <ContentRectangle>
                             <ContentText>
-                                정말 탈퇴하시겠어요?<br/>
-                                확인 버튼을 누르면 계정은 삭제되며,<br/>
-                                다시 복구되지 않습니다.
+                                정말로 탈퇴를 원하시다면, <br />
+                                현재 비밀번호를 입력하세요.
                             </ContentText>
+
+                            <PasswordInputBox
+                                type="text"
+                                name="password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                            />
                 
                             <ButtonWrapper>
                                 <OkBtn onClick={handleWithdraw}>확인</OkBtn>
@@ -56,6 +70,7 @@ export function WithdrawModal({ isWithdrawModalOpen, closeWithdrawModal}) {
         </>
     );
 }
+
 
 // PropTypes 추가
 WithdrawModal.propTypes = {
@@ -111,6 +126,23 @@ const ContentText = styled.span`
 	width: 537px;
 	min-height: 51px;
     margin-top: 20px;
+`;
+
+const PasswordInputBox = styled.input`
+	font-size: 17px;
+	border: solid 2px rgb(252, 129, 158);
+    background-color: #FFE6E6;
+	border-radius: 5px;
+	padding-left: 20px;
+	width: 80%; 
+	height: 50px;
+	max-width: 100%; 
+	box-sizing: border-box; 
+
+	&:focus {
+		border: 2px solid rgb(252, 129, 158);
+		outline: none; 
+	}
 `;
 
 const ButtonWrapper = styled.div`
