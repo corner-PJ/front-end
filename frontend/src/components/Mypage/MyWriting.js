@@ -1,61 +1,99 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import Choco from "../../assets/Choco.jpg"
-
+import axios from "axios";
 
 export function MyWriting() {
+    const [posts, setPosts] = useState([]);
+    const [reviews, setReviews] = useState([]);
+
+    // 임시 보호 글 내역
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const token = localStorage.getItem("authToken");
+                const response = await axios.get("/mypage/adoptposts", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.data.success) {
+                    setPosts(response.data.data);
+                } else {
+                    console.error("임시 보호 글 목록 조회 실패:", response.data.message);
+                }
+            } catch (error) {
+                console.error("임시 보호 글 목록을 불러오는 중 오류 발생:", error);
+            } 
+        };
+
+        fetchPosts();
+    }, []);
+
+
+    // 후기 내역
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const token = localStorage.getItem("authToken");
+                const response = await axios.get("/mypage/adoptreviews", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.data.success) {
+                    setReviews(response.data.data);
+                } else {
+                    console.error("입양 후기 글 목록 조회 실패:", response.data.message);
+                }
+            } catch (error) {
+                console.error("입양 후기 글 목록을 불러오는 중 오류 발생:", error);
+            } 
+        };
+
+        fetchReviews();
+    }, []);
+
+
 
     return (
         <WritingWrapper>
             <ProtectionWriting>
                 <ProtectionHeader>작성한 임시 보호 글</ProtectionHeader>
-                <ProtectionContent>
-                    <ProtectionImg src={Choco} />
-                    <ProtectionRectangle>
-                        <ProtectionDate>2024.03.17 16:04</ProtectionDate>
-                        <ProtectionPetName>초코</ProtectionPetName>
-                    </ProtectionRectangle>
-                </ProtectionContent>
-                <ProtectionContent>
-                    <ProtectionImg src={Choco} />
-                    <ProtectionRectangle>
-                        <ProtectionDate>2024.03.17 16:04</ProtectionDate>
-                        <ProtectionPetName>초코</ProtectionPetName>
-                    </ProtectionRectangle>
-                </ProtectionContent> <ProtectionContent>
-                    <ProtectionImg src={Choco} />
-                    <ProtectionRectangle>
-                        <ProtectionDate>2024.03.17 16:04</ProtectionDate>
-                        <ProtectionPetName>초코</ProtectionPetName>
-                    </ProtectionRectangle>
-                </ProtectionContent>
+                {posts.length === 0 ? (
+                    <TextX>작성한 임시 보호 글이 없습니다.</TextX>
+                ) : (
+                    posts.map((post, index) => (
+                        <ProtectionContent key={index}>
+                            <ProtectionImg src={post.imageUrls[0] || Choco} alt="pet" />
+                            <ProtectionRectangle>
+                                <ProtectionDate>{post.createdAt || '날짜 정보 없음'}</ProtectionDate>
+                                <ProtectionPetName>{post.name || '이름 없음'}</ProtectionPetName>
+                            </ProtectionRectangle>
+                        </ProtectionContent>
+                    ))
+                )}
 
                 <MoreBtn>더보기</MoreBtn>
             </ProtectionWriting>
 
             <MyReview>
                 <ReviewHeader>작성한 입양 후기</ReviewHeader>
-                <ReviewContent>
-                    <ReviewImg src={Choco} />
-                    <ReviewRectangle>
-                        <ReviewDate>2024.03.17 16:04</ReviewDate>
-                        <ReviewPetName>초코</ReviewPetName>
-                    </ReviewRectangle>
-                </ReviewContent>
-                <ReviewContent>
-                    <ReviewImg src={Choco} />
-                    <ReviewRectangle>
-                        <ReviewDate>2024.03.17 16:04</ReviewDate>
-                        <ReviewPetName>초코</ReviewPetName>
-                    </ReviewRectangle>
-                </ReviewContent>
-                <ReviewContent>
-                    <ReviewImg src={Choco} />
-                    <ReviewRectangle>
-                        <ReviewDate>2024.03.17 16:04</ReviewDate>
-                        <ReviewPetName>초코</ReviewPetName>
-                    </ReviewRectangle>
-                </ReviewContent>
+                {reviews.length === 0 ? (
+                    <TextX>작성한 임시 보호 글이 없습니다.</TextX>
+                ) : (
+                    reviews.map((reviews, index) => (
+                        <ReviewContent key={index}>
+                            <ReviewImg src={reviews.imageUrls[0] || Choco} alt="pet" />
+                            <ReviewRectangle>
+                                <ReviewDate>{reviews.createdAt || '날짜 정보 없음'}</ReviewDate>
+                                <ReviewPetName>{reviews.name || '이름 없음'}</ReviewPetName>
+                            </ReviewRectangle>
+                        </ReviewContent>
+                    ))
+                )}
 
                 <MoreBtn>더보기</MoreBtn>
             </MyReview>
@@ -151,7 +189,14 @@ const ProtectionPetName = styled.span`
     margin-left: 17px;
 `;
 
-
+const TextX = styled.div`
+    color: rgba(0, 0, 0, 0.6);
+	font-size: 20px;
+	font-family: Inter, sans-serif;
+	font-weight: 500;
+    margin-left: 80px;
+    margin-top: 25px;
+`;
 
 const MyReview = styled.div`
     min-height: 60vh;
