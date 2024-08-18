@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import { useTokenContext } from '../TokenContext';
 
 function ReviewComment({ reviewId }) {
     const navigate = useNavigate();

@@ -23,7 +23,7 @@ function ListWrite() {
     const fileInputRef = useRef(null);
 
     // // localStorage에서 토큰 가져오기
-    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
+    const ACCESS_TOKEN = localStorage.getItem('authToken');
 
     const ImgUpload = e => {
         const selectedFiles = e.target.files;
