@@ -10,8 +10,8 @@ function ListDetailContent({ data, postId }) {
     const [adoptStatus, setAdoptStatus] = useState(data.adoptStatus)
 
     // // localStorage에서 토큰 가져오기
-    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
+    const ACCESS_TOKEN = localStorage.getItem('authToken');
+    
     if (!data) {
         return <div>데이터가 없습니다.</div>;
     }

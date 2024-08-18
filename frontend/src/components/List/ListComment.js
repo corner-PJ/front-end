@@ -12,8 +12,8 @@ function ListComment({ postId }) {
     // const [isSecret, setIsSecret] = useState(false);
 
     // // localStorage에서 토큰 가져오기
-    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
-
+    const ACCESS_TOKEN = localStorage.getItem('authToken');
+    
     useEffect(() => {          
         ListCommentsData();
     }, [postId, navigate]);    
