@@ -1,26 +1,30 @@
-import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const ListContent = ({ data, setData }) => {
+const ListContent = ({ data }) => {
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const goToDetail = (item) => {
-    console.log(item)
-    navigate(`/listDetail/${item.id}`, {state: {data: item}});
+  const goToDetail = (index) => {
+    console.log(index);
+    const postId = data.length - index;
+    const searchParams = new URLSearchParams(location.search);
+    const queryType = searchParams.get('type') || 'adopt';
+    navigate(`/list/${queryType}/${postId}`);
   }
-console.log(data)
+
   return (
     <ListContainer>
-      {data.map((item) => (
-        <ListItem onClick={() => goToDetail(item)}>
-          <ListImg src={item.img[0]} alt="dog" />
+      {data.map((item, index) => (
+        // 공고 상세 페이지 id를 못 찾아서 일단 index로만 설정,,
+        <ListItem key={index} onClick={() => goToDetail(index)}>
+          <ListImg src={item.thumbnail} alt="dog" />
           <ListText>
-            <ItemText>이름: {item.dogName}</ItemText>
-            <ItemText>품종: {item.species}</ItemText>
-            <ItemText>추정나이: {item.age}살</ItemText>
-            {item.type === "Adopt"? <ItemText>임시 보호기간: {item.period}개월</ItemText> : null }
-            {item.isAdopted ? <ItemText>입양됨</ItemText> : <ItemText>입양 안 됨</ItemText>}
+            <ItemText>이름: {item.name || item.title}</ItemText>
+            {item.duration ? <ItemText>품종: {item.breed}</ItemText> : <ItemText>성별: {item.sex}</ItemText> }
+            <ItemText>추정나이: {item.age}</ItemText>
+            {item.duration ? <ItemText>임시 보호기간: {item.duration}</ItemText> : null }
+            {/* {item.isAdopt ? <ItemText>입양됨</ItemText> : <ItemText>입양 안 됨</ItemText>} */}
           </ListText>
         </ListItem>
       ))}

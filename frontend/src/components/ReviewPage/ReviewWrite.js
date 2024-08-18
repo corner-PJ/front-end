@@ -1,31 +1,36 @@
+import styled from 'styled-components';
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import ImgIcon from '../../assets/InputImg.png';
 import WriteText from './WriteText';
-import ImgIcon from '../../assets/InputImg.png'
-import { useReviewContext } from '../ReviewContext';
+import axios from 'axios';
 
 function ReviewWrite() {
     const [content, setContent] = useState("");
     const [dogImg, setDogImg] = useState([]);
+    const [dogImgFiles, setDogImgFiles] = useState([]);
     const fileInputRef = useRef(null);
-    const { addReview } = useReviewContext();
     const navigate = useNavigate();
 
+    // // localStorage에서 토큰 가져오기
+    const ACCESS_TOKEN = localStorage.getItem('ACCESS_TOKEN');
+
     const ImgUpload = e => {
-        const selectedImg = e.target.files;
-        if (dogImg.length + selectedImg.length > 10) {
-            alert("이미지는 최대 10개까지 업도르할 수 있습니다.");
+        const selectedFiles = e.target.files;
+        if (dogImg.length + selectedFiles.length > 10) {
+            alert("이미지는 최대 10개까지 업로드할 수 있습니다.");
             return;
         } 
         
-        const newImages = Array.from(selectedImg).map(file => URL.createObjectURL(file));
-        setDogImg(prevImages => [...prevImages, ...newImages]);
+        const newImageURLs = Array.from(selectedFiles).map(file => URL.createObjectURL(file));
+
+        setDogImg(prevImages => [...prevImages, ...newImageURLs]);
+        setDogImgFiles(prevFiles => [...prevFiles, ...selectedFiles]);    
     };
 
-    const handleUploadButtonClick = () => {
+        const handleUploadButtonClick = () => {
         if (dogImg.length >= 10) {
-            alert("이미지는 최대 10개까지 업도르할 수 있습니다.");
+            alert("이미지는 최대 10개까지 업로드할 수 있습니다.");
             return;
         }
 
@@ -34,18 +39,46 @@ function ReviewWrite() {
 
     const handleRemoveButtonClick = (index) => {
         setDogImg(prevImages => prevImages.filter((_, i) => i !== index));
+        setDogImgFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
     }
 
-    const handlePost = () => {
-        const newReview = {
-            id: Date.now(),
-            nickName: "홍길동",
-            update: new Date().toISOString().split('T')[0],
-            content,
-            img: dogImg
-        };
-        addReview(newReview);
-        navigate('/review');
+    // 리뷰 작성하기
+    const handlePost = async () => {
+        const formData = new FormData();
+
+        // 리뷰 내용 저장
+        const blob = new Blob([JSON.stringify({content: content})], {type: 'application/json'});
+        formData.append('reviewDTO', blob, { contentType: 'application/json' });
+
+        // 이미지 저장
+        dogImgFiles.forEach((file) => {
+            formData.append('images', file);
+        });
+
+        try {       
+            // console.log("리뷰 내용 확인", [...formData]);
+            const response = await axios.post('/reviews', formData, {
+                headers: {
+                    'Authorization' : `Bearer ${ACCESS_TOKEN}`,
+                }
+            });
+
+            if (response.status === 200) {
+                alert('입양 후기가 등록되었습니다.'); 
+                navigate('/review')
+            } else {
+                alert("후기 등록에 실패했습니다.")
+            }
+        } catch (error) {
+            console.error('후기 등록 오류:', error);
+
+            // 토큰이 만료되었거나 유효하지 않을 때
+            if (error.response && error.response.status === 401) {
+                localStorage.removeItem('ACCESS_TOKEN');
+                alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                navigate('/login');
+            }   
+        }
     };
 
     return (
@@ -65,7 +98,6 @@ function ReviewWrite() {
                             ref={fileInputRef}
                         />
                     </FileContainer>
-                    
                     {dogImg.map((imgSrc, index) => (
                         <Img key={index} src={imgSrc} onDoubleClick={() => handleRemoveButtonClick(index)} />
                     ))}

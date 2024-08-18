@@ -11,8 +11,12 @@ import { PiFilePlus } from "react-icons/pi";
 import { LuClipboardList } from "react-icons/lu";
 import { GrLinkNext } from "react-icons/gr";
 
+import Loading from '../Loading/Loading';
 
 export function SpeechSynthesisPage1() {
+	const [isLoading, setIsLoading] = useState(false);
+	const [progress, setProgress] = useState(0);
+
 	const [showResult, setShowResult] = useState(false);
 	const [video, setVideo] = useState(null);
     const fileInputRef = useRef(null);
@@ -35,7 +39,24 @@ export function SpeechSynthesisPage1() {
     };
 
 	const handleShowResult = () => {
-		setShowResult(true);
+		setIsLoading(true);
+
+		const totalDuration = 1000; 
+		const intervalDuration = 50; 
+		const totalIntervals = totalDuration / intervalDuration;
+	
+		let intervalCount = 0;
+	
+		const timer = setInterval(() => {
+		  intervalCount += 1;
+		  setProgress((intervalCount / totalIntervals) * 100);
+	
+		  if (intervalCount >= totalIntervals) {
+			clearInterval(timer);
+			setIsLoading(false);
+			setShowResult(true);
+		  }
+		}, intervalDuration);
 	};
 
     return (
@@ -86,7 +107,9 @@ export function SpeechSynthesisPage1() {
 					</ResultBtn>
 				</VideoWrapper>
 
-				{showResult && (
+                {isLoading && <Loading text="영상 분석 중 · · ·" progress={progress} />}
+
+                {!isLoading && showResult && (
 					<ResultWrapper>
 						<ResultText>해당 유기견이 선호하는 목소리는 청년 여성입니다.</ResultText>
 						<VoiceChart />
@@ -97,7 +120,6 @@ export function SpeechSynthesisPage1() {
 						</NextBtn>
 					</ResultWrapper>
 				)}
-				
             </ContentContainer>
             
         </SpeechSynthesisWrapper>
@@ -194,7 +216,7 @@ const VideoWrapper = styled.div`
     gap: 20px;
 	align-items: center;
 	padding: 20px;
-	margin-top: 50px;
+	margin: 50px 0;
 `;
 
 const VideoRectangle = styled.div`

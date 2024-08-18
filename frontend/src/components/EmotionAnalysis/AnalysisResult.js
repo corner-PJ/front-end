@@ -1,14 +1,47 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import backgroundImg from '../../assets/Emotionbackground.png'
 import Choco from "../../assets/Choco.jpg"
+import Loading from "../Loading/Loading"
 import html2canvas from "html2canvas";
+import { useState, useEffect } from 'react';
 
 function AnalysisResult() {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+    
+    // 임의로 지정한 시간 확인을 위해 작성함
+    const location = useLocation(); 
+    const { currentTime } = location.state || {}; 
+
+    useEffect(() => {
+        const totalDuration = 2500; 
+		const intervalDuration = 50; 
+		const totalIntervals = totalDuration / intervalDuration;
+	
+		let intervalCount = 0;
+	
+		const timer = setInterval(() => {
+		  intervalCount += 1;
+		  setProgress((intervalCount / totalIntervals) * 100);
+	
+		  if (intervalCount >= totalIntervals) {
+			clearInterval(timer);
+			setIsLoading(false);
+		  }
+		}, intervalDuration);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     const onClickDownloadButton = () => {
         const target = document.getElementById("download");
+        
         if (!target) {
           return alert("사진 저장에 실패했습니다.");
         }
@@ -20,17 +53,18 @@ function AnalysisResult() {
           const link = document.createElement("a");
           document.body.appendChild(link);
           link.href = canvas.toDataURL("image/png");
-          link.download = "뭉치result.png"; // 다운로드 이미지 이름 -> 변경 필요 
+          link.download = "result.png"; // 다운로드 이미지 이름 -> 변경 필요 
           link.click();
           document.body.removeChild(link);
         });
       };
 
     return(
+        <>{ isLoading? <Loading text="감정 해독 중 · · ·" progress={progress} /> :
         <AnalysisResultContainer id="download">
             <Header>
                 <Title>뭉치의 감정 해독 결과</Title>
-                <ResultDate>감정 해독 시각: 2024.07.07 일요일 오전 3시 12분</ResultDate>
+                <ResultDate>감정 해독 시각: {currentTime}</ResultDate>
             </Header>
             <ImgContainer>                
                 <CurrentImg src={Choco} style={{ top: '15%', left: '18%' }} />
@@ -55,12 +89,15 @@ function AnalysisResult() {
                 <ResultButton onClick={onClickDownloadButton}>
                     이미지로 저장하기
                 </ResultButton>
+                {/* 다이어리로 넘어가는데 오류 발생함 ( 날짜와 시간 전달관련 오류인 듯 ) */}
                 <ResultButton onClick={() => navigate(`/diary/new`)}>
                     감정 일기 기록하기
                 </ResultButton>
            </ButtonContainer>
             
         </AnalysisResultContainer>
+        }
+        </>
     )
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import s from './Home.module.css';
 import Modal from "./Modal";
@@ -14,6 +14,10 @@ export default function Home() {
     const closeModal = (e) => {
         setModalVisible(false);
     };
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <div className={s.home}>
@@ -53,7 +57,7 @@ export default function Home() {
                     <div className={s.content}>
                         <h1>입양글</h1>
                         <p>이름찾기 결과가 포함된 임시보호 입양 공고를 통해 입양자는 더욱 자세한 정보를 받을 수 있으며, 입양 과정에서부터 유대감을 쌓을 수 있습니다.</p>
-                        <Link className={s.pageButton} to={"./list"}>입양글 보러 가기</Link>
+                        <Link className={s.pageButton} to={"./list?type=adopt"}>입양글 보러 가기</Link>
                     </div>
                     <img className={s.listLogo} alt="buleumbuleung" src={listLogo} />
                 </div>

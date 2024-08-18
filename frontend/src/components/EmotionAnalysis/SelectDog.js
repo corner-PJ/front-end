@@ -56,11 +56,12 @@ function SelectDog() {
                         <DogImgWrapper>
                             <DogImg src={item.img} selected={selectedDog === item.id} />
                             {selectedDog === item.id && <Checkmark src={checkmark} />}
-                        </DogImgWrapper>                        <DogName>{item.dogname}</DogName>
+                        </DogImgWrapper>                        
+                        <DogName>{item.dogname}</DogName>
                     </ListItem>
                 ))}
             </ImgOption>
-            <NextButton onClick={() => goToAnalysis()} disabled={!selectedDog}>다음</NextButton>
+            <NextButton onClick={goToAnalysis} disabled={!selectedDog}>다음</NextButton>
         </SelectDogConatiner>
     )
 }

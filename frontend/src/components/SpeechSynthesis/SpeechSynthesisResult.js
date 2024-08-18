@@ -64,7 +64,7 @@ export function SpeechSynthesisResultPage() {
 				</ResultRectangle>
 				
 				<ButtonWrapper>
-					<NextBtn onClick={() => navigate(`/write`)}>글쓰러 가기</NextBtn>
+					<NextBtn onClick={() => navigate(`/list/write`)}>글쓰러 가기</NextBtn>
 					<BackBtn onClick={() => navigate(`/`)}>돌아가기</BackBtn>
 				</ButtonWrapper>
 				
