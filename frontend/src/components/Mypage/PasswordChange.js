@@ -28,7 +28,7 @@ export function PasswordChange() {
                 {   
                     params: {
                         newPassword: newPassword,
-                    prevPassword: password,
+                        prevPassword: password,
                     },
                     headers: {
                         Authorization: `Bearer ${token}`,

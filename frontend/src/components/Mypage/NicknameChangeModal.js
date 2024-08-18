@@ -143,7 +143,7 @@ const ContentText = styled.span`
     margin-top: 15px;
 `;
 
-export const NicknameInputBox = styled.input`
+const NicknameInputBox = styled.input`
 	font-size: 17px;
 	border: solid 2px rgb(252, 129, 158);
     background-color: #FFE6E6;
