@@ -146,50 +146,52 @@ function ListWrite() {
     return (
         <WritePageContainer>
             <MainTitle>입양 공고</MainTitle>
-            <ProfileInfo profile={profile} setProfile={setProfile} />
-            <AIResult>
-                <Reaction>
-                    <ResultTilte>목소리 반응 결과</ResultTilte>
-                    <ResultItme>
-                        {voicedata.map((item, index) => (
-                            <ResultRank key={item.id}>
-                                <Result>{item.name}</Result>
-                                <Rank>{index + 1}순위</Rank>
-                            </ResultRank>
-                        ))}
-                    </ResultItme>
-                </Reaction>
-                <div style={{ borderLeft: "2px solid #545454", height: "100%" }} />
-                <Reaction>
-                    <ResultTilte>이름 반응 결과</ResultTilte>
-                    <ResultItme>
-                        {namedata.map((item, index) => (
-                            <ResultRank key={item.id}>
-                                <Result>{item.name}</Result>
-                                <Rank>{index + 1}순위</Rank>
-                            </ResultRank>
-                        ))}
-                    </ResultItme>
-                </Reaction>
-            </AIResult>
-            <WriteText content={content} setContent={setContent} />
-            <ImgContainer>
-                <FileContainer onClick={handleUploadButtonClick}>
-                    <FileIcon src={ImgIcon} alt="ImgIcon" />
-                    <FileText>이미지 선택</FileText>
-                    <FileText>{dogImg ? dogImg.length : 0}/10</FileText>
-                    <UploadImg
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={ImgUpload}
-                        ref={fileInputRef}
-                    />
-                </FileContainer>
-                {dogImg.map((imgSrc, index) => (
-                    <Img key={index} src={imgSrc} onDoubleClick={() => handleRemoveButtonClick(index)} />
-                ))}
-            </ImgContainer>
+            <WriteContainer>
+                <ProfileInfo profile={profile} setProfile={setProfile} />
+                <AIResult>
+                    <Reaction>
+                        <ResultTilte>목소리 반응 결과</ResultTilte>
+                        <ResultItme>
+                            {voicedata.map((item, index) => (
+                                <ResultRank key={item.id}>
+                                    <Result>{item.name}</Result>
+                                    <Rank>{index + 1}순위</Rank>
+                                </ResultRank>
+                            ))}
+                        </ResultItme>
+                    </Reaction>
+                    <div style={{ borderLeft: "2px solid #545454", height: "100%" }} />
+                    <Reaction>
+                        <ResultTilte>이름 반응 결과</ResultTilte>
+                        <ResultItme>
+                            {namedata.map((item, index) => (
+                                <ResultRank key={item.id}>
+                                    <Result>{item.name}</Result>
+                                    <Rank>{index + 1}순위</Rank>
+                                </ResultRank>
+                            ))}
+                        </ResultItme>
+                    </Reaction>
+                </AIResult>
+                <WriteText content={content} setContent={setContent} />
+                <ImgContainer>
+                    <FileContainer onClick={handleUploadButtonClick}>
+                        <FileIcon src={ImgIcon} alt="ImgIcon" />
+                        <FileText>이미지 선택</FileText>
+                        <FileText>{dogImg ? dogImg.length : 0}/10</FileText>
+                        <UploadImg
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={ImgUpload}
+                            ref={fileInputRef}
+                        />
+                    </FileContainer>
+                    {dogImg.map((imgSrc, index) => (
+                        <Img key={index} src={imgSrc} onDoubleClick={() => handleRemoveButtonClick(index)} />
+                    ))}
+                </ImgContainer>
+            </WriteContainer>
             <PsotButton onClick={handleSubmit}>등록하기</PsotButton>
         </WritePageContainer>
     );
@@ -197,19 +199,22 @@ function ListWrite() {
 
 const WritePageContainer = styled.div`
     margin: 50px;
-    text-align: center;
+`
+
+const WriteContainer = styled.div`
+    margin-left: 15em;
 `
 
 const MainTitle = styled.div`
     font-size: 2.5em;
     font-weight: bold;
     margin: 50px 0;
+    text-align: center;
 `
 
 const AIResult = styled.div`
     width: 1080px;
     height: 130px;
-    margin-left: 14em;
     border: 2px solid #000000;
     border-radius: 15px;
     padding: 30px 30px 40px;
@@ -268,9 +273,7 @@ const ImgContainer = styled.div`
     gap: 20px;
     justify-content: left;
     width: 1150px;
-    margin-left: 14em;
     margin-bottom: 20px;
-
 `
 
 const UploadImg = styled.input`

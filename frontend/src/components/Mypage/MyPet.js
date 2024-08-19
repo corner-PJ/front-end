@@ -40,13 +40,15 @@ export function MyPet() {
 
                 // console.log("서버 응답 데이터:", response.data);
 
-                if (response.data.success) {
-                    setPetInfo(response.data.data);
+                if (response.data && response.data.success) {
+                    setPetInfo(response.data.data); 
                 } else {
-                    console.error("반려견 정보 조회 실패:", response.data.message);
+                    console.error("반려견 정보 조회 실패:", response.data ? response.data.message : "응답 데이터 없음");
+                    // setPetInfo({});
                 }
             } catch (error) {
                 console.error("반려견 정보를 불러오는 중 오류 발생:", error);
+                // setPetInfo({});
             }
         };
 
@@ -68,32 +70,36 @@ export function MyPet() {
                     </MypetRegisterBtn>
                 </HeaderWrapper>
 
+                
                 <ScrollContainer>
                     <MyPetWrapperFlex>
-                        {petInfo.map((pet, petId) => (
-                            
-                            <MypetContainer key={petId}>
-                                <MypetContent>
-                                    <MypetImg src={pet.image} alt={`${pet.name}'s 사진`}/>
-                                    <MypetRectangle>
-                                        <MypetBoxContainer>
-                                            <Mypetname>{pet.name}</Mypetname>
-                                            <MypetEditBtn onClick={() => moveToEdit(pet.petId)}>프로필 수정</MypetEditBtn>
-                                        </MypetBoxContainer>
+                        {petInfo.length === 0 ? (
+                            <TextX>등록한 반려견이 없습니다.</TextX>
+                        ) : (
+                            petInfo.map((pet) => (
+                                <MypetContainer key={pet.petId}>
+                                    <MypetContent>
+                                        <MypetImg src={pet.image} alt={`${pet.name}'s 사진`}/>
+                                        <MypetRectangle>
+                                            <MypetBoxContainer>
+                                                <Mypetname>{pet.name}</Mypetname>
+                                                <MypetEditBtn onClick={() => moveToEdit(pet.petId)}>프로필 수정</MypetEditBtn>
+                                            </MypetBoxContainer>
 
-                                        <ContentContainer>
-                                            <MypetText>{pet.sex}</MypetText>
-                                            <MypetText>{pet.neuter}</MypetText>
-                                            <MypetText>{pet.age}</MypetText>
-                                            <MypetText>{pet.breed}</MypetText>
-                                            <MypetText>{pet.feature}</MypetText>
-                                        </ContentContainer>
-                                    </MypetRectangle>
-                                </MypetContent>
-                                <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
-                            </MypetContainer>
-                        ))}
-                        </MyPetWrapperFlex>
+                                            <ContentContainer>
+                                                <MypetText>{pet.sex}</MypetText>
+                                                <MypetText>{pet.neuter}</MypetText>
+                                                <MypetText>{pet.age}</MypetText>
+                                                <MypetText>{pet.breed}</MypetText>
+                                                <MypetText>{pet.feature}</MypetText>
+                                            </ContentContainer>
+                                        </MypetRectangle>
+                                    </MypetContent>
+                                    <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
+                                </MypetContainer>
+                            ))
+                        )}
+                    </MyPetWrapperFlex>
                 </ScrollContainer>
             </MyPetWrapper>
     );
@@ -148,6 +154,17 @@ const MypetRegisterBtn = styled.button`
 
 const MypetRegisterBtnText = styled.span`
     margin-left: 5px;
+`;
+
+const TextX = styled.div`
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 20px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    text-align: center;
+    flex: 1;  
+    margin-right: 40px;
+    margin-top: 60px;
 `;
 
 const ScrollContainer = styled.div`
