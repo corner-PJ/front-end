@@ -26,6 +26,7 @@ import Review from './pages/Review';
 import ReviewWrite from './pages/ReviewWrite'
 import ReviewDetail from './pages/ReviewDetail';
 import { MypetEditPage } from './components/Mypage/MypetEdit';
+import { DiaryEditPage } from './components/Diary/DiaryEdit';
 
 function AppNavigation() {
   return (
@@ -41,8 +42,9 @@ function AppNavigation() {
           
           <Route path="/diary" element={<Diary />} />  
           <Route path="/diary/list" element={<DiaryList />} />
-          <Route path="/diary/detail" element={<DiaryDetail />} />
+          <Route path="/diary/:diaryId" element={<DiaryDetail />} />
           <Route path="/diary/new" element={<DiaryWrite />} />
+          <Route path="/diary/edit/:diaryId" element={<DiaryEditPage />} />
           
           <Route path="/emotionTestUrl" element={<EmotionTest />} />    
           

@@ -1,74 +1,67 @@
 import React, {useState, useEffect} from "react";
 import styled from 'styled-components';
 import Choco from "../../assets/Choco.jpg"
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { DeleteModal } from "./Modal/DeleteModal";
 import axios from "axios";
 
 
-export function DiaryDetailPage() {
+export function DiaryEditPage() {
     const navigate = useNavigate();
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const selectedDateStr = queryParams.get('date');
-    const selectedDate = new Date(selectedDateStr);
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [diaryData, setDiaryData] = useState(null);
-    const { diaryId } = useParams();
-
-    const openModal = (day) => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleDelete = () => {
-        closeModal();
-        navigate('/diary');
-    };
-
-    const moveToEdit = () => {
-        const content = "장난감을 물고 다닐 때마다 이렇게 놀고 싶어하는지 알아주지 못 한 것 같다.. 산책가고 싶다는 것도 놀고 싶다는 것일까? 산책 가고 싶다는 줄 알았다."; 
-        navigate(`/diary/edit/${diaryId}`, { state: { selectedDate, content } });
-    };
+    const [editContent, seteditContent] = useState("");
 
     // 현재 날짜를 포맷팅
     const todayDate = format(new Date(), 'yyyy년 MM월 dd일 EEEE', { locale: ko });
 
+    function formatDateForServer(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }const token = localStorage.getItem('authToken');
 
-    // 일기 상세 조회 
-    useEffect(() => {
-        const fetchDiaryDetail = async () => {
-            try {
-                const token = localStorage.getItem('authToken');
-                const response = await axios.get(`/diary`, {
+    // 일기 정보 불러오기
+
+
+    // 일기 등록 핸들러
+    const handleRegister = async () => {
+        // const now = new Date();
+        // const formattedDate = formatDateForServer(now);
+        
+        try {
+            const token = localStorage.getItem('authToken'); 
+        
+            const response = await axios.patch('/diary',
+                {
                     params: {
-                        diaryId: diaryId
+                        content: editContent 
                     },
                     headers: {
                         Authorization: `Bearer ${token}`,
                     }
-                });
-                
-                if (response.data.success) {
-                    setDiaryData(response.data.data);
-                } else {
-                    console.error("일기 상세 조회 실패:", response.data.message);
                 }
-                
-            } catch (error) {
-                console.error('상세 조회 중 오류 발생:', error);
-                alert(`상세 조회 중 오류가 발생했습니다: ${error.message}`);
-            }
-        };
+            );
 
-        fetchDiaryDetail();
-    }, [diaryId]);
+            // 응답 데이터 확인
+            console.log("서버 응답 데이터:", response.data);
+
+            if (response.status === 200) {
+                alert('일기가 수정되었습니다.');
+                navigate("/diary");
+
+            } else {
+                alert(`일기 수정에 실패했습니다: ${response.data.message}`);
+            }
+        } catch (error) {
+            console.error('일기 수정 중 오류 발생:', error);
+            alert(`일기 수정 중 오류가 발생했습니다: ${error.message}`);
+        }
+    };
 
 
     return (
@@ -77,7 +70,7 @@ export function DiaryDetailPage() {
             
             <HeaderWrapper>
                 <DetailImg src={Choco} />
-                <HeaderContent>
+                <HeadereditContent>
                     <HeaderContainer>
                         <StatateText>“놀고 싶어요” 상태</StatateText>
                         <HeaderText>에 대한 기록</HeaderText>
@@ -86,28 +79,24 @@ export function DiaryDetailPage() {
                     <ExplainText>
                         “놀고 싶어요 상태”는 반려견이 활발하고 호기심이 많은 때를 말합니다. 이는 보통 몸을 움직여 활동하고, 사물을 탐색하며, 사회적 상호작용을 즐기는 것으로 나타날 수 있습니다.
                     </ExplainText>
-                </HeaderContent>
+                </HeadereditContent>
             </HeaderWrapper>
             
-            <DetailRectangle>
-                <ContentText>
-                    {diaryData ? diaryData.content : "내용을 불러오는 중..."}
-                </ContentText>
-            </DetailRectangle>
+            <editContentContainer>
+                <DetailRectangle>
+                    <editContentTextArea
+                        value={editContent}
+                        onChange={(e) => seteditContent(e.target.value)}
+                        // placeholder="여기에 내용을 작성하세요..."
+                    />
+                </DetailRectangle>
+            </editContentContainer>
             
             <ButtonWrapper>
-                <ModifyBtn onClick={moveToEdit}>수정</ModifyBtn>
-                <DeleteBtn onClick={openModal}>삭제</DeleteBtn>
+                <RegisterBtn onClick={handleRegister}>등록</RegisterBtn>
             </ButtonWrapper>
-
-            {isModalOpen && (
-                <DeleteModal
-                    isModalOpen={isModalOpen}
-                    closeModal={closeModal}
-                />
-            )}
             
-            </DetailWrapper>
+        </DetailWrapper>
     );
 }
 
@@ -134,7 +123,7 @@ const DetailDate = styled.span`
 const HeaderWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-editContent: space-between;
     align-items: center;
     width: 60%;
     margin-bottom: 20px;
@@ -152,10 +141,10 @@ const DetailImg = styled.img`
     margin-bottom: 20px;
 `;
 
-const HeaderContent = styled.div` 
+const HeadereditContent = styled.div` 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-editContent: center;
     align-items: flex-start;
     width: 100%;
     margin-left: 30px;
@@ -165,7 +154,7 @@ const HeaderContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center
-    justify-content: center; 
+    justify-editContent: center; 
     width: 80%;
 `;
 
@@ -205,24 +194,54 @@ const ExplainText = styled.span`
 	text-align: left;
 	width: 100%;
 `;
+const editContentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-editContent: center;
+    align-items: flex-start;
+    margin-bottom: 7px;
+    margin-top: 10px;
+    width: 60%;
+    height: 210px;
+`;
 
 const DetailRectangle = styled.div`
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 7px;
-    margin-top: 10px;
+    flex-direction: column;
+    justify-editContent: center;
+    align-items: flex-start;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25),0px 2px 3px 0px rgba(0, 0, 0, 0.03);
     border: solid 1px rgb(235, 235, 235);
     border-radius: 16px;
-    width: 60%;
+    width: 100%;
     height: 210px;
     background-color: #FFF3C7;
     box-sizing: border-box;
     padding: 30px;
     flex-shrink: 0;
+`;
+
+const editContentTextArea = styled.textarea`
+	color: black;
+	font-size: 19px;
+	font-family: Inter, sans-serif;
+	font-weight: 400;
     overflow-y: auto;
-    
+    background-color: transparent;
+    width: 100%;
+    height: 80%;
+    border: none;
+    resize: none; 
+    outline: none; 
+
+    &::placeholder {
+        color: #A1A0A0;
+        font-size: 15px;
+    }
+    &:focus {
+        outline: none; 
+    }
+
     &::-webkit-scrollbar {
 		width: 10px; 
         height: 8px;
@@ -237,53 +256,22 @@ const DetailRectangle = styled.div`
 	}
 `;
 
-const ContentText = styled.span`
-	color: black;
-	font-size: 19px;
-	font-family: Inter, sans-serif;
-	font-weight: 400;
-	text-align: left;
-`;
-
 const ButtonWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-editContent: flex-end;
     align-items: center;
     margin-top: 30px;
     width: 60%;
 `;
 
-const ModifyBtn = styled.button`
-    display: flex;
-	color: white;
-	font-size: 19px;
-	font-family: Inter, sans-serif;
-	font-weight: 600;
-	justify-content: center;
-	border: 2px;
-	border-radius: 30px;
-	background-color: rgb(252, 129, 158);
-	box-shadow: 0px 3px 2px 1px #a9a9a9;
-	padding: 10px 20px;
-	width: 90px;
-	margin-left: 30px;
-
-	&:hover {
-		background-color: white;
-		border: 2px solid rgb(252, 129, 158);
-		color: rgb(252, 129, 158);
-		width: 90px;
-	}
-`;
-
-const DeleteBtn = styled.button`
+const RegisterBtn = styled.button`
     display: flex;
     color: white;
     font-size: 19px;
     font-family: Inter, sans-serif;
     font-weight: 600;
-    justify-content: center;
+    justify-editContent: center;
     border: 2px;
     border-radius: 30px;
     background-color: rgb(252, 129, 158);

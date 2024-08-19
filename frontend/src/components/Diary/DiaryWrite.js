@@ -1,45 +1,74 @@
 import React, {useState, useEffect} from "react";
 import styled from 'styled-components';
 import Choco from "../../assets/Choco.jpg"
-import { useNavigate, useLocation  } from 'react-router-dom';
-import { WriteModal } from "./Modal/WriteModal";
+import { useNavigate  } from 'react-router-dom';
 import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import axios from "axios";
 
 
 export function DiaryWritePage() {
     const navigate = useNavigate();
-    const location = useLocation();
-    const { state } = location;
-    const { selectedDate, content: initialContent } = state || {};
-    // const selectedDate = new Date(initialDateStr);
+    const [content, setContent] = useState("");
 
-    const [content, setContent] = useState(initialContent || "");
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // 상세 페이지 이동 
+    const moveToDetail = (diaryId) => {
+        navigate(`/diary/${diaryId}`);
+    };
 
-    useEffect(() => {
-        // 상태가 변경된 경우, content를 초기화
-        if (initialContent) {
-            setContent(initialContent);
+    // 현재 날짜를 포맷팅
+    const todayDate = format(new Date(), 'yyyy년 MM월 dd일 EEEE', { locale: ko });
+
+    function formatDateForServer(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }
+
+    // 일기 등록 핸들러
+    const handleRegister = async () => {
+        const now = new Date();
+        const formattedDate = formatDateForServer(now);
+        
+        try {
+            const token = localStorage.getItem('authToken'); 
+        
+            const response = await axios.post('/diary', {
+                emotionTrackId: 2,  
+                diaryDate: formattedDate,
+                content: content
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            // 응답 데이터 확인
+            console.log("서버 응답 데이터:", response.data);
+
+            if (response.data.success) {
+                alert('일기가 작성되었습니다.');
+                const diaryId = response.data.diaryId;
+                moveToDetail(diaryId);
+
+            } else {
+                alert(`일기 작성에 실패했습니다: ${response.data.message}`);
+            }
+        } catch (error) {
+            console.error('일기 작성 중 오류 발생:', error);
+            alert(`일기 작성 중 오류가 발생했습니다: ${error.message}`);
         }
-    }, [initialContent]);
-
-    const openModal = (day) => {
-        setIsModalOpen(true);
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
-    // const handleRegister = () => {
-    //     // 백엔드에 데이터 전달 로직 추가
-
-    //     openModal();
-    // };
 
     return (
         <DetailWrapper>
-            <DetailDate>{format(selectedDate, "yyyy년 MM월 dd일 EEEE")}</DetailDate>
+            <DetailDate>{todayDate}</DetailDate>
             
             <HeaderWrapper>
                 <DetailImg src={Choco} />
@@ -66,17 +95,10 @@ export function DiaryWritePage() {
             </ContentContainer>
             
             <ButtonWrapper>
-                <RegisterBtn onClick={openModal}>등록</RegisterBtn>
+                <RegisterBtn onClick={handleRegister}>등록</RegisterBtn>
             </ButtonWrapper>
-
-            {isModalOpen && (
-                <WriteModal
-                    isModalOpen={isModalOpen}
-                    closeModal={closeModal}
-                />
-            )}
             
-            </DetailWrapper>
+        </DetailWrapper>
     );
 }
 

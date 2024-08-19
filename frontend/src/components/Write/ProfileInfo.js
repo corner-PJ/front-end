@@ -86,7 +86,6 @@ function ProfileInfo({ profile, setProfile }) {
 const ProfileInfoContainer = styled.div`
     width: 1080px;
     height: 200px;
-    margin-left: 14em;
     margin-bottom: 20px;
     border: 2px solid #000000;
     border-radius: 15px;
