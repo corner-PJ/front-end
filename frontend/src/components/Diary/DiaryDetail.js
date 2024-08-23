@@ -19,17 +19,13 @@ export function DiaryDetailPage() {
     const [diaryData, setDiaryData] = useState(null);
     const { diaryId } = useParams();
 
-    const openModal = (day) => {
+    // 삭제 모달
+    const openModal = () => {
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
-    };
-
-    const handleDelete = () => {
-        closeModal();
-        navigate('/diary');
     };
 
     const moveToEdit = () => {
@@ -43,6 +39,8 @@ export function DiaryDetailPage() {
 
     // 일기 상세 조회 
     useEffect(() => {
+        // console.log("Diary ID:", diaryId);
+
         const fetchDiaryDetail = async () => {
             try {
                 const token = localStorage.getItem('authToken');
@@ -208,8 +206,6 @@ const ExplainText = styled.span`
 
 const DetailRectangle = styled.div`
     display: flex;
-    justify-content: center;
-    align-items: center;
     margin-bottom: 7px;
     margin-top: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25),0px 2px 3px 0px rgba(0, 0, 0, 0.03);
@@ -219,7 +215,7 @@ const DetailRectangle = styled.div`
     height: 210px;
     background-color: #FFF3C7;
     box-sizing: border-box;
-    padding: 30px;
+    padding: 35px;
     flex-shrink: 0;
     overflow-y: auto;
     
