@@ -1,16 +1,47 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import axios from "axios";
 
 export function DeleteModal({ isModalOpen, closeModal}) {
     const navigate = useNavigate();
+    const { diaryId } = useParams();
 
-    const MoveToDiaryMain = async() => {
-        closeModal();
+        // 일기 삭제 핸들러
+        const handleDelete = async () => {
         
-        navigate(`/diary`);
-    }
+            try {
+                const token = localStorage.getItem('authToken'); 
+            
+                const response = await axios.delete(
+                    '/diary',  
+                    {
+                        params: { 
+                            diaryId: diaryId
+                        },
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        }
+                    }
+                );
+    
+                // 응답 데이터 확인
+                console.log("서버 응답 데이터:", response.data);
+    
+                if (response.status === 200) {
+                    alert('일기가 삭제되었습니다.');
+                    closeModal();
+                    navigate("/diary");
+
+                } else {
+                    alert(`일기 삭제에 실패했습니다: ${response.data.message}`);
+                }
+            } catch (error) {
+                console.error('일기 삭제 중 오류 발생:', error);
+                alert(`일기 삭제 중 오류가 발생했습니다: ${error.message}`);
+            }
+        };
     
     return (
         <>
@@ -24,7 +55,7 @@ export function DeleteModal({ isModalOpen, closeModal}) {
                             </ContentText>
                 
                             <ButtonWrapper>
-                                <OkBtn onClick={MoveToDiaryMain}>확인</OkBtn>
+                                <OkBtn onClick={handleDelete}>확인</OkBtn>
                                 <CancleBtn onClick={closeModal}>취소</CancleBtn>
                             </ButtonWrapper>
                         </ContentRectangle>

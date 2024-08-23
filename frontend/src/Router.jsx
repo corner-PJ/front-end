@@ -41,7 +41,7 @@ function AppNavigation() {
           <Route path="/speechSynthesis/result" element={<SpeechSynthesisResult />} /> 
           
           <Route path="/diary" element={<Diary />} />  
-          <Route path="/diary/list" element={<DiaryList />} />
+          <Route path="/diary/list/:date" element={<DiaryList />} />
           <Route path="/diary/:diaryId" element={<DiaryDetail />} />
           <Route path="/diary/new" element={<DiaryWrite />} />
           <Route path="/diary/edit/:diaryId" element={<DiaryEditPage />} />
