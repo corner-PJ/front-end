@@ -9,7 +9,7 @@ import axios from "axios";
 
 export function DiaryEditPage() {
     const navigate = useNavigate();
-    const [diaryData, setDiaryData] = useState(null);
+    // const [diaryData, setDiaryData] = useState(null);
     const [editContent, setEditContent] = useState("");
     const { diaryId } = useParams();
 
@@ -31,7 +31,7 @@ export function DiaryEditPage() {
                 });
                 
                 if (response.data.success) {
-                    setDiaryData(response.data.data);
+                    // setDiaryData(response.data.data);
                     setEditContent(response.data.data.content);
                 } else {
                     console.error("일기 상세 조회 실패:", response.data.message);
