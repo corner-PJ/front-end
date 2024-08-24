@@ -63,6 +63,16 @@ export function LoginPage() {
 	const isButtonActive = formData.id && formData.password;
 
 
+  // 소셜로그인
+  // kakao
+  const K_REST_API_KEY = '백엔드한테 달라하자1';
+  const K_REDIRECT_URI = "/oauth2/authorization/kakao";
+  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${K_REST_API_KEY}&redirect_uri=${K_REDIRECT_URI}&response_type=code`;
+
+  const loginHandler = () => {
+    window.location.href = KAKAO_AUTH_URL;
+  };
+
   return (
     <L.LoginRootWrapper>
       <L.LogoContainer>
@@ -104,7 +114,7 @@ export function LoginPage() {
           <L.SocialLogo>
             <L.SocialLogoImg src={GoogleLogo} />
             <L.SocialLogoImg src={NaverLogo} />
-            <L.SocialLogoImg src={KakaoLogo} />
+            <L.SocialLogoImg src={KakaoLogo} onClick={loginHandler} />
           </L.SocialLogo>
         </L.SocialContent>
       </L.ContentContainer>
