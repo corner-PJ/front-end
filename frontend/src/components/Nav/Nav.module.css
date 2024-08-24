@@ -74,10 +74,13 @@
     color: #FFFFFF;
 }
 
-.navbar .profileImg {
-    margin-left: 15px;
-    margin-top: 3px;
-    width: 40px;
-    height: 40px;
+.navbar .logoutImg {
+    margin-left: 10px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
+
+    &:hover {
+        cursor: pointer;
+    }
 }
