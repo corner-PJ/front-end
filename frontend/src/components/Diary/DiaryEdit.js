@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import styled from 'styled-components';
 import Choco from "../../assets/Choco.jpg"
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import axios from "axios";
@@ -9,37 +9,57 @@ import axios from "axios";
 
 export function DiaryEditPage() {
     const navigate = useNavigate();
-    const [editContent, seteditContent] = useState("");
+    // const [diaryData, setDiaryData] = useState(null);
+    const [editContent, setEditContent] = useState("");
+    const { diaryId } = useParams();
 
     // 현재 날짜를 포맷팅
     const todayDate = format(new Date(), 'yyyy년 MM월 dd일 EEEE', { locale: ko });
 
-    function formatDateForServer(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
-        
-        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    }const token = localStorage.getItem('authToken');
-
     // 일기 정보 불러오기
+    useEffect(() => {
+        const fetchDiaryDetail = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get(`/diary`, {
+                    params: {
+                        diaryId: diaryId
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                
+                if (response.data.success) {
+                    // setDiaryData(response.data.data);
+                    setEditContent(response.data.data.content);
+                } else {
+                    console.error("일기 상세 조회 실패:", response.data.message);
+                }
+                
+            } catch (error) {
+                console.error('상세 조회 중 오류 발생:', error);
+                alert(`상세 조회 중 오류가 발생했습니다: ${error.message}`);
+            }
+        };
+
+        fetchDiaryDetail();
+    }, [diaryId]);
 
 
-    // 일기 등록 핸들러
+    // 일기 수정 핸들러
     const handleRegister = async () => {
-        // const now = new Date();
-        // const formattedDate = formatDateForServer(now);
         
         try {
             const token = localStorage.getItem('authToken'); 
         
-            const response = await axios.patch('/diary',
-                {
-                    params: {
-                        content: editContent 
+            const response = await axios.patch(
+                '/diary',  
+                {},
+                { 
+                    params: { 
+                        diaryId: diaryId,
+                        content: editContent
                     },
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -70,7 +90,7 @@ export function DiaryEditPage() {
             
             <HeaderWrapper>
                 <DetailImg src={Choco} />
-                <HeadereditContent>
+                <HeaderContent>
                     <HeaderContainer>
                         <StatateText>“놀고 싶어요” 상태</StatateText>
                         <HeaderText>에 대한 기록</HeaderText>
@@ -79,18 +99,17 @@ export function DiaryEditPage() {
                     <ExplainText>
                         “놀고 싶어요 상태”는 반려견이 활발하고 호기심이 많은 때를 말합니다. 이는 보통 몸을 움직여 활동하고, 사물을 탐색하며, 사회적 상호작용을 즐기는 것으로 나타날 수 있습니다.
                     </ExplainText>
-                </HeadereditContent>
+                </HeaderContent>
             </HeaderWrapper>
             
-            <editContentContainer>
+            <ContentContainer>
                 <DetailRectangle>
-                    <editContentTextArea
+                    <ContentTextArea
                         value={editContent}
-                        onChange={(e) => seteditContent(e.target.value)}
-                        // placeholder="여기에 내용을 작성하세요..."
+                        onChange={(e) => setEditContent(e.target.value)}
                     />
                 </DetailRectangle>
-            </editContentContainer>
+            </ContentContainer>
             
             <ButtonWrapper>
                 <RegisterBtn onClick={handleRegister}>등록</RegisterBtn>
@@ -123,7 +142,7 @@ const DetailDate = styled.span`
 const HeaderWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    justify-editContent: space-between;
+    justify-content: space-between;
     align-items: center;
     width: 60%;
     margin-bottom: 20px;
@@ -141,10 +160,10 @@ const DetailImg = styled.img`
     margin-bottom: 20px;
 `;
 
-const HeadereditContent = styled.div` 
+const HeaderContent = styled.div` 
     display: flex;
     flex-direction: column;
-    justify-editContent: center;
+    justify-content: center;
     align-items: flex-start;
     width: 100%;
     margin-left: 30px;
@@ -154,7 +173,7 @@ const HeaderContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center
-    justify-editContent: center; 
+    justify-content: center; 
     width: 80%;
 `;
 
@@ -194,10 +213,10 @@ const ExplainText = styled.span`
 	text-align: left;
 	width: 100%;
 `;
-const editContentContainer = styled.div`
+const ContentContainer = styled.div`
     display: flex;
     flex-direction: column;
-    justify-editContent: center;
+    justify-content: center;
     align-items: flex-start;
     margin-bottom: 7px;
     margin-top: 10px;
@@ -208,7 +227,7 @@ const editContentContainer = styled.div`
 const DetailRectangle = styled.div`
     display: flex;
     flex-direction: column;
-    justify-editContent: center;
+    justify-content: center;
     align-items: flex-start;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25),0px 2px 3px 0px rgba(0, 0, 0, 0.03);
     border: solid 1px rgb(235, 235, 235);
@@ -221,7 +240,7 @@ const DetailRectangle = styled.div`
     flex-shrink: 0;
 `;
 
-const editContentTextArea = styled.textarea`
+const ContentTextArea = styled.textarea`
 	color: black;
 	font-size: 19px;
 	font-family: Inter, sans-serif;
@@ -259,7 +278,7 @@ const editContentTextArea = styled.textarea`
 const ButtonWrapper = styled.div`
     display: flex;
     flex-direction: row;
-    justify-editContent: flex-end;
+    justify-content: flex-end;
     align-items: center;
     margin-top: 30px;
     width: 60%;
@@ -271,7 +290,7 @@ const RegisterBtn = styled.button`
     font-size: 19px;
     font-family: Inter, sans-serif;
     font-weight: 600;
-    justify-editContent: center;
+    justify-content: center;
     border: 2px;
     border-radius: 30px;
     background-color: rgb(252, 129, 158);

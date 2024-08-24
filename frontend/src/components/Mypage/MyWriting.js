@@ -26,6 +26,7 @@ export function MyWriting() {
 
                 if (response.data.success) {
                     setPosts(response.data.data);
+                    console.log('Fetched posts:', response.data.data);
                 } else {
                     console.error("임시 보호 글 목록 조회 실패:", response.data.message);
                 }
@@ -84,8 +85,8 @@ export function MyWriting() {
     }
 
     // 상세페이지 이동 핸들러
-    const handlePostClick = (postId) => {
-        navigate(`/list/adopt/${postId}`);
+    const handlePostClick = (postId, type) => {
+        navigate(`/list/${type}/${postId}`);
     };
 
     const handleReviewClick = (reviewId) => {
@@ -100,7 +101,7 @@ export function MyWriting() {
                     <TextX>작성한 임시 보호 글이 없습니다.</TextX>
                 ) : (
                     posts.slice(0, visiblePosts).map((post, index) => (
-                        <ProtectionContent key={index} onClick={() => handlePostClick(post.adoptPostId)}>
+                        <ProtectionContent key={index} onClick={() => handlePostClick(post.adoptPostId, 'adopt')}>
                             <ProtectionImg src={post.imageUrls[0]} alt="pet" />
                             <ProtectionRectangle>
                                 <ProtectionDate>{formatDate(post.postDate)}</ProtectionDate>

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import styled from 'styled-components';
 import Choco from "../../assets/Choco.jpg"
 import { useNavigate  } from 'react-router-dom';
@@ -20,7 +20,7 @@ export function DiaryWritePage() {
     const todayDate = format(new Date(), 'yyyy년 MM월 dd일 EEEE', { locale: ko });
 
     function formatDateForServer(date) {
-        const year = date.getFullYear();
+        const year = date.getFullYear(); 
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const hours = String(date.getHours()).padStart(2, '0');
@@ -34,6 +34,8 @@ export function DiaryWritePage() {
     const handleRegister = async () => {
         const now = new Date();
         const formattedDate = formatDateForServer(now);
+
+        console.log('Formatted Date for Server:', formattedDate);
         
         try {
             const token = localStorage.getItem('authToken'); 
@@ -52,8 +54,8 @@ export function DiaryWritePage() {
             console.log("서버 응답 데이터:", response.data);
 
             if (response.data.success) {
+                const diaryId = response.data.data; 
                 alert('일기가 작성되었습니다.');
-                const diaryId = response.data.diaryId;
                 moveToDetail(diaryId);
 
             } else {

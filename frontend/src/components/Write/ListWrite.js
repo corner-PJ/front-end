@@ -199,12 +199,17 @@ function ListWrite() {
 
 const WritePageContainer = styled.div`
     margin: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;  
 `
 
 const WriteContainer = styled.div`
-    margin-left: 15em;
+    max-width: 1130px;  
+    width: 100%; 
+    padding: 0 20px;  
 `
-
 const MainTitle = styled.div`
     font-size: 2.5em;
     font-weight: bold;
