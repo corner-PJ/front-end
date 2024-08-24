@@ -1,9 +1,38 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "@emotion/styled";
 import Choco from "../../assets/Choco.jpg"
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 
 export function EmotionHistoryPage() {
+    const { petId } = useParams(); 
+    const [emotionTracks, setEmotionTracks] = useState([]); // 감정 추적 데이터를 저장할 상태
+
+    useEffect(() => {
+        // 컴포넌트가 마운트될 때 API 요청
+        const fetchEmotionTracks = async () => {
+            try {
+                const token = localStorage.getItem("authToken");
+                const response = await axios.get(`/mypage/emotion-tracks/${petId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.data.success) {
+                    setEmotionTracks(response.data.data);
+                    
+                } else {
+                    console.error("감정 추적 기록 조회 실패:", response.data.message);
+                }
+            } catch (error) {
+                console.error("감정 추적 기록을 불러오는 중 오류 발생:", error);
+            } 
+        };
+
+        fetchEmotionTracks();
+    }, [petId]);
 
     return (
         <WritingWrapper>
@@ -13,46 +42,10 @@ export function EmotionHistoryPage() {
                     <EmotionHistoryContent>
                         <EmotionHistoryImg src={Choco} />
                         <EmotionHistoryRectangle>
-                            <EmotionHistoryDate>2024.03.17 16:04</EmotionHistoryDate>
+                            <EmotionHistoryDate>2024.08.19 16:04</EmotionHistoryDate>
                             <EmotionHistoryPetName>놀고 싶어요 상태</EmotionHistoryPetName>
                         </EmotionHistoryRectangle>
                     </EmotionHistoryContent>
-                    <EmotionHistoryContent>
-                        <EmotionHistoryImg src={Choco} />
-                        <EmotionHistoryRectangle>
-                            <EmotionHistoryDate>2024.03.17 16:04</EmotionHistoryDate>
-                            <EmotionHistoryPetName>놀고 싶어요 상태</EmotionHistoryPetName>
-                        </EmotionHistoryRectangle>
-                    </EmotionHistoryContent> 
-                    <EmotionHistoryContent>
-                        <EmotionHistoryImg src={Choco} />
-                        <EmotionHistoryRectangle>
-                            <EmotionHistoryDate>2024.03.17 16:04</EmotionHistoryDate>
-                            <EmotionHistoryPetName>놀고 싶어요 상태</EmotionHistoryPetName>
-                        </EmotionHistoryRectangle>
-                    </EmotionHistoryContent>
-                    <EmotionHistoryContent>
-                        <EmotionHistoryImg src={Choco} />
-                        <EmotionHistoryRectangle>
-                            <EmotionHistoryDate>2024.03.17 16:04</EmotionHistoryDate>
-                            <EmotionHistoryPetName>놀고 싶어요 상태</EmotionHistoryPetName>
-                        </EmotionHistoryRectangle>
-                    </EmotionHistoryContent>
-                    <EmotionHistoryContent>
-                        <EmotionHistoryImg src={Choco} />
-                        <EmotionHistoryRectangle>
-                            <EmotionHistoryDate>2024.03.17 16:04</EmotionHistoryDate>
-                            <EmotionHistoryPetName>놀고 싶어요 상태</EmotionHistoryPetName>
-                        </EmotionHistoryRectangle>
-                    </EmotionHistoryContent>
-                    <EmotionHistoryContent>
-                        <EmotionHistoryImg src={Choco} />
-                        <EmotionHistoryRectangle>
-                            <EmotionHistoryDate>2024.03.17 16:04</EmotionHistoryDate>
-                            <EmotionHistoryPetName>놀고 싶어요 상태</EmotionHistoryPetName>
-                        </EmotionHistoryRectangle>
-                    </EmotionHistoryContent>
-                    
                 </ContentContainer>
             </EmotionHistoryWriting>
         </WritingWrapper>

@@ -17,8 +17,8 @@ export function MyPet() {
         navigate(`/mypage/petEdit/${petId}`);
     };    
 
-    const moveToEmotionHistory = () => {
-        navigate('/mypage/emotionHistory/');
+    const moveToEmotionHistory = (petId) => {
+        navigate(`/mypage/emotionHistory/${petId}`);
     };
 
 
@@ -95,7 +95,7 @@ export function MyPet() {
                                             </ContentContainer>
                                         </MypetRectangle>
                                     </MypetContent>
-                                    <MypetHistoryBtn onClick={moveToEmotionHistory}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
+                                    <MypetHistoryBtn onClick={() => moveToEmotionHistory(pet.petId)}>감정 해독 결과 히스토리 보기</MypetHistoryBtn>
                                 </MypetContainer>
                             ))
                         )}
