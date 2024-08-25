@@ -299,7 +299,7 @@ export const SigninButton = styled.button`
     &:hover {
         background-color: ${(props) => props.$disabled ? '#d3d3d3' : 'white'};
         border: 3px solid ${(props) => props.$disabled ? '#d3d3d3' :' rgb(252, 129, 158)'};
-        color: ${(props) => props.$disabled ? '#d3d3d3' : 'rgb(252, 129, 158)'};
+        color: ${(props) => props.$disabled ? 'white' : 'rgb(252, 129, 158)'};
         box-shadow: 0px 4px 4px 2px rgba(252, 129, 158, 0.25); 
     }
 `;
