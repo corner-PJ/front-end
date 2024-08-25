@@ -15,19 +15,23 @@ const ListContent = ({ data }) => {
 
   return (
     <ListContainer>
-      {data.map((item, index) => (
-        // 공고 상세 페이지 id를 못 찾아서 일단 index로만 설정,,
-        <ListItem key={index} onClick={() => goToDetail(index)}>
-          <ListImg src={item.thumbnail} alt="dog" />
-          <ListText>
-            <ItemText>이름: {item.name || item.title}</ItemText>
-            {item.duration ? <ItemText>품종: {item.breed}</ItemText> : <ItemText>성별: {item.sex}</ItemText> }
-            <ItemText>추정나이: {item.age}</ItemText>
-            {item.duration ? <ItemText>임시 보호기간: {item.duration}</ItemText> : null }
-            {/* {item.isAdopt ? <ItemText>입양됨</ItemText> : <ItemText>입양 안 됨</ItemText>} */}
-          </ListText>
-        </ListItem>
-      ))}
+      {data.length === 0 ? (
+        <NoDataMessage>등록된 글이 없습니다.</NoDataMessage>
+      ) : (
+        data.map((item, index) => (
+          // 공고 상세 페이지 id를 못 찾아서 일단 index로만 설정,,
+          <ListItem key={index} onClick={() => goToDetail(index)}>
+            <ListImg src={item.thumbnail} alt="dog" />
+            <ListText>
+              <ItemText>이름: {item.name || item.title}</ItemText>
+              {item.duration ? <ItemText>품종: {item.breed}</ItemText> : <ItemText>성별: {item.sex}</ItemText> }
+              <ItemText>추정나이: {item.age}</ItemText>
+              {item.duration ? <ItemText>임시 보호기간: {item.duration}</ItemText> : null }
+              {/* {item.isAdopt ? <ItemText>입양됨</ItemText> : <ItemText>입양 안 됨</ItemText>} */}
+            </ListText>
+          </ListItem>
+        ))
+      )}
     </ListContainer>
   );
 };
@@ -70,5 +74,14 @@ const ListText = styled.div`
 const ItemText = styled.div`
     font-size: 1.2em;
 `
+
+const NoDataMessage = styled.div`
+    color: rgba(0, 0, 0, 0.6);
+	font-size: 20px;
+	font-family: Inter, sans-serif;
+	font-weight: 500;
+    margin-left: 80px;
+    margin-top: 25px;
+`;
 
 export default ListContent;
