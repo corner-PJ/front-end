@@ -64,8 +64,7 @@ function Nav() {
             };
     
             fetchUserInfo();
-        }, []);
-    
+        }, [ACCESS_TOKEN]);
 
     return (
         <div className={s.navbar}>
