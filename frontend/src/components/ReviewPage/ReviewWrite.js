@@ -84,38 +84,50 @@ function ReviewWrite() {
     return (
         <WritePageContainer>
             <MainTitle>입양 후기</MainTitle>
-            <WriteText content={content} setContent={setContent}/>
-            <ImgContainer>
-                    <FileContainer onClick={handleUploadButtonClick}>
-                        <FileIcon src={ImgIcon} alt="ImgIcon" />
-                        <FileText>이미지 선택</FileText>
-                        <FileText>{dogImg ? dogImg.length : 0 }/10</FileText>
-                        <UploadImg
-                            type="file" 
-                            accept="image/*" 
-                            multiple
-                            onChange={ImgUpload}
-                            ref={fileInputRef}
-                        />
-                    </FileContainer>
-                    {dogImg.map((imgSrc, index) => (
-                        <Img key={index} src={imgSrc} onDoubleClick={() => handleRemoveButtonClick(index)} />
-                    ))}
-            </ImgContainer>
+            <WriteContainer>
+                <WriteText content={content} setContent={setContent}/>
+                <ImgContainer>
+                        <FileContainer onClick={handleUploadButtonClick}>
+                            <FileIcon src={ImgIcon} alt="ImgIcon" />
+                            <FileText>이미지 선택</FileText>
+                            <FileText>{dogImg ? dogImg.length : 0 }/10</FileText>
+                            <UploadImg
+                                type="file" 
+                                accept="image/*" 
+                                multiple
+                                onChange={ImgUpload}
+                                ref={fileInputRef}
+                            />
+                        </FileContainer>
+                        {dogImg.map((imgSrc, index) => (
+                            <Img key={index} src={imgSrc} onDoubleClick={() => handleRemoveButtonClick(index)} />
+                        ))}
+                </ImgContainer>
+            </WriteContainer>
             <PsotButton onClick={handlePost}>등록하기</PsotButton>
         </WritePageContainer>
     )
 }
 
 const WritePageContainer = styled.div`
-    margin: 50px 50px 120px;
-    text-align: center;
+    margin: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;  
+`
+
+const WriteContainer = styled.div`
+    max-width: 1130px;  
+    width: 100%; 
+    padding: 0 20px;  
 `
 
 const MainTitle = styled.div`
     font-size: 2.5em;
     font-weight: bold;
     margin: 50px 0 75px;
+    text-align: center;    
 `
 
 const ImgContainer = styled.div`
@@ -124,7 +136,6 @@ const ImgContainer = styled.div`
     gap: 20px;
     justify-content: left;
     width: 1150px;
-    margin-left: 14em;
     margin-bottom: 20px;
 
 `
@@ -165,7 +176,7 @@ const Img = styled.img`
 
 const PsotButton = styled.button`
     display: block;
-    margin-left: 52em;
+    margin-left: 45em;
     padding: 15px 60px;
     color: #FFFFFF;
     font-size: 22px;
