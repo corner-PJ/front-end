@@ -24,7 +24,7 @@ function SelectDog() {
                 if (response.status === 200) {
                     const responseData = response.data.data.map((item, index) => ({
                         ...item,
-                        petId: 1 // id 값을 1부터 시작하는 인덱스로 설정
+                        petId: index+1 // id 값을 1부터 시작하는 인덱스로 설정
                     }));
                     setData(responseData);
                     // console.log(response.data.data)                    
