@@ -62,7 +62,7 @@ export function SpeechSynthesisPage2() {
 	const handleShowResult = () => {
 		setIsLoading(true);
 
-		const totalDuration = 1000; 
+		const totalDuration = 3000; 
 		const intervalDuration = 50; 
 		const totalIntervals = totalDuration / intervalDuration;
 	
