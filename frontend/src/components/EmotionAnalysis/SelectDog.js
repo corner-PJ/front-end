@@ -1,40 +1,50 @@
-import { useState } from "react";
 import styled from 'styled-components';
-import checkmark from '../../assets/checkmark.png'
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import checkmark from '../../assets/checkmark.png';
+import axios from 'axios';
 
 function SelectDog() {
     const navigate = useNavigate();
-
+    const [data, setData] = useState([]);
     const [selectedDog, setSelectedDog] = useState(null);
+    
+    // localStorage에서 토큰 가져오기
+    const ACCESS_TOKEN = localStorage.getItem('authToken');
 
-    const data = [
-        {
-            id: 1,
-            dogname: "진구",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxuGFo3mMbJvJ5qmXqgOEv4IqR06S929K2vw&s"
-        },
-        {
-            id: 2,
-            dogname: "뭉치",
-            img: "https://scontent-ssn1-1.xx.fbcdn.net/v/t1.6435-9/105050805_1280480938965267_4329762517066303827_n.jpg?stp=dst-jpg_p526x296&_nc_cat=103&ccb=1-7&_nc_sid=13d280&_nc_ohc=X7uOp4VaDpcQ7kNvgHP1Vsv&_nc_ht=scontent-ssn1-1.xx&oh=00_AYBBxE155pPYYAiUAGOcPJEpuzenfW1mq15-feU_hAeXSw&oe=66AE51F7"
-        },
-        {
-            id: 3,
-            dogname: "몽실",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRI6hU1UePpJeJWYoY44IJKhZPRHkrlo43ADw&s"
-        },
-        {
-            id: 4,
-            dogname: "망고",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXJd22bv_zCY9yMB3oLzpGrT9dnl4f-BOhdw&s"
-        },
-        {
-            id: 5,
-            dogname: "럭키",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZXinKaTgeOdXL3VLshOHNbctlr2NKgfbOmA&s"
-        },
-    ];
+    useEffect(() => {
+        // 반려견 정보 조회
+        const ReviewsData = async () => {
+            try {
+                const response = await axios.get('/mypage/petinfo', {
+                    headers: {
+                        'Authorization' : `Bearer ${ACCESS_TOKEN}`,
+                    }
+                });
+                if (response.status === 200) {
+                    const responseData = response.data.data.map((item, index) => ({
+                        ...item,
+                        petId: 1 // id 값을 1부터 시작하는 인덱스로 설정
+                    }));
+                    setData(responseData);
+                    // console.log(response.data.data)                    
+                } else {
+                    alert("데이터를 불러오는데 실패했습니다.");
+                }
+            } catch (error) {
+                console.error('반려견 목록 조회 실패:', error);
+                
+                // 토큰이 만료되었거나 유효하지 않을 때
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('ACCESS_TOKEN');
+                    alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                    navigate('/login');
+                }
+            }
+        };
+
+        ReviewsData();
+    }, [ACCESS_TOKEN, navigate]);
 
     const ChooseDog = (id) => {
         setSelectedDog(id);
@@ -46,20 +56,25 @@ function SelectDog() {
             navigate(`/analysis/${selectedDog}`);
         }
     }
-     
+     console.log("반려견 데이터:", data);
     return (
         <SelectDogConatiner>
             <Title>감정 해독할 반려견을 선택해주세요</Title>
             <ImgOption>
-                {data.map((item) => (
-                    <ListItem onClick={() => ChooseDog(item.id)}>
-                        <DogImgWrapper>
-                            <DogImg src={item.img} selected={selectedDog === item.id} />
-                            {selectedDog === item.id && <Checkmark src={checkmark} />}
-                        </DogImgWrapper>                        
-                        <DogName>{item.dogname}</DogName>
-                    </ListItem>
-                ))}
+                {data && data.length > 0 ? (
+                    data.map((item) => (
+                        // 아직 id 값이 없음
+                        <ListItem key={item.petId} onClick={() => ChooseDog(item.petId)}>
+                            <DogImgWrapper>
+                                <DogImg src={item.image} selected={selectedDog === item.id} />
+                                {selectedDog === item.petId && <Checkmark src={checkmark} />}
+                            </DogImgWrapper>                        
+                            <DogName>{item.name}</DogName>
+                        </ListItem>
+                    ))
+                ) : (
+                    <NoDogsMessage>선택할 반려견이 없습니다.</NoDogsMessage>
+                )}
             </ImgOption>
             <NextButton onClick={goToAnalysis} disabled={!selectedDog}>다음</NextButton>
         </SelectDogConatiner>
@@ -84,6 +99,11 @@ const ImgOption = styled.div`
     justify-items: center;
 `
 
+const NoDogsMessage = styled.p`
+    font-size: 18px;
+    color: gray;
+`;
+
 const ListItem = styled.div`
     display: flex;
     flex-direction: column;
@@ -96,7 +116,7 @@ const DogImgWrapper = styled.div`
 
 const DogImg = styled.img`
     width: 250px;
-    height: 250px;
+    height: 270px;
     border-radius: 50%;
     background-size: cover;
     background-position: center;

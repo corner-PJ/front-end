@@ -159,6 +159,10 @@ function ListComment({ postId }) {
         } catch (error) {
             console.error("댓글 삭제 실패:", error);
 
+            if (error.response.status === 403 || error.response.status === 404 ) {
+                alert("작성자만 변경할 수 있습니다.");
+            }
+
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');

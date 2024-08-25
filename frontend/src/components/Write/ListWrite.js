@@ -97,7 +97,8 @@ function ListWrite() {
 
             if (response.data.success) {
                 alert('입양 공고가 등록되었습니다.');
-                navigate('/list?type=adopt');
+                const postId = response.data.data;
+                navigate(`/list/adopt/${postId}`);
             } else {
                 alert('입양 공고 등록에 실패했습니다.');
             }
