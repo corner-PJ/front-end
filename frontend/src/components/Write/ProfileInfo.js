@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 function ProfileInfo({ profile, setProfile }) {
-
     const stateHandler = (e) => {
         if (e.target.name === 'tnr') {
             setProfile({
@@ -14,6 +13,7 @@ function ProfileInfo({ profile, setProfile }) {
                 [e.target.name]: e.target.value
             });
         }
+        console.log(e.target.value)
     };
 
     return (
@@ -57,7 +57,7 @@ function ProfileInfo({ profile, setProfile }) {
                 />
                 <RadioGroup>
                     <TnrTitle>중성화 여부</TnrTitle>
-                    <label style={{ fontSize: "1.3em" }}>
+                    <RadioLabel>
                         <TnrButton
                             type="radio"
                             name="tnr"
@@ -65,9 +65,10 @@ function ProfileInfo({ profile, setProfile }) {
                             checked={profile.tnr === true}
                             onChange={stateHandler}
                         />
+                        <CustomRadio checked={profile.tnr === true} />
                         예
-                    </label>
-                    <label style={{ fontSize: "1.3em" }}>
+                    </RadioLabel>
+                    <RadioLabel>
                         <TnrButton
                             type="radio"
                             name="tnr"
@@ -75,8 +76,9 @@ function ProfileInfo({ profile, setProfile }) {
                             checked={profile.tnr === false}
                             onChange={stateHandler}
                         />
+                        <CustomRadio checked={profile.tnr === false} />
                         아니요
-                    </label>
+                    </RadioLabel>
                 </RadioGroup>
             </InfoContainer>
         </ProfileInfoContainer>
@@ -108,21 +110,58 @@ const InfoContainer = styled.div`
 const InputText = styled.input`
     border: none;
     border-bottom: 2px solid #000000;
-    font-size: 1.2em;
+    font-size: 19px;
     height: 20px;
     padding: 10px;
 `;
 
 const RadioGroup = styled.div`
     display: flex;
-    gap: 30px;
+    gap: 25px;
+    margin-top: 5px;
 `;
 
 const TnrTitle = styled.div`
-    font-size: 1.3em;
+    font-size: 20px;
 `;
 
-const TnrButton = styled.input`
+const TnrButton = styled.input.attrs({ type: 'radio' })`
+    display: none; /* Hide the default radio button */
+`;
+
+const RadioLabel = styled.label`
+    font-size: 19px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 15px;
+`;
+
+const CustomRadio = styled.span`
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border: 5px solid #d9d9d9;
+    border-radius: 50%;
+    margin-right: 8px;
+    position: relative;
+
+    background-color: ${({ checked }) => (checked ? '#FFC1C1' : 'transparent')};
+    border-color: ${({ checked }) => (checked ? '#FFC1C1' : '#d9d9d9')};
+
+    &::after {
+        content: '';
+        display: block;
+        width: 11px;
+        height: 11px;
+        background-color: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: ${({ checked }) => (checked ? 1 : 0)};
+    }
 `;
 
 export default ProfileInfo;
