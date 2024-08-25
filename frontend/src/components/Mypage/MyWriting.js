@@ -100,8 +100,11 @@ export function MyWriting() {
                 {posts.length === 0 ? (
                     <TextX>작성한 임시 보호 글이 없습니다.</TextX>
                 ) : (
-                    posts.slice(0, visiblePosts).map((post, index) => (
-                        <ProtectionContent key={index} onClick={() => handlePostClick(post.adoptPostId, 'adopt')}>
+                    posts
+                    .slice() 
+                    .sort((a, b) => new Date(a.postDate) - new Date(b.postDate)) 
+                    .slice(0, visiblePosts).map((post) => (
+                        <ProtectionContent key={post.adoptPostId} onClick={() => handlePostClick(post.adoptPostId, 'adopt')}>
                             <ProtectionImg src={post.imageUrls[0]} alt="pet" />
                             <ProtectionRectangle>
                                 <ProtectionDate>{formatDate(post.postDate)}</ProtectionDate>
@@ -120,19 +123,23 @@ export function MyWriting() {
                 {reviews.length === 0 ? (
                     <TextX>작성한 입양 후기가 없습니다.</TextX>
                 ) : (
-                    reviews.slice(0, visibleReviews).map((review, index) => (
-                        <ReviewContent key={index} onClick={() => handleReviewClick(review.reviewId)}>
-                            <ReviewImg src={review.images[0].fileName} alt="pet" />
-                            <ReviewRectangle>
-                            <ReviewDate>
-                                {formatDate(review.reviewDate)}
-                            </ReviewDate>
-                            <ReviewPetName>
-                                {review.content.length > 20 ? `${review.content.slice(0, 20)}...` : review.content || '내용 없음'}
-                            </ReviewPetName>
-                            </ReviewRectangle>
-                        </ReviewContent>
-                    ))
+                    reviews
+                        .slice() // 원본 배열을 변경하지 않기 위해 복사
+                        .sort((a, b) => new Date(a.reviewDate) - new Date(b.reviewDate)) // 날짜 기준 오름차순 정렬
+                        .slice(0, visibleReviews) 
+                        .map((review, index) => (
+                            <ReviewContent key={index} onClick={() => handleReviewClick(review.reviewId)}>
+                                <ReviewImg src={review.images[0].fileName} alt="pet" />
+                                <ReviewRectangle>
+                                    <ReviewDate>
+                                        {formatDate(review.reviewDate)}
+                                    </ReviewDate>
+                                    <ReviewPetName>
+                                        {review.content.length > 20 ? `${review.content.slice(0, 20)}...` : review.content || '내용 없음'}
+                                    </ReviewPetName>
+                                </ReviewRectangle>
+                            </ReviewContent>
+                        ))
                 )}
                 {visibleReviews < reviews.length && (
                     <MoreBtn onClick={handleLoadMoreReviews}>더보기</MoreBtn>
@@ -170,7 +177,6 @@ const ProtectionHeader = styled.span`
     margin-bottom: 20px;
 `;
 
-
 const ProtectionContent = styled.div`
     display: flex;
     flex-direction: row; 
@@ -190,7 +196,6 @@ const ProtectionContent = styled.div`
 	padding: 16px;
     flex-shrink: 0;
 `;
-
 
 const ProtectionImg = styled.img`
     width: 90px;
