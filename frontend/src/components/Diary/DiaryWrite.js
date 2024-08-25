@@ -38,10 +38,16 @@ export function DiaryWritePage() {
         console.log('Formatted Date for Server:', formattedDate);
         
         try {
-            const token = localStorage.getItem('authToken'); 
+            const token = localStorage.getItem('authToken');
+
+            if (!token) {
+                alert('인증 토큰이 없습니다. 다시 로그인해주세요.');
+                // navigate('/login'); 
+                return;
+            } 
         
             const response = await axios.post('/diary', {
-                emotionTrackId: 2,  
+                emotionTrackId: 1,  
                 diaryDate: formattedDate,
                 content: content
             }, {

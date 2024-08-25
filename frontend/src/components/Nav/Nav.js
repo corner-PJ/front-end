@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import {Link, useNavigate} from "react-router-dom"
 import hadogIog from '../../assets/HADOG.png'
 import logout from "../../assets/logout.png"
+import axios from 'axios';
 
 function Nav() {
     const navigate = useNavigate();
@@ -31,6 +32,40 @@ function Nav() {
             navigate(`/login`);
         }
     };
+
+        // 유저 정보 저장
+        const [userInfo, setUserInfo] = useState({
+            name: "",
+            id: "",
+            nickname: "",
+            password: "",
+            email: "",
+        });
+    
+        // 유저 정보 서버로부터 가져옴
+        useEffect(() => {
+            const fetchUserInfo = async () => {
+            try {
+                const token = localStorage.getItem("authToken");
+                // console.log("토큰:", token);
+    
+                const response = await axios.get("/mypage/userinfo", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+    
+                // console.log("서버 응답 데이터:", response.data);
+    
+                setUserInfo(response.data.data);
+            } catch (error) {
+                console.error("사용자 정보를 불러오는 중 오류 발생:", error);
+            }
+            };
+    
+            fetchUserInfo();
+        }, []);
+    
 
     return (
         <div className={s.navbar}>
@@ -72,7 +107,7 @@ function Nav() {
                     <>
                     <div className={s.dropmenu}>
                         {/* 아직 이름 불러오는 부분 구현 x */}
-                        <Link to={"./mypage"}><strong>심수빈</strong></Link>
+                        <Link to={"./mypage"}><strong>{userInfo.name}</strong></Link>
                     </div>
                     <img onClick={handleLogoutButtonClick} className={s.logoutImg} alt='logoutImg' src={logout}/>
                     </>

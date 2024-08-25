@@ -180,14 +180,17 @@ export const DiaryPage = () => {
     const nextMonth = () => {
         setCurrentMonth(addMonths(currentMonth, 1));
     };
+    
 
     const onDateClick = (day, entries) => {
+        console.log('Selected entries:', entries);
         setSelectedDate(day);
     
         if (!entries || entries.length === 0) {  // 일기가 없는 경우 모달
             openModal();
         } else if (entries.length === 1) { // 일기 하나인 경우 상세페이지
-            navigate(`/diary/${entries[0].id}`);
+            console.log("entries[0].id", entries[0].id);
+            // navigate(`/diary/${entries[0].id}`);
         } else if (entries.length > 1) { // 일기 2개 이상인 경우 목록
             navigate(`/diary/list/${day}`);
         }
