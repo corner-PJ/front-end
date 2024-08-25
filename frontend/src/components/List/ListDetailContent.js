@@ -48,7 +48,10 @@ function ListDetailContent({ data, postId }) {
             alert("데이터를 불러오는데 실패했습니다.");
           }
       } catch (error) {
-          console.error('입양 상태 변화 실패:', error);            
+          console.error('입양 상태 변화 실패:', error);   
+          if(error.response.status === 403){
+            alert("작성자만 변경할 수 있습니다.")
+          }         
           
           // 토큰이 만료되었거나 유효하지 않을 때
           if (error.response && error.response.status === 401) {
