@@ -47,7 +47,7 @@ export function DiaryWritePage() {
             } 
         
             const response = await axios.post('/diary', {
-                emotionTrackId: 1,  
+                emotionTrackId: 2,  
                 diaryDate: formattedDate,
                 content: content
             }, {
