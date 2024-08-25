@@ -70,6 +70,7 @@ function ListWrite() {
         
         // 내용 저장
         const blob = new Blob([JSON.stringify({
+            postDate: new Date().toISOString(),
             content: content,
             name: profile.dogname,
             breed: profile.species,
