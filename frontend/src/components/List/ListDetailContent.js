@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AIResult from './AIResult';
 import axios from 'axios';
@@ -12,6 +12,12 @@ function ListDetailContent({ data, postId }) {
     // // localStorage에서 토큰 가져오기
     const ACCESS_TOKEN = localStorage.getItem('authToken');
     
+    useEffect(() => {
+      if (data && data.adoptStatus !== undefined) {
+          setAdoptStatus(data.adoptStatus);
+      }
+    }, [data]); 
+
     if (!data) {
         return <div>데이터가 없습니다.</div>;
     }
@@ -49,6 +55,7 @@ function ListDetailContent({ data, postId }) {
           }
       } catch (error) {
           console.error('입양 상태 변화 실패:', error);   
+          
           if(error.response.status === 403){
             alert("작성자만 변경할 수 있습니다.")
           }         
@@ -98,7 +105,6 @@ function ListDetailContent({ data, postId }) {
                     <AdoptionCheckbox
                         type="checkbox"
                         checked={adoptStatus}
-                        onChange={handleCheckboxChange}
                     />
                     <AdoptionLabel>입양 완료</AdoptionLabel>
                 </AdoptionStatus>
@@ -156,7 +162,7 @@ const ListData = styled.div`
 const ImgContainer = styled.div`
   width: 800px;
   height: 600px;
-  margin: 50px 70px 50px 23%;
+  margin: 50px 50px 50px 20%;
   overflow: hidden;
   position: relative;
 `;
@@ -229,16 +235,40 @@ const Dot = styled.div`
 `;
 
 const AdoptionStatus = styled.div`
-  font-size: 18px;
+  display: flex;
+  align-items: center;  
   cursor: pointer;
 `;
 
-const AdoptionCheckbox = styled.input`
-  margin-right: 5px;
-  cursor: pointer;
+const AdoptionCheckbox = styled.input.attrs({ type: 'checkbox' })`
+  appearance: none; 
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #FC819E;
+  margin-right: 10px; 
+  position: relative;
+
+  &:checked {
+    background-color: #FC819E;
+    border-color: #FC819E;
+  }
+
+  &:checked::after {
+    content: '✔';
+    display: block;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 `;
 
 const AdoptionLabel = styled.label`
+  font-size: 19px; 
   cursor: pointer;
 `;
 
