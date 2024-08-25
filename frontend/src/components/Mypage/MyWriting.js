@@ -98,7 +98,7 @@ export function MyWriting() {
             <ProtectionWriting>
                 <ProtectionHeader>작성한 임시 보호 글</ProtectionHeader>
                 {posts.length === 0 ? (
-                    <TextX>작성한 임시 보호 글이 없습니다.</TextX>
+                    <NoDataMessage>작성한 임시 보호 글이 없습니다.</NoDataMessage>
                 ) : (
                     posts
                     .slice() 
@@ -121,7 +121,7 @@ export function MyWriting() {
             <MyReview>
                 <ReviewHeader>작성한 입양 후기</ReviewHeader>
                 {reviews.length === 0 ? (
-                    <TextX>작성한 입양 후기가 없습니다.</TextX>
+                    <NoDataMessage>작성한 입양 후기가 없습니다.</NoDataMessage>
                 ) : (
                     reviews
                         .slice() // 원본 배열을 변경하지 않기 위해 복사
@@ -235,7 +235,7 @@ const ProtectionPetName = styled.span`
     margin-left: 17px;
 `;
 
-const TextX = styled.div`
+const NoDataMessage = styled.div`
     color: rgba(0, 0, 0, 0.6);
 	font-size: 20px;
 	font-family: Inter, sans-serif;

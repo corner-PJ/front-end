@@ -101,6 +101,7 @@ const ListContainer = styled.div`
     display: flex;
     margin: 60px 0;
     flex-shrink: 0;
+    min-height: 40vh;
 `;
 const ListButton = styled.div`
     width: 150px;
