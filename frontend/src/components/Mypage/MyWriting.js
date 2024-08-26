@@ -107,7 +107,7 @@ export function MyWriting() {
                         <ProtectionContent key={post.adoptPostId} onClick={() => handlePostClick(post.adoptPostId, 'adopt')}>
                             <ProtectionImg src={post.imageUrls[0]} alt="pet" />
                             <ProtectionRectangle>
-                                <ProtectionDate>{formatDate(post.postDate)}</ProtectionDate>
+                                {/* <ProtectionDate>{formatDate(post.postDate)}</ProtectionDate> */}
                                 <ProtectionPetName>{post.name || '이름 없음'}</ProtectionPetName>
                             </ProtectionRectangle>
                         </ProtectionContent>
