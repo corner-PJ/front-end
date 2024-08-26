@@ -2,7 +2,6 @@ import React from "react";
 import hadogIogo from "../../assets/Login_Logo.jpg"
 import GoogleLogo from "../../assets/GoogleLogo.png"
 import NaverLogo from "../../assets/NaverLogo.png"
-import KakaoLogo from "../../assets/KakaoLogo.png"
 import * as L from "./LoginStyle";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
