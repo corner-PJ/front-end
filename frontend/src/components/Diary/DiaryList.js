@@ -47,9 +47,14 @@ export function DiaryListPage() {
         }
     }, [date]); 
 
-    // 상세 페이지 이동
+    // 상세 페이지 이동 (더보기 버튼)
     const handleReadMore = (diaryId) => {
-        navigate(`/diary/detail/${diaryId}`);
+        navigate(`/diary/${diaryId}`);
+    };
+
+    // 상세 페이지 이동 
+    const moveToDetail = (diaryId) => {
+        navigate(`/diary/${diaryId}`);
     };
 
 
@@ -59,7 +64,7 @@ export function DiaryListPage() {
                 <ListHeader>{format(new Date(date), "yyyy년 MM월 dd일")}</ListHeader>
                 <ContentContainer>
                     {diaryEntries.map((entry, index) => (
-                        <ListContentWrapper key={index} onClick={() => handleReadMore(entry.diaryId)}>
+                        <ListContentWrapper key={index} onClick={() => moveToDetail(entry.diaryId)}>
                             <ListImg src={Choco} />
                             <ListRectangle>
                                 <ListDate>{format(new Date(entry.diaryDate), "yyyy.MM.dd")}</ListDate>  
