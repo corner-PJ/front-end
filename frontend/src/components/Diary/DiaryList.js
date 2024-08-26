@@ -13,22 +13,16 @@ export function DiaryListPage() {
     
     const { date } = useParams();
 
-    // 서버에 맞게 날짜 형식 변환 
-    const formatDateForAPI = (date) => {
-        return `${date}T00:00:00`; 
-    };
-
     // 목록 조회 (URL의 날짜가 변경되었을 때)
     useEffect(() => {
         const fetchDiaryEntries = async () => {
-            const formattedDate = formatDateForAPI(date);
-            // console.log("date:", formattedDate);
+            // console.log("date:", date);
 
             try {
                 const token = localStorage.getItem('authToken');
                 const response = await axios.get('/diary/list', {
                     params: { 
-                        date: '2024-08-19T14:56:52', 
+                        date: date, 
                     },
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -65,10 +59,10 @@ export function DiaryListPage() {
                 <ListHeader>{format(new Date(date), "yyyy년 MM월 dd일")}</ListHeader>
                 <ContentContainer>
                     {diaryEntries.map((entry, index) => (
-                        <ListContentWrapper key={index}>
+                        <ListContentWrapper key={index} onClick={() => handleReadMore(entry.diaryId)}>
                             <ListImg src={Choco} />
                             <ListRectangle>
-                                <ListDate>{format(new Date(entry.diaryDate), "yyyy.MM.dd HH:mm")}</ListDate>
+                                <ListDate>{format(new Date(entry.diaryDate), "yyyy.MM.dd")}</ListDate>  
                                 <ListContentHeader>놀고 싶어요 상태에 대한 기록</ListContentHeader>  {/* 감정 분석 결과 제목 */}
                                 <ListContent>
                                     {entry.content.length > maxLength ? (
