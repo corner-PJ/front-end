@@ -33,22 +33,22 @@ export function DiaryWritePage() {
     // 일기 등록 핸들러
     const handleRegister = async () => {
         const now = new Date();
-        const formattedDate = formatDateForServer(now);
+        // const formattedDate = formatDateForServer(now);
 
-        console.log('Formatted Date for Server:', formattedDate);
+        // console.log('Formatted Date for Server:', formattedDate);
         
         try {
             const token = localStorage.getItem('authToken');
 
             if (!token) {
                 alert('인증 토큰이 없습니다. 다시 로그인해주세요.');
-                // navigate('/login'); 
+                navigate('/login'); 
                 return;
             } 
         
             const response = await axios.post('/diary', {
                 emotionTrackId: 2,  
-                diaryDate: formattedDate,
+                // diaryDate: formattedDate,
                 content: content
             }, {
                 headers: {
