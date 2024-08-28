@@ -5,13 +5,39 @@ import dogImg1 from '../../assets/dogImg1.png'
 import dogImg2 from '../../assets/dogImg2.png'
 import dogImg3 from '../../assets/dogImg3.png'
 import dogImg4 from '../../assets/dogImg4.png'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import React, { useState, useEffect  } from "react";
 
 function EmotionAnalysis() {
     const navigate = useNavigate();
+    const [isLogin, setIsLogin] = useState(false);
 
     const goToAnalysis = () => {
         navigate(`/analysis/`);
     }
+
+    	// localStorage에서 토큰 가져오기
+	const token = localStorage.getItem('authToken');
+
+	useEffect(() => {
+		// console.log('토큰 확인: ', token);
+		if (token) {
+			// 토큰이 있으면 로그인 상태로 설정
+			setIsLogin(true);
+		} 
+	}, [token]);
+
+    const handleStartClick = () => {
+        if (isLogin) {
+            goToAnalysis();
+        } else {
+            toast.error('로그인 후 이용해 주세요.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
+        }
+    };
 
     return(
         <EmotionAnalysisContainer>
@@ -33,8 +59,8 @@ function EmotionAnalysis() {
                 이렇게 분석된 강아지의 감정을 통해 더 깊은 이해를 얻고, 
                 더 나은 동반자가 되어보세요.
                 </MainText>
-           </MainTextContainer>
-            <StartButton onClick={() => goToAnalysis()}>
+            </MainTextContainer>
+            <StartButton onClick={handleStartClick}>
                 시작하기
             </StartButton>
         </EmotionAnalysisContainer>

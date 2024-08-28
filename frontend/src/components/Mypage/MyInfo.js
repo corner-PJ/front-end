@@ -5,6 +5,8 @@ import * as M from "./MypageStyle";
 import { FaPen } from "react-icons/fa";
 import { NicknameChangeModal } from './NicknameChangeModal';
 import { WithdrawModal } from "./WithdrawalModal";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function MyInfo() {
 
@@ -49,6 +51,11 @@ export function MyInfo() {
             setUserInfo(response.data.data);
         } catch (error) {
             console.error("사용자 정보를 불러오는 중 오류 발생:", error);
+            toast.error(`사용자 정보를 불러오는 중 오류 발생: ${error}`, {
+                autoClose: 3000,
+                position: "top-center",
+            });
+
         }
         };
 

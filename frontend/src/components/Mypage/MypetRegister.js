@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { PetRadioGroup } from './petRadioGroup';
 import { PetRadio } from './petRadio';
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function MypetRegisterPage() {
 
@@ -81,9 +83,17 @@ export function MypetRegisterPage() {
             );
 
             if (response.data.success) {
+                toast.success('반려견 등록에 성공했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 console.log("반려견 등록 성공:", response.data);
                 navigate('/mypage');
             } else {
+                toast.error('반려견 등록에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 console.error("반려견 등록 실패:", response.data.message);
             }
         } catch (error) {

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import checkmark from '../../assets/checkmark.png';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SelectDog() {
     const navigate = useNavigate();
@@ -29,7 +31,10 @@ function SelectDog() {
                     setData(responseData);
                     // console.log(response.data.data)                    
                 } else {
-                    alert("데이터를 불러오는데 실패했습니다.");
+                    toast.error('반려견 목록 조회하는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });        
                 }
             } catch (error) {
                 console.error('반려견 목록 조회 실패:', error);
@@ -37,7 +42,11 @@ function SelectDog() {
                 // 토큰이 만료되었거나 유효하지 않을 때
                 if (error.response && error.response.status === 401) {
                     localStorage.removeItem('ACCESS_TOKEN');
-                    alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                    toast.error('토큰이 만료되었습니다. 다시 로그인해주세요', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
+        
                     navigate('/login');
                 }
             }
@@ -56,7 +65,7 @@ function SelectDog() {
             navigate(`/analysis/${selectedDog}`);
         }
     }
-     console.log("반려견 데이터:", data);
+        console.log("반려견 데이터:", data);
     return (
         <SelectDogConatiner>
             <Title>감정 해독할 반려견을 선택해주세요</Title>

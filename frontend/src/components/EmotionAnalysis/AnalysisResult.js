@@ -5,6 +5,8 @@ import Choco from "../../assets/Choco.jpg"
 import Loading from "../Loading/Loading"
 import html2canvas from "html2canvas";
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AnalysisResult() {
     const navigate = useNavigate();
@@ -27,13 +29,13 @@ function AnalysisResult() {
 		let intervalCount = 0;
 	
 		const timer = setInterval(() => {
-		  intervalCount += 1;
-		  setProgress((intervalCount / totalIntervals) * 100);
-	
-		  if (intervalCount >= totalIntervals) {
-			clearInterval(timer);
-			setIsLoading(false);
-		  }
+            intervalCount += 1;
+            setProgress((intervalCount / totalIntervals) * 100);
+        
+            if (intervalCount >= totalIntervals) {
+                clearInterval(timer);
+                setIsLoading(false);
+            }
 		}, intervalDuration);
 
         return () => clearTimeout(timer);
@@ -43,21 +45,26 @@ function AnalysisResult() {
         const target = document.getElementById("download");
         
         if (!target) {
-          return alert("사진 저장에 실패했습니다.");
+            return (
+                toast.error('사진 저장에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                })
+            );
         }
         html2canvas(target, {
             ignoreElements: (element) => {
                 return element.id === 'button';
             }
         }).then((canvas) => {
-          const link = document.createElement("a");
-          document.body.appendChild(link);
-          link.href = canvas.toDataURL("image/png");
-          link.download = "result.png"; // 다운로드 이미지 이름 -> 변경 필요 
-          link.click();
-          document.body.removeChild(link);
-        });
-      };
+            const link = document.createElement("a");
+            document.body.appendChild(link);
+            link.href = canvas.toDataURL("image/png");
+            link.download = "result.png"; // 다운로드 이미지 이름 -> 변경 필요 
+            link.click();
+            document.body.removeChild(link);
+            });
+        };
 
     return(
         <>{ isLoading? <Loading text="감정 해독 중 · · ·" progress={progress} /> :

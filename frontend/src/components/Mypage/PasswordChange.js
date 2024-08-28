@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export function PasswordChange() {
 	const [password, setPassword] = useState('');
@@ -37,15 +40,21 @@ export function PasswordChange() {
             );
 
             if (response.data.success) {
-                alert("비밀번호가 변경되었습니다");
+                toast.success('비밀번호가 변경되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 navigate('/mypage');
 
             } else {
-                alert(response.data.message || "비밀번호 변경 실패");
+                toast.error('비밀번호 변경에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+    
             }
         } catch (error) {
             console.error("비밀번호 변경 중 오류 발생:", error);
-            alert("비밀번호 변경 중 오류가 발생했습니다.");
         }
     };
 

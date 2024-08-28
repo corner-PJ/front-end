@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function NicknameChangeModal({ isNicknameModalOpen, closeNicknameModal, setUserInfo}) {
     const [newNickname, setNewNickname] = useState("");
@@ -44,12 +46,18 @@ export function NicknameChangeModal({ isNicknameModalOpen, closeNicknameModal, s
                     nickname: newNickname,
                 }));
                 
-                alert(response.data.message);
+                toast.success('닉네임이 변경되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 closeNicknameModal();
                 navigate(`/mypage`);
 
             } else {
-                alert("닉네임 변경에 실패했습니다.");
+                toast.error('닉네임 변경에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
 
         } catch (error) {

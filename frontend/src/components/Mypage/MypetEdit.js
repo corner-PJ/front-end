@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { PetRadioGroup } from './petRadioGroup';
 import { PetRadio } from './petRadio';
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function MypetEditPage() {
     const { petId } = useParams();
@@ -54,6 +56,10 @@ export function MypetEditPage() {
                 if (response.data.success) {
                     setPetInfo(response.data.data);
                 } else {
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                     console.error("반려견 정보 조회 실패:", response.data.message);
                 }
             } catch (error) {
@@ -117,14 +123,22 @@ export function MypetEditPage() {
                 }));
                 console.log("반려견 정보 수정 성공:", response.data);
                 navigate('/mypage/'); // 수정 후 마이페이지로 이동
+                toast.success('반려견 정보 수정에 성공했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+
             } else {
+                toast.error('반려견 정보 수정에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 console.error("반려견 정보 수정 실패:", response.data.message);
             }
         } catch (error) {
             console.error("반려견 정보를 수정하는 중 오류 발생:", error);
         }
     };
-
 
 
     return (

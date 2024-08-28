@@ -4,6 +4,8 @@ import ListComment from './ListComment';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ListDetail() {
     const { postId, type } = useParams();
@@ -51,7 +53,10 @@ function ListDetail() {
                     setData(response.data.data);
                     console.log(response.data.data);
                 } else {
-                    alert("데이터를 불러오는데 실패했습니다.");
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                 }
             } catch (error) {
                 console.error('상세 페이지 조회 실패:', error);

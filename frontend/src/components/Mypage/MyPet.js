@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function MyPet() {
     const navigate = useNavigate();
@@ -43,6 +45,10 @@ export function MyPet() {
                 if (response.data && response.data.success) {
                     setPetInfo(response.data.data); 
                 } else {
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                     console.error("반려견 정보 조회 실패:", response.data ? response.data.message : "응답 데이터 없음");
                     // setPetInfo({});
                 }
