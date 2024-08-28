@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import ImgIcon from '../../assets/InputImg.png';
 import WriteText from './WriteText';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ReviewWrite() {
     const [content, setContent] = useState("");
@@ -18,7 +20,10 @@ function ReviewWrite() {
     const ImgUpload = e => {
         const selectedFiles = e.target.files;
         if (dogImg.length + selectedFiles.length > 10) {
-            alert("이미지는 최대 10개까지 업로드할 수 있습니다.");
+            toast.error('이미지는 최대 10개까지 업로드할 수 있습니다.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
             return;
         } 
         
@@ -30,7 +35,10 @@ function ReviewWrite() {
 
         const handleUploadButtonClick = () => {
         if (dogImg.length >= 10) {
-            alert("이미지는 최대 10개까지 업로드할 수 있습니다.");
+            toast.error('이미지는 최대 10개까지 업로드할 수 있습니다.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
             return;
         }
 
@@ -64,10 +72,16 @@ function ReviewWrite() {
             });
 
             if (response.status === 200) {
-                alert('입양 후기가 등록되었습니다.'); 
+                toast.success('입양 후기가 등록되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 navigate('/review')
             } else {
-                alert("후기 등록에 실패했습니다.")
+                toast.error('후기 등록에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('후기 등록 오류:', error);
@@ -75,7 +89,10 @@ function ReviewWrite() {
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
-                alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 navigate('/login');
             }   
         }

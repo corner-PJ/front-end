@@ -3,6 +3,9 @@ import styled from "@emotion/styled";
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export function WithdrawModal({ isWithdrawModalOpen, closeWithdrawModal}) {
     const [password, setPassword] = useState("");
@@ -27,16 +30,26 @@ export function WithdrawModal({ isWithdrawModalOpen, closeWithdrawModal}) {
             });
 
             if (response.data.success) {
-                alert("회원 탈퇴가 완료되었습니다.");
+                toast.success('회원 탈퇴에 성공했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 localStorage.removeItem("authToken");
                 navigate("/"); 
 
             } else {
-                alert(response.data.message || "회원 탈퇴 실패");
+                toast.error('회원 탈퇴에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+
             }
         } catch (error) {
             console.error("회원 탈퇴 중 오류 발생:", error);
-            alert("회원 탈퇴 중 오류가 발생했습니다.");
+            toast.error('회원 탈퇴 중 오류가 발생했습니다.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
         }
     };
 

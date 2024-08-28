@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { useState, useRef } from 'react';
 import UpLoadIcon from '../../assets/UpLoadIcon.png';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function UpLoad() {
     const [video, setVideo] = useState(null);
@@ -11,7 +13,10 @@ function UpLoad() {
 
     const goToResult = () => {
         if (video === null) {
-            alert("영상을 업로드 해주세요.");
+            toast.error('영상을 업로드해 주세요.', {
+				autoClose: 3000,
+				position: "top-center",
+			});
             return;
         }
         console.log(selectedDog);

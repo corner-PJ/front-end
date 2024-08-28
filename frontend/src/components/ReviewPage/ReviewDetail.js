@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReviewComment from './ReviewComment';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ReviewDetail = () => {
     const navigate = useNavigate(); 
@@ -31,7 +33,10 @@ const ReviewDetail = () => {
                     setData(response.data.data);
                     // console.log(response.data.data)
                 } else {
-                    alert("데이터를 불러오는데 실패했습니다.");
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                 }
             } catch (error) {
                 console.error('리뷰 상세 조희 실패:', error);
@@ -39,7 +44,10 @@ const ReviewDetail = () => {
                 // 토큰이 만료되었거나 유효하지 않을 때
                 if (error.response && error.response.status === 401) {
                     localStorage.removeItem('ACCESS_TOKEN');
-                    alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                    toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                     navigate('/login');
                 }
             }

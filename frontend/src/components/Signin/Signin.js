@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import * as S from './SigninStyle';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function SigninPage() {
 	// 로그인 formData 상태변수 
@@ -137,12 +139,22 @@ export function SigninPage() {
 				"/user",
 				formData
 			);
+
+			toast.success('회원가입에 성공했습니다!', {
+				autoClose: 3000,
+				position: "top-center",
+			});
+			
 			// 페이지 이동 
 			navigate("/login");
 			console.log(response.data); 
 
 		} catch (error) {
 			console.error("데이터 전송 중 오류 발생:", error);
+			toast.error('회원가입에 실패했습니다.', {
+				autoClose: 3000,
+				position: "top-center",
+			});
 		}
 	};
 

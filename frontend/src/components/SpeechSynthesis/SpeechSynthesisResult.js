@@ -1,12 +1,12 @@
 import React, { useEffect  } from "react";
 import { NameChart } from "./NameChart";
 import { VoiceChart } from "./VioceChart";
-
 import styled from "@emotion/styled";
 import { FiDownload } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export function SpeechSynthesisResultPage() {
@@ -19,8 +19,14 @@ export function SpeechSynthesisResultPage() {
 	const onClickDownloadButton = () => {
 		const target = document.getElementById("download");
 		if (!target) {
-			return alert("사진 저장에 실패했습니다.");
-		}
+			return (
+				toast.error('사진 저장에 실패했습니다.', {
+					autoClose: 3000,
+					position: "top-center",
+				})
+			)	
+		};
+
 		html2canvas(target, {
 			ignoreElements: (element) => {
 				return element.id === 'button';

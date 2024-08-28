@@ -5,6 +5,8 @@ import ProfileInfo from './ProfileInfo';
 import WriteText from './WriteText';
 import ImgIcon from '../../assets/InputImg.png';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ListWrite() {
     const navigate = useNavigate();
@@ -28,7 +30,10 @@ function ListWrite() {
     const ImgUpload = e => {
         const selectedFiles = e.target.files;
         if (dogImg.length + selectedFiles.length > 10) {
-            alert("이미지는 최대 10개까지 업로드할 수 있습니다.");
+            toast.error('이미지는 최대 10개까지 업로드할 수 있습니다.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
             return;
         } 
         
@@ -40,7 +45,10 @@ function ListWrite() {
 
     const handleUploadButtonClick = () => {
         if (dogImg.length >= 10) {
-            alert("이미지는 최대 10개까지 업도르할 수 있습니다.");
+            toast.error('이미지는 최대 10개까지 업로드할 수 있습니다.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
             return;
         }
 
@@ -55,12 +63,18 @@ function ListWrite() {
     // 임보 공고 작성
     const handleSubmit = async () => {
         if (!profile.dogname || !profile.species || !profile.age || !profile.phonenum || !content) {
-            alert("모든 필드를 작성해 주세요.");
+            toast.error('모든 필드를 작성해 주세요.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
             return;
         }
 
         if (dogImg.length === 0) {
-            alert("이미지를 최소 1장 이상 업로드해야 합니다.");
+            toast.error('이미지를 최소 1장 이상 업로드해야 합니다.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
             return;
         }
 
@@ -97,11 +111,17 @@ function ListWrite() {
             });
 
             if (response.data.success) {
-                alert('입양 공고가 등록되었습니다.');
+                toast.success('입양 공고가 등록되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 const postId = response.data.data;
                 navigate(`/list/adopt/${postId}`);
             } else {
-                alert('입양 공고 등록에 실패했습니다.');
+                toast.error('입양 공고 등록에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('공고 등록 실패:', error);
@@ -109,7 +129,11 @@ function ListWrite() {
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
-                alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+
                 navigate('/login');
             }           
         }
