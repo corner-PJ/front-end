@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function MyWriting() {
     const [posts, setPosts] = useState([]);
@@ -28,6 +30,10 @@ export function MyWriting() {
                     setPosts(response.data.data);
                     console.log('Fetched posts:', response.data.data);
                 } else {
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                     console.error("임시 보호 글 목록 조회 실패:", response.data.message);
                 }
             } catch (error) {
@@ -53,6 +59,10 @@ export function MyWriting() {
                 if (response.data.success) {
                     setReviews(response.data.data);
                 } else {
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                     console.error("입양 후기 글 목록 조회 실패:", response.data.message);
                 }
             } catch (error) {
@@ -107,7 +117,7 @@ export function MyWriting() {
                         <ProtectionContent key={post.adoptPostId} onClick={() => handlePostClick(post.adoptPostId, 'adopt')}>
                             <ProtectionImg src={post.imageUrls[0]} alt="pet" />
                             <ProtectionRectangle>
-                                {/* <ProtectionDate>{formatDate(post.postDate)}</ProtectionDate> */}
+                                <ProtectionDate>{formatDate(post.postDate)}</ProtectionDate>
                                 <ProtectionPetName>{post.name || '이름 없음'}</ProtectionPetName>
                             </ProtectionRectangle>
                         </ProtectionContent>

@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import ReviewContent from './ReviewContnet';
 import ReviewMainImg from '../../assets/ReviewMainImg.png';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ReviewPage() { 
     const navigate = useNavigate(); 
@@ -26,7 +28,10 @@ function ReviewPage() {
                     setReviews(response.data.data);
                     // console.log(response.data.data)                    
                 } else {
-                    alert("데이터를 불러오는데 실패했습니다.");
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });    
                 }
             } catch (error) {
                 console.error('리뷰 목록 조회 실패:', error);
@@ -34,7 +39,10 @@ function ReviewPage() {
                 // 토큰이 만료되었거나 유효하지 않을 때
                 if (error.response && error.response.status === 401) {
                     localStorage.removeItem('ACCESS_TOKEN');
-                    alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                    toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                     navigate('/login');
                 }
             }

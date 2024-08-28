@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function DeleteModal({ isModalOpen, closeModal}) {
     const navigate = useNavigate();
@@ -30,16 +32,26 @@ export function DeleteModal({ isModalOpen, closeModal}) {
                 console.log("서버 응답 데이터:", response.data);
     
                 if (response.status === 200) {
-                    alert('일기가 삭제되었습니다.');
+                    toast.success('일기가 삭제되었습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                     closeModal();
                     navigate("/diary");
 
                 } else {
-                    alert(`일기 삭제에 실패했습니다: ${response.data.message}`);
+                    toast.error(`일기 삭제에 실패했습니다. 다시 시도해주세요.`, {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
+        
                 }
             } catch (error) {
                 console.error('일기 삭제 중 오류 발생:', error);
-                alert(`일기 삭제 중 오류가 발생했습니다: ${error.message}`);
+                toast.error(`일기 삭제 중 오류가 발생했습니다: ${error.message}`, {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         };
     

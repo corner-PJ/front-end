@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ListContent from './ListContent';
 import Pagination from './Pagination';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ListPage() {
     const location = useLocation();
@@ -24,7 +26,10 @@ function ListPage() {
                 setTotalPages(response.data.data.totalPages);
                 // console.log("임보", response.data.data.content); 
             } else {
-                alert("데이터를 불러오는데 실패했습니다.");
+                toast.error('데이터를 불러오는데 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('임보 페이지 조회 실패:', error);
@@ -42,7 +47,10 @@ function ListPage() {
                 setTotalPages(response.data.data.totalPages);
                 // console.log("보호소", response.data.data.content); 
             } else {
-                alert("데이터를 불러오는데 실패했습니다.");
+                toast.error('데이터를 불러오는데 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('보호소 페이지 조회 실패:', error);

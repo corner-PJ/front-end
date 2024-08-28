@@ -9,6 +9,8 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { MoveModal } from './Modal/MoveModal';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
@@ -150,6 +152,10 @@ export const DiaryPage = () => {
                 setDiaryEntries(entries);  // API로부터 받은 데이터를 상태에 저장
             } else {
                 console.error('일기 목록을 불러오는 데 실패했습니다.');
+                toast.error('데이터를 불러오는데 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('서버 오류:', error);

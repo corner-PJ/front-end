@@ -4,7 +4,8 @@ import Choco from "../../assets/Choco.jpg"
 import { useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 import axios from 'axios';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function DiaryListPage() {
     const navigate = useNavigate();
@@ -35,7 +36,10 @@ export function DiaryListPage() {
                     console.log("Diary Entries:", response.data.data);
                     setDiaryEntries(response.data.data);
                 } else {
-                    console.error('일기 목록을 불러오는 데 실패했습니다.');
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                 }
             } catch (error) {
                 console.error('서버 오류:', error);
