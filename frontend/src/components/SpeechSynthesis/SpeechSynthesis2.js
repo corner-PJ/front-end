@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect  } from "react";
 import { useNavigate } from 'react-router-dom';
 import { NameChart } from "./NameChart";
-
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 import { PiFilePlus } from "react-icons/pi";
 import { LuClipboardList } from "react-icons/lu";
-
 import Loading from '../Loading/Loading';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const names = [
 	"해피", "초코", "마루", "구름", "뭉치",
@@ -21,9 +22,15 @@ const names = [
 export function SpeechSynthesisPage2() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [progress, setProgress] = useState(0);
-
 	const [selectedNames, setSelectedNames] = useState([]);
 	const [showResult, setShowResult] = useState(false);
+	const [video, setVideo] = useState(null);
+    const fileInputRef = useRef(null);
+    const navigate = useNavigate();
+
+	useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
 	const toggleSelection = (name) => {
 		setSelectedNames(prevSelectedNames =>
@@ -32,12 +39,6 @@ export function SpeechSynthesisPage2() {
 				: [...prevSelectedNames, name]
 		);
 	};
-
-	
-	const [video, setVideo] = useState(null);
-    const fileInputRef = useRef(null);
-
-    const navigate = useNavigate();
 
     const goToResult = () => {
         navigate('/speechSynthesis/result/');
@@ -54,12 +55,15 @@ export function SpeechSynthesisPage2() {
         fileInputRef.current.click();
     };
 
-	useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
-
 	const handleShowResult = () => {
+		if (video === null) {
+            toast.error('영상을 업로드해 주세요.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
+            return;
+		}
+
 		setIsLoading(true);
 
 		const totalDuration = 3000; 
@@ -69,18 +73,16 @@ export function SpeechSynthesisPage2() {
 		let intervalCount = 0;
 	
 		const timer = setInterval(() => {
-		  intervalCount += 1;
-		  setProgress((intervalCount / totalIntervals) * 100);
-	
-		  if (intervalCount >= totalIntervals) {
-			clearInterval(timer);
-			setIsLoading(false);
-			setShowResult(true);
-		  }
+			intervalCount += 1;
+			setProgress((intervalCount / totalIntervals) * 100);
+		
+			if (intervalCount >= totalIntervals) {
+				clearInterval(timer);
+				setIsLoading(false);
+				setShowResult(true);
+			}
 		}, intervalDuration);
 	};
-
-
 
 
     return (

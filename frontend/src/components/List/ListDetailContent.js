@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AIResult from './AIResult';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ListDetailContent({ data, postId }) {
     const navigate = useNavigate();
@@ -48,22 +50,36 @@ function ListDetailContent({ data, postId }) {
           });
           // console.log("값 확인", response);
           if (response.status === 200) {
-            alert('입양 상태가 변경되었습니다.');
+            toast.success('입양 상태가 변경되었습니다.', {
+              autoClose: 3000,
+              position: "top-center",
+            });
             setAdoptStatus(!adoptStatus);
           } else {
-            alert("데이터를 불러오는데 실패했습니다.");
+            toast.error('데이터를 불러오는데 실패했습니다.', {
+              autoClose: 3000,
+              position: "top-center",
+          });
+
           }
       } catch (error) {
           console.error('입양 상태 변화 실패:', error);   
           
           if(error.response.status === 403){
-            alert("작성자만 변경할 수 있습니다.")
+            toast.error('작성자만 변경할 수 있습니다.', {
+              autoClose: 3000,
+              position: "top-center",
+          });
+
           }         
           
           // 토큰이 만료되었거나 유효하지 않을 때
           if (error.response && error.response.status === 401) {
               localStorage.removeItem('ACCESS_TOKEN');
-              alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+              toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
               navigate('/login');
           }    
       }

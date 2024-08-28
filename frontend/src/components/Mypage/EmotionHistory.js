@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import Choco from "../../assets/Choco.jpg"
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export function EmotionHistoryPage() {
@@ -24,6 +26,10 @@ export function EmotionHistoryPage() {
                     setEmotionTracks(response.data.data);
                     
                 } else {
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                     console.error("감정 추적 기록 조회 실패:", response.data.message);
                 }
             } catch (error) {

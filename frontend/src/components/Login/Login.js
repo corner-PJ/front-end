@@ -6,6 +6,8 @@ import * as L from "./LoginStyle";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function LoginPage() {
 
@@ -38,6 +40,11 @@ export function LoginPage() {
       if (response.data.success) {
         console.log("로그인 성공");
 
+        toast.success('로그인에 성공했습니다!', {
+          autoClose: 3000,
+          position: "top-center",
+        });
+
         // 토큰 저장 
         localStorage.setItem("authToken", response.data.data);
         console.log("Your token", response.data.data);
@@ -47,14 +54,19 @@ export function LoginPage() {
 
       } else {
         console.log("로그인 실패");
-        // 실패 시에 알림 창 띄움
-        alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인하세요.");
+        toast.error('로그인에 실패했습니다. 아이디와 비밀번호를 확인하세요.', {
+          autoClose: 3000,
+          position: "top-center",
+        });
       }
 
     } catch (error) {
       console.error("데이터 전송 중 오류 발생:", error);
       // 실패 시에 알림 창 띄움
-      alert("로그인에 실패했습니다. 다시 시도하세요.");
+      toast.error('로그인 중 오류가 발생했습니다.', {
+        autoClose: 3000,
+        position: "top-center",
+      });
     }
   };
 

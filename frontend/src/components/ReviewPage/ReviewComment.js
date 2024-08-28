@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function ReviewComment({ reviewId }) {
@@ -47,7 +49,10 @@ function ReviewComment({ reviewId }) {
                 setComments(parentComments);
                 // console.log('댓글 확인: ', parentComments);
             } else {
-                alert("댓글을 불러오는데 실패했습니다.");
+                toast.error('댓글을 불러오는데 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('댓글 조회 실패:', error);
@@ -55,7 +60,10 @@ function ReviewComment({ reviewId }) {
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
-                alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 navigate('/login');
             }            
         }
@@ -95,9 +103,15 @@ function ReviewComment({ reviewId }) {
                 setNewComment('');
                 // setIsSecret(false);
                 // console.log("댓글 확인:", comments);
-                alert("댓글이 등록되었습니다.");
+                toast.success('댓글이 등록되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             } else {
-                alert("댓글을 등록에 실패했습니다.");
+                toast.error('댓글 등록에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('댓글 작성 실패:', error);
@@ -105,7 +119,10 @@ function ReviewComment({ reviewId }) {
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
-                alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 navigate('/login');
             }
         }
@@ -131,10 +148,16 @@ function ReviewComment({ reviewId }) {
                 ReviewCommentsData();
                 setReplyText('');
                 setReplyIndex(null);
-                alert("대댓글이 등록되었습니다.");
+                toast.success('댓글이 등록되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 // console.log("대댓글 확인:", comments);
             } else {
-                alert("대댓글 등록에 실패했습니다.");
+                toast.error('댓글 등록에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('대댓글 작성 실패:', error);
@@ -142,7 +165,10 @@ function ReviewComment({ reviewId }) {
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
-                alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 navigate('/login');
             }
         }
@@ -158,9 +184,15 @@ function ReviewComment({ reviewId }) {
             });
             if (response.status === 200) {
                 ReviewCommentsData();
-                alert("댓글이 삭제되었습니다.");
+                toast.success('댓글이 삭제되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             } else {
-                alert("댓글 삭제에 실패했습니다.");
+                toast.error('댓글 삭제에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('댓글 삭제 실패:', error);
@@ -168,7 +200,10 @@ function ReviewComment({ reviewId }) {
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
-                alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 navigate('/login');
             }
         }
@@ -184,9 +219,15 @@ function ReviewComment({ reviewId }) {
             });
             if (response.status === 200) {
                 ReviewCommentsData();
-                alert("대댓글이 삭제되었습니다.");
+                toast.success('댓글이 삭제되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             } else {
-                alert("대댓글 삭제에 실패했습니다.");
+                toast.error('댓글 삭제에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         } catch (error) {
             console.error('대댓글 삭제 실패:', error);
@@ -194,7 +235,10 @@ function ReviewComment({ reviewId }) {
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
-                alert('토큰이 만료되었습니다. 다시 로그인하세요.');
+                toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
                 navigate('/login');
             }
         }

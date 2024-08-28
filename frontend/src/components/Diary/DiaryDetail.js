@@ -6,6 +6,8 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { DeleteModal } from "./Modal/DeleteModal";
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export function DiaryDetailPage() {
@@ -57,11 +59,18 @@ export function DiaryDetailPage() {
                     setDiaryData(response.data.data);
                 } else {
                     console.error("일기 상세 조회 실패:", response.data.message);
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
                 }
                 
             } catch (error) {
                 console.error('상세 조회 중 오류 발생:', error);
-                alert(`상세 조회 중 오류가 발생했습니다: ${error.message}`);
+                toast.error(`일기 상세 조회 중 오류 발생:  ${error.message}`, {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
             }
         };
 
