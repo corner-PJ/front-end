@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import s from './Home.module.css';
 import Modal from "./Modal";
-import mainLogo from '../../assets/Home_log.png';
+import mainLogo from '../../assets/Login_Logo.jpg';
 import nameLogo from '../../assets/homeImg1.png';
 import decodeLogo from '../../assets/homeImg2.png';
 import diaryLogo from '../../assets/homeImg3.png';

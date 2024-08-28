@@ -13,6 +13,11 @@
     font-size: 1.8em;
 }
 
+.main > .mainLogo {
+    width: 350px;
+    height: 100px;
+}
+
 .page > div {
     display: flex;
     align-items: center;
