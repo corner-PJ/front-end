@@ -5,9 +5,7 @@ const ListContent = ({ data }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const goToDetail = (index) => {
-    console.log(index);
-    const postId = data.length - index;
+  const goToDetail = (postId) => {
     const searchParams = new URLSearchParams(location.search);
     const queryType = searchParams.get('type') || 'adopt';
     navigate(`/list/${queryType}/${postId}`);
@@ -18,9 +16,8 @@ const ListContent = ({ data }) => {
       {data.length === 0 ? (
         <NoDataMessage>등록된 글이 없습니다.</NoDataMessage>
       ) : (
-        data.map((item, index) => (
-          // 공고 상세 페이지 id를 못 찾아서 일단 index로만 설정,,
-          <ListItem key={index} onClick={() => goToDetail(index)}>
+        data.map((item) => (
+          <ListItem key={item.adoptPostId || item.shelterPostId} onClick={() => goToDetail(item.adoptPostId || item.shelterPostId)}>
             <ListImg src={item.thumbnail} alt="dog" />
             <ListText>
               <ItemText>이름: {item.name || item.title}</ItemText>
