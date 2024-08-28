@@ -25,13 +25,19 @@ function EmotionAnalysis() {
 		if (token) {
 			// 토큰이 있으면 로그인 상태로 설정
 			setIsLogin(true);
-		} else {
+		} 
+	}, [token]);
+
+    const handleStartClick = () => {
+        if (isLogin) {
+            goToAnalysis();
+        } else {
             toast.error('로그인 후 이용해 주세요.', {
                 autoClose: 3000,
                 position: "top-center",
             });
         }
-	}, [token]);
+    };
 
     return(
         <EmotionAnalysisContainer>
@@ -54,15 +60,9 @@ function EmotionAnalysis() {
                 더 나은 동반자가 되어보세요.
                 </MainText>
             </MainTextContainer>
-            {isLogin ? (
-                <StartButton onClick={() => goToAnalysis()}>
-                    시작하기
-                </StartButton>
-				) : (
-					<StartButton>
-                        시작하기
-                    </StartButton>
-				)}
+            <StartButton onClick={handleStartClick}>
+                시작하기
+            </StartButton>
         </EmotionAnalysisContainer>
     )
 }
