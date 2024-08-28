@@ -51,7 +51,7 @@ function ListDetail() {
 
                 if (response.status === 200) {
                     setData(response.data.data);
-                    console.log(response.data.data);
+                    // console.log(response.data.data);
                 } else {
                     toast.error('데이터를 불러오는데 실패했습니다.', {
                         autoClose: 3000,

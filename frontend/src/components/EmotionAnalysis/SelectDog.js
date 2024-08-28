@@ -57,7 +57,7 @@ function SelectDog() {
 
     const ChooseDog = (id) => {
         setSelectedDog(id);
-        console.log(selectedDog);
+        // console.log(selectedDog);
     }
 
     const goToAnalysis = () => {
