@@ -19,7 +19,7 @@ function UpLoad() {
 			});
             return;
         }
-        console.log(selectedDog);
+        // console.log(selectedDog);
 
         // 결과 확인 시간 전달
         const currentTime = new Date().toLocaleString(); 

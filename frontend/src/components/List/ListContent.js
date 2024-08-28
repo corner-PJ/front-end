@@ -74,9 +74,9 @@ const ItemText = styled.div`
 
 const NoDataMessage = styled.div`
     color: rgba(0, 0, 0, 0.6);
-	font-size: 20px;
-	font-family: Inter, sans-serif;
-	font-weight: 500;
+    font-size: 20px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
     margin-left: 80px;
     margin-top: 25px;
 `;

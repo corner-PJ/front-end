@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function ListDetailContent({ data, postId }) {
     const navigate = useNavigate();
     const [slideIndex, setSlideIndex] = useState(0);
-    const [adoptStatus, setAdoptStatus] = useState(data.adoptStatus)
+    const [adoptStatus, setAdoptStatus] = useState(data.adoptStatus || false);
 
     // // localStorage에서 토큰 가져오기
     const ACCESS_TOKEN = localStorage.getItem('authToken');

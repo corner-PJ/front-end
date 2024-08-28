@@ -91,7 +91,7 @@ function ListComment({ postId }) {
                 }
             });
             const result = response.data;
-            console.log(result);
+            // console.log(result);
             if (response.status === 200) {
                 ListCommentsData();
                 setNewComment('');
@@ -137,7 +137,7 @@ function ListComment({ postId }) {
                 }
             });
             const result = response.data;
-            console.log(result);
+            // console.log(result);
             if (response.status === 200) {
                 ListCommentsData();
                 setReplyText('');
@@ -176,7 +176,7 @@ function ListComment({ postId }) {
                 }
             });
             const result = response.data;
-            console.log(result);
+            // console.log(result);
             if (response.status === 200) {
                 ListCommentsData();
                 toast.success('댓글이 삭제되었습니다.', {
