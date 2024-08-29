@@ -35,7 +35,7 @@ function AppNavigation() {
           <Route path="/" element={<HomePage />} /> 
           <Route path="/login" element={<Login />} />
           <Route path="/signin" element={<Signin />} />  
-        
+
           <Route path="/speechSynthesis" element={<SpeechSynthesis />} />  
           <Route path="/speechSynthesis2" element={<SpeechSynthesis2 />} />
           <Route path="/speechSynthesis/result" element={<SpeechSynthesisResult />} /> 

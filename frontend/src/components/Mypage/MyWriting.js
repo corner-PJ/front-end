@@ -20,6 +20,7 @@ export function MyWriting() {
         const fetchPosts = async () => {
             try {
                 const token = localStorage.getItem("authToken");
+                console.log(token);
                 const response = await axios.get("/mypage/adoptposts", {
                     headers: {
                         Authorization: `Bearer ${token}`,

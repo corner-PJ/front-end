@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import hadogIogo from "../../assets/Login_Logo.jpg"
 import GoogleLogo from "../../assets/GoogleLogo.png"
 import NaverLogo from "../../assets/NaverLogo.png"
 import * as L from "./LoginStyle";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 export function LoginPage() {
 
@@ -73,8 +74,36 @@ export function LoginPage() {
   // 로그인 버튼 활성화
 	const isButtonActive = formData.id && formData.password;
 
-
   // 소셜로그인
+  // console.log(window.naver);
+
+  // 네이버 로그인
+  const { naver } = window;
+  const NAVER_CLIENT_ID = process.env.REACT_APP_NAVER_CLIENT_ID; 
+  const NAVER_CALLBACK_URL = process.env.REACT_APP_NAVER_CALLBACK_URI;
+  
+  const handleNaverLogin = () => {
+    
+    const STATE_STRING = process.env.REACT_APP_STATE_STRING;
+    const NAVER_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE_STRING}&redirect_uri=${NAVER_CALLBACK_URL}}`;
+    
+    window.location.href = NAVER_URL;
+  };
+
+  const naverLogin = new naver.LoginWithNaverId({
+    clientId: NAVER_CLIENT_ID,  
+    callbackUrl: NAVER_CALLBACK_URL,  
+    isPopup: false,  
+    loginButton: {
+      color: "green", 
+      type: 1,
+      height: 50,
+    },
+  });
+
+  useEffect(() => {
+    naverLogin.init();
+  }, []);
 
 
   return (
@@ -117,13 +146,15 @@ export function LoginPage() {
           <L.Text2>소셜 로그인</L.Text2>
           <L.SocialLogo>
             <L.SocialLogoImg src={GoogleLogo} />
-            <L.SocialLogoImg src={NaverLogo} />
+            <div id="naverIdLogin" />
+            <L.SocialLogoImg 
+              id="loginButton"
+              // src={NaverLogo} 
+              // onClick={handleNaverLogin} 
+            />
           </L.SocialLogo>
         </L.SocialContent>
       </L.ContentContainer>
     </L.LoginRootWrapper>
   );
 }
-
-
-
