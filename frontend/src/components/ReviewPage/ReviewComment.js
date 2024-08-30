@@ -265,9 +265,7 @@ function ReviewComment({ reviewId }) {
             {comments.map((comment, index) => (
                 <Comment key={comment.cmtId}>
                     <CommentHeader>
-                        {/* 익명 표시 현재 작동x & 닉네임을 전달 받지 못해 임시로 id 출력 중 */}
-                        <CommentId>ID. {comment.isSecret ? '익명' : comment.cmtId}</CommentId>
-                        {/* 자신이 작성한 댓글만 삭제 못함 ( 현재 모두에게 삭제 버튼 표시 중 ) */}                                
+                        <CommentId>ID. {comment.userId}</CommentId>
                         <DeleteButton onClick={() => handleCommentDelete(comment.cmtId)}>삭제</DeleteButton>
                     </CommentHeader>
                     <CommentBody>
