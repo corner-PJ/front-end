@@ -265,7 +265,7 @@ function ReviewComment({ reviewId }) {
             {comments.map((comment, index) => (
                 <Comment key={comment.cmtId}>
                     <CommentHeader>
-                        <CommentId>ID. {comment.userId}</CommentId>
+                        <CommentId>ID. {comment.userId}</CommentId>                            
                         <DeleteButton onClick={() => handleCommentDelete(comment.cmtId)}>삭제</DeleteButton>
                     </CommentHeader>
                     <CommentBody>
