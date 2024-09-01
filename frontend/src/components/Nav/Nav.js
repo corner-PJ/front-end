@@ -1,5 +1,5 @@
 import s from'./Nav.module.css'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {Link, useNavigate} from "react-router-dom"
 import hadogIog from '../../assets/HADOG.png'
 import logout from "../../assets/logout.png"
@@ -11,32 +11,42 @@ function Nav() {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(false);
     
-    // // localStorage에서 토큰 가져오기
+    // localStorage에서 토큰 및 만료 시간 가져오기
     const ACCESS_TOKEN = localStorage.getItem('authToken');
-    
-    useEffect(() => {
-        console.log('토큰 확인: ', ACCESS_TOKEN);
+    const tokenExpirationTime = localStorage.getItem('tokenExpirationTime');
 
-        if (ACCESS_TOKEN) {
-            // 토큰이 있으면 로그인 상태로 설정
-            setIsLogin(true);
-        }
-    }, [ACCESS_TOKEN]);
+    const handleLogout = useCallback(() => {
+        // 로그아웃 시 토큰과 유저 정보 삭제
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('tokenExpirationTime');
+
+        setIsLogin(false);
+        toast.success('로그아웃 되었습니다.', {
+            autoClose: 3000,
+            position: "top-center",
+        });
+        navigate(`/`);
+    }, [navigate]);
 
     const handleLogoutButtonClick = () => {
         if (isLogin) {
-            // 로그아웃 시 토큰과 유저 정보 삭제
-            localStorage.removeItem('authToken');
-            setIsLogin(false);
-            toast.success('로그아웃 되었습니다.', {
-				autoClose: 3000,
-				position: "top-center",
-			});
-            navigate(`/`);
+            handleLogout();
         } else {
             navigate(`/login`);
         }
     };
+
+    // 토큰 만료 확인 및 자동 로그아웃
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const currentTime = new Date().getTime();
+            if (tokenExpirationTime && currentTime > tokenExpirationTime) {
+                handleLogout();
+            }
+        }, 3600000); // 1시간 마다 확인
+
+        return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 인터벌 정리
+    }, [handleLogout, tokenExpirationTime]);
 
     // 유저 정보 저장
     const [userInfo, setUserInfo] = useState({
@@ -59,9 +69,6 @@ function Nav() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
-            // console.log("서버 응답 데이터:", response.data);
-
             setUserInfo(response.data.data);
         } catch (error) {
             console.error("사용자 정보를 불러오는 중 오류 발생:", error);
@@ -69,6 +76,12 @@ function Nav() {
         };
 
         fetchUserInfo();
+    }, [ACCESS_TOKEN]);
+
+    useEffect(() => {
+        if (ACCESS_TOKEN) {
+            setIsLogin(true);
+        }
     }, [ACCESS_TOKEN]);
 
     return (

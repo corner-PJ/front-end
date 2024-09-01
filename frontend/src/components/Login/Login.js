@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import hadogIogo from "../../assets/Login_Logo.jpg"
 import GoogleLogo from "../../assets/GoogleLogo.png"
-import NaverLogo from "../../assets/NaverLogo.png"
 import * as L from "./LoginStyle";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -49,6 +48,9 @@ export function LoginPage() {
         // 토큰 저장 
         localStorage.setItem("authToken", response.data.data);
         console.log("Your token", response.data.data);
+
+        const expirationTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 토큰 유효 시간: 현재 + 24시간
+        localStorage.setItem("tokenExpirationTime", expirationTime);
 
         // 로그인 성공 시 메인페이지로 이동
         navigate("/");
@@ -149,7 +151,6 @@ export function LoginPage() {
             <div id="naverIdLogin" />
             <L.SocialLogoImg 
               id="loginButton"
-              // src={NaverLogo} 
               // onClick={handleNaverLogin} 
             />
           </L.SocialLogo>
