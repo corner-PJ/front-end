@@ -28,7 +28,7 @@ export function MyWriting() {
 
                 if (response.data.success) {
                     setPosts(response.data.data);
-                    console.log('Fetched posts:', response.data.data);
+                    // console.log('Fetched posts:', response.data.data);
                 } else {
                     toast.error('데이터를 불러오는데 실패했습니다.', {
                         autoClose: 3000,
@@ -43,7 +43,6 @@ export function MyWriting() {
 
         fetchPosts();
     }, []);
-
 
     // 후기 내역
     useEffect(() => {

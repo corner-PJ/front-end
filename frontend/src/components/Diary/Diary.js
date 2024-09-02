@@ -138,8 +138,6 @@ export const DiaryPage = () => {
                 }
             });
 
-            // console.log('API Response Data:', response.data);
-
             if (response.data.success) {
                 // 각 날짜에 작성된 일기 개수 계산
                 const entries = response.data.data.reduce((acc, entry) => {
@@ -167,9 +165,9 @@ export const DiaryPage = () => {
         fetchDiaryEntries(currentMonth.getFullYear(), currentMonth.getMonth() + 1);
     }, [currentMonth]);  // currentMonth가 변경될 때마다 호출
 
-    useEffect(() => {
-        console.log('Diary Entries:', diaryEntries);
-    }, [diaryEntries]);
+    // useEffect(() => {
+    //     console.log('Diary Entries:', diaryEntries);
+    // }, [diaryEntries]);
 
     const openModal = () => {
         setIsModalOpen(true);
