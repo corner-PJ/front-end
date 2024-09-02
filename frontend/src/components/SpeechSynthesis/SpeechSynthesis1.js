@@ -1,4 +1,4 @@
-import React, { useState, useRef  } from "react";
+import React, { useState, useRef, useEffect  } from "react";
 import { useNavigate } from 'react-router-dom';
 import { VoiceChart } from "./VioceChart";
 import ChildImg from "../../assets/child.png"
@@ -10,9 +10,16 @@ import { faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 import { PiFilePlus } from "react-icons/pi";
 import { LuClipboardList } from "react-icons/lu";
 import { GrLinkNext } from "react-icons/gr";
+import Loading from '../Loading/Loading';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export function SpeechSynthesisPage1() {
+	const [isLoading, setIsLoading] = useState(false);
+	const [isLogin, setIsLogin] = useState(false);
+	const [progress, setProgress] = useState(0);
+
 	const [showResult, setShowResult] = useState(false);
 	const [video, setVideo] = useState(null);
     const fileInputRef = useRef(null);
@@ -22,6 +29,22 @@ export function SpeechSynthesisPage1() {
     const goToNext = () => {
         navigate('/SpeechSynthesis2/');
     }
+
+	// localStorage에서 토큰 가져오기
+	const token = localStorage.getItem('authToken');
+
+	useEffect(() => {
+		// console.log('토큰 확인: ', token);
+		if (token) {
+			// 토큰이 있으면 로그인 상태로 설정
+			setIsLogin(true);
+		} else {
+            toast.error('로그인 후 이용해 주세요.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
+        }
+	}, [token]);
 
     const videoUpload = e => {
         const selectedVideo = e.target.files[0];
@@ -35,7 +58,32 @@ export function SpeechSynthesisPage1() {
     };
 
 	const handleShowResult = () => {
-		setShowResult(true);
+		if (video === null) {
+            toast.error('영상을 업로드해 주세요.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
+            return;
+		}
+
+		setIsLoading(true);
+
+		const totalDuration = 3000; 
+		const intervalDuration = 50; 
+		const totalIntervals = totalDuration / intervalDuration;
+	
+		let intervalCount = 0;
+	
+		const timer = setInterval(() => {
+			intervalCount += 1;
+			setProgress((intervalCount / totalIntervals) * 100);
+		
+			if (intervalCount >= totalIntervals) {
+				clearInterval(timer);
+				setIsLoading(false);
+				setShowResult(true);
+			}
+		}, intervalDuration);
 	};
 
     return (
@@ -48,54 +96,62 @@ export function SpeechSynthesisPage1() {
 					<ContentImg src={OldImg} />
 				</ImageContent>
 
-				<SpeechBtn>
-					<FontAwesomeIcon icon={faVolumeUp} style={{ marginLeft: '6px' }}/>
-					<SpeechBtnText>음성 듣기</SpeechBtnText>
-				</SpeechBtn>
+				{isLogin ? (
+					<>
+						<SpeechBtn>
+							<FontAwesomeIcon icon={faVolumeUp} style={{ marginLeft: '6px' }}/>
+							<SpeechBtnText>음성 듣기</SpeechBtnText>
+						</SpeechBtn>
 
-				<ExplanationText>
-					소아, 성인, 노년층의 음성이 첨부되어있습니다.<br/>
-					가이드에 맞게 유기견에게 음성을 들려주며<br/>
-					동영상을 촬영하고, 해당 동영상을 첨부해주세요!<br/><br/>
-					유기견의 반응을 분석하여, 먼저 선호하는 목소리를 선정합니다.
-				</ExplanationText>
-                
-				<VideoWrapper>
-					<VideoRectangle>
-						<VideoContainer onClick={handleUploadButtonClick}>
-							{video ? 
-							( <Video autoPlay loop muted src={video} /> ) :
-							(
-								<FileContainer>
-									<PiFilePlus size={50}/>
-									<FileText>동영상을 첨부해주세요.</FileText>
-								</FileContainer>
-							)}
-							<UpLoadVideo 
-								type="file" 
-								accept="video/*" 
-								onChange={videoUpload}
-								ref={fileInputRef}
-							/>
-						</VideoContainer>
-					</VideoRectangle>
+						<ExplanationText>
+							소아, 성인, 노년층의 음성이 첨부되어있습니다.<br/>
+							가이드에 맞게 유기견에게 음성을 들려주며<br/>
+							동영상을 촬영하고, 해당 동영상을 첨부해주세요!<br/><br/>
+							유기견의 반응을 분석하여, 먼저 선호하는 목소리를 선정합니다.
+						</ExplanationText>
+						
+						<VideoWrapper>
+							<VideoRectangle>
+								<VideoContainer onClick={handleUploadButtonClick}>
+									{video ? ( 
+										<Video autoPlay loop muted src={video} /> ) :
+									(
+										<FileContainer>
+											<PiFilePlus size={50}/>
+											<FileText>동영상을 첨부해주세요.</FileText>
+										</FileContainer>
+									)}
+									<UpLoadVideo 
+										type="file" 
+										accept="video/*" 
+										onChange={videoUpload}
+										ref={fileInputRef}
+									/>
+								</VideoContainer>
+							</VideoRectangle>
 
-					<ResultBtn onClick={handleShowResult}>
-						<LuClipboardList size={40} />
-						<SpeechBtnText>결과 보기</SpeechBtnText>
-					</ResultBtn>
-				</VideoWrapper>
+							<ResultBtn onClick={handleShowResult}>
+								<LuClipboardList size={40} />
+								<SpeechBtnText>결과 보기</SpeechBtnText>
+							</ResultBtn>
+						</VideoWrapper>
 
-				{showResult && (
-					<ResultWrapper>
-						<ResultText>해당 유기견이 선호하는 목소리는 청년 여성입니다.</ResultText>
-						<VoiceChart />
+						{isLoading && <Loading text="영상 분석 중 · · ·" progress={progress} />}
 
-						<NextBtn onClick={goToNext}>
-							<NextBtnText>다음으로</NextBtnText>
-							<GrLinkNext size={35} />
-						</NextBtn>
-					</ResultWrapper>
+						{!isLoading && showResult && (
+							<ResultWrapper>
+								<ResultText>해당 유기견이 선호하는 목소리는 청년 여성입니다.</ResultText>
+								<VoiceChart />
+
+								<NextBtn onClick={goToNext}>
+									<NextBtnText>다음으로</NextBtnText>
+									<GrLinkNext size={35} />
+								</NextBtn>
+							</ResultWrapper>
+						)}
+					</>
+				) : (
+						<NoDataMessage>로그인 후 이용해 주세요.</NoDataMessage>
 				)}
 				
             </ContentContainer>
@@ -194,7 +250,7 @@ const VideoWrapper = styled.div`
     gap: 20px;
 	align-items: center;
 	padding: 20px;
-	margin-top: 50px;
+	margin: 50px 0;
 `;
 
 const VideoRectangle = styled.div`
@@ -314,5 +370,10 @@ const NextBtnText = styled.span`
 	margin-right: 5px;
 `;
 
-
-
+const NoDataMessage = styled.div`
+    color: rgba(0, 0, 0, 0.6);
+	font-size: 20px;
+	font-family: Inter, sans-serif;
+	font-weight: 500;
+    margin-top: 25px;
+`;

@@ -1,23 +1,77 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import ListComment from './ListComment';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import ReviewComment from './ReviewComment';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ReviewDetail = () => {
+    const navigate = useNavigate(); 
     const [slideIndex, setSlideIndex] = useState(0);
-    const location = useLocation();
-    const { data } = location.state || {}; 
+    const [data, setData] = useState({ images: [], reviewDate: '', content: '', reviewId: '' });
+    const { reviewId } = useParams();
 
-    if (!data) {
-        return <div>데이터가 없습니다.</div>;
-    }
+    // // localStorage에서 토큰 가져오기
+    const ACCESS_TOKEN = localStorage.getItem('authToken');
+    
+	useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+    
+    useEffect(() => {
+        // 리뷰 상세 조회
+        const ReviewDetailData = async () => {
+            try {
+                const response = await axios.get(`/reviews/${reviewId}`,{
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization' : `Bearer ${ACCESS_TOKEN}`,
+                    }
+                });
+                if (response.status === 200) {
+                    setData(response.data.data);
+                    // console.log(response.data.data)
+                } else {
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
+                }
+            } catch (error) {
+                console.error('리뷰 상세 조희 실패:', error);
+
+                // 토큰이 만료되었거나 유효하지 않을 때
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('ACCESS_TOKEN');
+                    toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
+                    navigate('/login');
+                }
+            }
+        };
+        ReviewDetailData();
+    }, [reviewId, ACCESS_TOKEN, navigate]);
+
+    // 작성 시간 표현 설정
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+    };
 
     const moveToPrevSlide = () => {
-        setSlideIndex((prev) => (prev === 0 ? data.img.length - 1 : prev - 1));
+        setSlideIndex((prev) => (prev === 0 ? data.images.length - 1 : prev - 1));
     };
     
     const moveToNextSlide = () => {
-        setSlideIndex((prev) => (prev === data.img.length - 1 ? 0 : prev + 1));
+        setSlideIndex((prev) => (prev === data.images.length - 1 ? 0 : prev + 1));
     };
     
     const moveDot = (index) => {
@@ -27,8 +81,8 @@ const ReviewDetail = () => {
     return (
         <ReviewDetailContainer>
             <ReviewHeader>
-                <ReviewTitle>{data.nickName} 님의 후기</ReviewTitle>
-                <ReviewUpdate>{data.update}</ReviewUpdate>
+                <ReviewTitle>{data.authorName}님의 후기</ReviewTitle>
+                <ReviewUpdate>{formatDate(data.reviewDate)}</ReviewUpdate>
             </ReviewHeader>
             <ReviewMain>
                 <ImgContainer>
@@ -36,9 +90,9 @@ const ReviewDetail = () => {
                         ‹
                     </Arrow>
                     <Wrapper slideIndex={slideIndex}>
-                        {data.img.map((item, index) => (
+                        {data.images && data.images.map((item, index) => (
                             <ImgSlide key={index}>
-                                <Img src={item} />
+                                <Img src={item.fileName} alt={`slide-${index}`} />
                             </ImgSlide>
                         ))}
                     </Wrapper>
@@ -46,7 +100,7 @@ const ReviewDetail = () => {
                         ›
                     </Arrow>
                     <DotContainer>
-                        {data.img.map((item, index) => (
+                        {data.images && data.images.map((item, index) => (
                             <Dot
                                 key={index}
                                 className={index === slideIndex ? "active" : null}
@@ -59,7 +113,7 @@ const ReviewDetail = () => {
                     {data.content}
                 </ReviewText>
             </ReviewMain>
-            <ListComment />
+            <ReviewComment reviewId={reviewId} />
         </ReviewDetailContainer>
     );
 }
@@ -105,6 +159,7 @@ const ImgContainer = styled.div`
 `;
 
 const Wrapper = styled.div`
+    width: 100%;
     height: 100%;
     display: flex;
     transform: translateX(${({ slideIndex }) => slideIndex * -100 + "%"});

@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
+import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export function PasswordChange() {
 	const [password, setPassword] = useState('');
@@ -8,10 +12,51 @@ export function PasswordChange() {
 	const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
 
     const navigate = useNavigate();
-    const onclickHandler = () => {
-        alert("비밀번호가 변경되었습니다");
-        navigate('/mypage');
-    }
+
+    // 비밀번호 변경 함수
+    const handlePasswordChange = async () => {
+
+        // 새 비밀번호와 확인 비밀번호 일치 여부 확인
+        if (newPassword !== newPasswordConfirm) {
+            alert("새 비밀번호가 일치하지 않습니다.");
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem("authToken");
+            
+            const response = await axios.patch(
+                "/user/password",
+                null,
+                {   
+                    params: {
+                        newPassword: newPassword,
+                        prevPassword: password,
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.data.success) {
+                toast.success('비밀번호가 변경되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+                navigate('/mypage');
+
+            } else {
+                toast.error('비밀번호 변경에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+    
+            }
+        } catch (error) {
+            console.error("비밀번호 변경 중 오류 발생:", error);
+        }
+    };
 
     return (
         <PasswordChangeWrapper>
@@ -21,6 +66,7 @@ export function PasswordChange() {
 					<Text> 현재 비밀번호 </Text>
 					<PasswordInputBox
 						type="password"
+                        name="password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 					/>
@@ -29,7 +75,8 @@ export function PasswordChange() {
                 <BoxContainer>
 					<Text> 새 비밀번호 </Text>
 					<NewPasswordInputBox
-						type="newPassword"
+                        type="password"
+						name="newPassword"
 						value={newPassword}
 						onChange={(e) => setNewPassword(e.target.value)}
 					/>
@@ -38,14 +85,15 @@ export function PasswordChange() {
                 <BoxContainer>
 					<Text> 새 비밀번호 확인 </Text>
 					<NewPasswordConfirmInputBox
-						type="newPasswordConfirm"
+                        type="password"
+						name="newPasswordConfirm"
 						value={newPasswordConfirm}
 						onChange={(e) => setNewPasswordConfirm(e.target.value)}
 					/>
 				</BoxContainer>
 
                 <ButtonContainer>
-                    <ConfirmButton onClick={onclickHandler}>확인</ConfirmButton>
+                    <ConfirmButton onClick={handlePasswordChange}>확인</ConfirmButton>
                     <CancleButton as={Link} to="/mypage" >취소</CancleButton>
                 </ButtonContainer>
                 

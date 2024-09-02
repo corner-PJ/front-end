@@ -1,16 +1,58 @@
-import React from 'react';
 import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReviewContent from './ReviewContnet';
-import ReviewMainImg from '../../assets/ReviewMainImg.png'
-import { useReviewContext } from '../ReviewContext';
+import ReviewMainImg from '../../assets/ReviewMainImg.png';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ReviewPage() { 
     const navigate = useNavigate(); 
-    const { reviews } = useReviewContext();
+    const [reviews, setReviews] = useState([]);
+
+    // // localStorage에서 토큰 가져오기
+    const ACCESS_TOKEN = localStorage.getItem('authToken');
+    
+    useEffect(() => {
+        // 리뷰 목록 조회
+        const ReviewsData = async () => {
+            try {
+                const response = await axios.get('/reviews', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization' : `Bearer ${ACCESS_TOKEN}`,
+                    }
+                });
+                if (response.status === 200) {
+                    setReviews(response.data.data);
+                    // console.log(response.data.data)                    
+                } else {
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });    
+                }
+            } catch (error) {
+                console.error('리뷰 목록 조회 실패:', error);
+                
+                // 토큰이 만료되었거나 유효하지 않을 때
+                if (error.response && error.response.status === 401) {
+                    localStorage.removeItem('ACCESS_TOKEN');
+                    toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
+                    navigate('/login');
+                }
+            }
+        };
+
+        ReviewsData();
+    }, [ACCESS_TOKEN, navigate]);
 
     const goToWritePage = () => {
-        navigate('/reviewWrite');
+        navigate('./write');
     };   
 
     return (
@@ -23,7 +65,7 @@ function ReviewPage() {
             </Header>
             <UploadButton onClick={goToWritePage}>후기 작성하기</UploadButton>
             <ReviewList>
-                <ReviewContent data={reviews} />
+                <ReviewContent reviews={reviews} />
             </ReviewList>
         </ReviewPageContainer>  
     )

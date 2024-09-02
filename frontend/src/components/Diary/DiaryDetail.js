@@ -1,9 +1,13 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from 'styled-components';
 import Choco from "../../assets/Choco.jpg"
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { DeleteModal } from "./Modal/DeleteModal";
+import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export function DiaryDetailPage() {
@@ -14,8 +18,11 @@ export function DiaryDetailPage() {
     const selectedDate = new Date(selectedDateStr);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [diaryData, setDiaryData] = useState(null);
+    const { diaryId } = useParams();
 
-    const openModal = (day) => {
+    // 삭제 모달
+    const openModal = () => {
         setIsModalOpen(true);
     };
 
@@ -23,19 +30,57 @@ export function DiaryDetailPage() {
         setIsModalOpen(false);
     };
 
-    const handleDelete = () => {
-        closeModal();
-        navigate('/diary');
+    const moveToEdit = () => {
+        const content = "장난감을 물고 다닐 때마다 이렇게 놀고 싶어하는지 알아주지 못 한 것 같다.. 산책가고 싶다는 것도 놀고 싶다는 것일까? 산책 가고 싶다는 줄 알았다."; 
+        navigate(`/diary/edit/${diaryId}`, { state: { selectedDate, content } });
     };
 
-    const handleModify = () => {
-        const content = "장난감을 물고 다닐 때마다 이렇게 놀고 싶어하는지 알아주지 못 한 것 같다.. 산책가고 싶다는 것도 놀고 싶다는 것일까? 산책 가고 싶다는 줄 알았다."; 
-        navigate('/diary/new', { state: { selectedDate, content } });
-    };
+    // 현재 날짜를 포맷팅
+    const todayDate = format(new Date(), 'yyyy년 MM월 dd일 EEEE', { locale: ko });
+
+
+    // 일기 상세 조회 
+    useEffect(() => {
+        // console.log("Diary ID:", diaryId);
+
+        const fetchDiaryDetail = async () => {
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get(`/diary`, {
+                    params: {
+                        diaryId: diaryId
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                
+                if (response.data.success) {
+                    setDiaryData(response.data.data);
+                } else {
+                    console.error("일기 상세 조회 실패:", response.data.message);
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
+                }
+                
+            } catch (error) {
+                console.error('상세 조회 중 오류 발생:', error);
+                toast.error(`일기 상세 조회 중 오류 발생:  ${error.message}`, {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+            }
+        };
+
+        fetchDiaryDetail();
+    }, [diaryId]);
+
 
     return (
         <DetailWrapper>
-            <DetailDate>{format(selectedDate, "yyyy년 MM월 dd일 EEEE")}</DetailDate>
+            <DetailDate>{todayDate}</DetailDate>
             
             <HeaderWrapper>
                 <DetailImg src={Choco} />
@@ -53,12 +98,12 @@ export function DiaryDetailPage() {
             
             <DetailRectangle>
                 <ContentText>
-                    장난감을 물고 다닐 때마다 이렇게 놀고 싶어하는지 알아주지 못 한 것 같다.. 산책가고 싶다는 것도 놀고 싶다는 것일까? 산책 가고 싶다는 줄 알았다.
+                    {diaryData ? diaryData.content : "내용을 불러오는 중..."}
                 </ContentText>
             </DetailRectangle>
             
             <ButtonWrapper>
-                <ModifyBtn onClick={handleModify}>수정</ModifyBtn>
+                <ModifyBtn onClick={moveToEdit}>수정</ModifyBtn>
                 <DeleteBtn onClick={openModal}>삭제</DeleteBtn>
             </ButtonWrapper>
 
@@ -170,8 +215,6 @@ const ExplainText = styled.span`
 
 const DetailRectangle = styled.div`
     display: flex;
-    justify-content: center;
-    align-items: center;
     margin-bottom: 7px;
     margin-top: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25),0px 2px 3px 0px rgba(0, 0, 0, 0.03);
@@ -181,7 +224,7 @@ const DetailRectangle = styled.div`
     height: 210px;
     background-color: #FFF3C7;
     box-sizing: border-box;
-    padding: 30px;
+    padding: 35px;
     flex-shrink: 0;
     overflow-y: auto;
     

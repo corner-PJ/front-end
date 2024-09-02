@@ -1,30 +1,80 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export function WriteModal({ isModalOpen, closeModal}) {
+
+export function WithdrawModal({ isWithdrawModalOpen, closeWithdrawModal}) {
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    const MoveToDiaryMain = async() => {
-        closeModal();
-        
-        navigate(`/diary`);
-    }
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+    };
+
+    // 회원 탈퇴 처리
+    const handleWithdraw = async () => {
+
+        try {
+            const token = localStorage.getItem("authToken");
+            const response = await axios.delete("/user", {
+                params: {
+                    password: password,  
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.data.success) {
+                toast.success('회원 탈퇴에 성공했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+                localStorage.removeItem("authToken");
+                navigate("/"); 
+
+            } else {
+                toast.error('회원 탈퇴에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+
+            }
+        } catch (error) {
+            console.error("회원 탈퇴 중 오류 발생:", error);
+            toast.error('회원 탈퇴 중 오류가 발생했습니다.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
+        }
+    };
+
     
     return (
         <>
-            {isModalOpen && (
+            {isWithdrawModalOpen && (
                 <ModalOverlay>
                     <RootWrapper>
                         <ContentRectangle>
                             <ContentText>
-                                내용을 등록하시겠습니까?
+                                정말로 탈퇴를 원하시다면, <br />
+                                현재 비밀번호를 입력하세요.
                             </ContentText>
+
+                            <PasswordInputBox
+                                type="text"
+                                name="password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                            />
                 
                             <ButtonWrapper>
-                                <OkBtn onClick={MoveToDiaryMain}>확인</OkBtn>
-                                <CancleBtn onClick={closeModal}>취소</CancleBtn>
+                                <OkBtn onClick={handleWithdraw}>확인</OkBtn>
+                                <CancleBtn onClick={closeWithdrawModal}>취소</CancleBtn>
                             </ButtonWrapper>
                         </ContentRectangle>
                     </RootWrapper>
@@ -34,10 +84,11 @@ export function WriteModal({ isModalOpen, closeModal}) {
     );
 }
 
+
 // PropTypes 추가
-WriteModal.propTypes = {
-    isModalOpen: PropTypes.bool.isRequired,
-    closeModal: PropTypes.func.isRequired,
+WithdrawModal.propTypes = {
+    isWithdrawModalOpen: PropTypes.bool.isRequired,
+    closeWithdrawModal: PropTypes.func.isRequired,
 };
 
 const ModalOverlay = styled.div`
@@ -81,13 +132,31 @@ const ContentRectangle = styled.div`
 
 const ContentText = styled.span`
 	color: black;
-	font-size: 23px;
+	font-size: 21px;
 	font-family: Inter, sans-serif;
 	font-weight: 700;
 	text-align: center;
 	width: 537px;
 	min-height: 51px;
     margin-top: 20px;
+    margin-bottom: 12px;
+`;
+
+const PasswordInputBox = styled.input`
+	font-size: 17px;
+	border: solid 2px rgb(252, 129, 158);
+    background-color: #FFE6E6;
+	border-radius: 5px;
+	padding-left: 20px;
+	width: 80%; 
+	height: 50px;
+	max-width: 100%; 
+	box-sizing: border-box; 
+
+	&:focus {
+		border: 2px solid rgb(252, 129, 158);
+		outline: none; 
+	}
 `;
 
 const ButtonWrapper = styled.div`

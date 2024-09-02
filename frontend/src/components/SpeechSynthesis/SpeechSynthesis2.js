@@ -1,23 +1,36 @@
 import React, { useState, useRef, useEffect  } from "react";
 import { useNavigate } from 'react-router-dom';
 import { NameChart } from "./NameChart";
-
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 import { PiFilePlus } from "react-icons/pi";
 import { LuClipboardList } from "react-icons/lu";
+import Loading from '../Loading/Loading';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const names = [
 	"해피", "초코", "마루", "구름", "뭉치",
 	"까미", "보리", "설이", "몽이", "토리",
 	"코코", "콩이", "두부", "별이", "호두", "사랑이",
-	"까미", "보리", "설이", "몽이", "토리",
+	"망고", "쿠키", "하루", "루비", "흰둥이",
+	"레오", "뚱이", "모모", "가을"
 ];
 
 export function SpeechSynthesisPage2() {
+	const [isLoading, setIsLoading] = useState(false);
+	const [progress, setProgress] = useState(0);
 	const [selectedNames, setSelectedNames] = useState([]);
 	const [showResult, setShowResult] = useState(false);
+	const [video, setVideo] = useState(null);
+    const fileInputRef = useRef(null);
+    const navigate = useNavigate();
+
+	useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
 	const toggleSelection = (name) => {
 		setSelectedNames(prevSelectedNames =>
@@ -26,12 +39,6 @@ export function SpeechSynthesisPage2() {
 				: [...prevSelectedNames, name]
 		);
 	};
-
-	
-	const [video, setVideo] = useState(null);
-    const fileInputRef = useRef(null);
-
-    const navigate = useNavigate();
 
     const goToResult = () => {
         navigate('/speechSynthesis/result/');
@@ -48,14 +55,34 @@ export function SpeechSynthesisPage2() {
         fileInputRef.current.click();
     };
 
-	useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
 	const handleShowResult = () => {
-		setShowResult(true);
-	};
+		if (video === null) {
+            toast.error('영상을 업로드해 주세요.', {
+                autoClose: 3000,
+                position: "top-center",
+            });
+            return;
+		}
 
+		setIsLoading(true);
+
+		const totalDuration = 3000; 
+		const intervalDuration = 50; 
+		const totalIntervals = totalDuration / intervalDuration;
+	
+		let intervalCount = 0;
+	
+		const timer = setInterval(() => {
+			intervalCount += 1;
+			setProgress((intervalCount / totalIntervals) * 100);
+		
+			if (intervalCount >= totalIntervals) {
+				clearInterval(timer);
+				setIsLoading(false);
+				setShowResult(true);
+			}
+		}, intervalDuration);
+	};
 
 
     return (
@@ -111,8 +138,10 @@ export function SpeechSynthesisPage2() {
 						<SpeechBtnText>결과 보기</SpeechBtnText>
 					</ResultBtn>
 				</VideoWrapper>
-				
-				{showResult && (
+
+                {isLoading && <Loading text="영상 분석 중 · · ·" progress={progress} />}
+
+                {!isLoading && showResult && (
 					<ResultWrapper>
 						<ResultText>해당 유기견이 선호하는 이름은 별이입니다.</ResultText>
 						<NameChart />
@@ -253,7 +282,7 @@ const VideoWrapper = styled.div`
     gap: 20px;
 	align-items: center;
 	padding: 20px;
-	margin-top: 90px;
+	margin: 50px 0;
 `;
 
 const VideoRectangle = styled.div`

@@ -1,22 +1,21 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-const ReviewContent = ({data}) => {
+const ReviewContent = ({reviews}) => {
     const navigate = useNavigate();
 
-    const goToDetail = (item) => {
-        navigate(`/reviewDetail/${item.id}`, {state: {data: item}});
+    const goToDetail = (reviewId) => {
+        navigate(`/review/${reviewId}`);
     };
-    console.log(data)
 
     return (
         <ReviewContainer>
-            {data.map((item) => (
-                <ReviewItem onClick={() => goToDetail(item)}>
-                    <ReviewImg  src={item.img[0]} />
+            {reviews.map((item) => (
+                <ReviewItem key={item.reviewId} onClick={() => goToDetail(item.reviewId)}>
+                    <ReviewImg  src={item.images[0].fileName} />
                     <ReviewName>
-                        {item.nickName} 님의 후기
-                    </ReviewName>
+                        {item.authorName}님의 후기
+                    </ReviewName> 
                 </ReviewItem>
             ))}
         </ReviewContainer>

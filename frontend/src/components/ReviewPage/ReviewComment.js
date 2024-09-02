@@ -1,58 +1,62 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function ListComment({ postId }) {
+
+function ReviewComment({ reviewId }) {
     const navigate = useNavigate();
+
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
-    const [replyIndex, setReplyIndex] = useState(null);
     const [replyText, setReplyText] = useState('');
-    // const [isSecret, setIsSecret] = useState(false);
+    // const [isSecret, setIsSecret] = useState(false); // 비밀댓글관련 부분이 없어서 적용되지 않음
+    const [replyIndex, setReplyIndex] = useState(null);
 
     // // localStorage에서 토큰 가져오기
     const ACCESS_TOKEN = localStorage.getItem('authToken');
     
-    useEffect(() => {          
-        ListCommentsData();
-    }, [postId, navigate]);    
+    useEffect(() => {
+        ReviewCommentsData();
+    }, [reviewId, navigate]);
 
-    // 공고 댓글 조회
-    const ListCommentsData = async () => {
+    // 리뷰 댓글 조회
+    const ReviewCommentsData = async () => {
         try {
-            const response = await axios.get(`/comment/${postId}`, {
+            const response = await axios.get(`/reviews/${reviewId}/comments`, {
                 headers: {
-                    'Authorization': `Bearer ${ACCESS_TOKEN}`
+                    Authorization: `Bearer ${ACCESS_TOKEN}`
                 }
             });
 
             if (response.status === 200) {
                 const comments = response.data.data;
-    
-                // 댓글 정렬
-                comments.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
 
-                // 대댓글 정렬
-                comments.forEach(comment => {
-                    comment.replies.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+                // 댓글만 분리
+                const parentComments = comments.filter(comment => comment.parentCommentId === null);
+
+                // 각 댓글에 해당하는 대댓글 저장
+                parentComments.forEach(parent => {
+                    parent.replies = comments.filter(comment => comment.parentCommentId === parent.cmtId);
+
+                    parent.replies.sort((a, b) => new Date(b.cmtDate) - new Date(a.cmtDate));
                 });
-    
-                setComments(comments);
-                console.log('댓글 확인: ', comments);
+
+                parentComments.sort((a, b) => new Date(b.cmtDate) - new Date(a.cmtDate));
+
+                setComments(parentComments);
                 // console.log('댓글 확인: ', parentComments);
             } else {
                 toast.error('댓글을 불러오는데 실패했습니다.', {
                     autoClose: 3000,
                     position: "top-center",
                 });
-
             }
         } catch (error) {
-            console.error("댓글 조회 실패:", error);
-            
+            console.error('댓글 조회 실패:', error);
+
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
@@ -61,7 +65,7 @@ function ListComment({ postId }) {
                     position: "top-center",
                 });
                 navigate('/login');
-            }     
+            }            
         }
     };
 
@@ -76,26 +80,29 @@ function ListComment({ postId }) {
         return `${year}-${month}-${day} ${hours}:${minutes}`;
     };
 
-    // 댓글 등록
+    // 리뷰 댓글 작성 
     const handleCommentSubmit = async () => {
         if (!newComment) return;
 
         try {
-            const response = await axios.post(`/addComment?postId=${postId}&content=${newComment}`, {
-                postId: postId,
-                content: newComment
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${ACCESS_TOKEN}`
+            const response = await axios.post(
+                `/reviews/${reviewId}/comments`,
+                {
+                    content: newComment,
+                    parentCommentId: null,
+                    // isSecret: isSecret
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${ACCESS_TOKEN}`
+                    }
                 }
-            });
-            const result = response.data;
-            // console.log(result);
+            );
             if (response.status === 200) {
-                ListCommentsData();
+                ReviewCommentsData();
                 setNewComment('');
                 // setIsSecret(false);
+                // console.log("댓글 확인:", comments);
                 toast.success('댓글이 등록되었습니다.', {
                     autoClose: 3000,
                     position: "top-center",
@@ -107,8 +114,8 @@ function ListComment({ postId }) {
                 });
             }
         } catch (error) {
-            console.error("댓글 작성 실패:", error);
-            
+            console.error('댓글 작성 실패:', error);
+
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
@@ -121,31 +128,31 @@ function ListComment({ postId }) {
         }
     };
 
-    // 대댓글 등록
-    const handleReplySubmit = async (parentIndex) => {
-        if (!replyText) return;
-
-        const comment = comments[parentIndex];
+    // 리뷰 대댓글 작성
+    const handleReplySubmit = async (index) => {
         try {
-            const response = await axios.post(`/addComment?postId=${postId}&content=${replyText}&parentCommentId=${comment.commentId}`, {
-                postId: postId,
-                content: replyText,
-                parentCommentId: comment.commentId
-            }, {
-                headers: {
-                    Authorization: `Bearer ${ACCESS_TOKEN}`
+            const comment = comments[index];
+            const response = await axios.post(
+                `/reviews/comments/${comment.cmtId}/replies`,
+                {
+                    content: replyText,
+                    parentCommentId: comment.cmtId
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${ACCESS_TOKEN}`
+                    }
                 }
-            });
-            const result = response.data;
-            // console.log(result);
+            );
             if (response.status === 200) {
-                ListCommentsData();
+                ReviewCommentsData();
                 setReplyText('');
                 setReplyIndex(null);
                 toast.success('댓글이 등록되었습니다.', {
                     autoClose: 3000,
                     position: "top-center",
                 });
+                // console.log("대댓글 확인:", comments);
             } else {
                 toast.error('댓글 등록에 실패했습니다.', {
                     autoClose: 3000,
@@ -153,8 +160,8 @@ function ListComment({ postId }) {
                 });
             }
         } catch (error) {
-            console.error("대댓글 작성 실패:", error);
-            
+            console.error('대댓글 작성 실패:', error);
+
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('ACCESS_TOKEN');
@@ -167,18 +174,16 @@ function ListComment({ postId }) {
         }
     };
 
-    // 댓글 삭제
+    // 리뷰 댓글 삭제
     const handleCommentDelete = async (commentId) => {
         try {
-            const response = await axios.delete(`/delComment/${commentId}`, {
+            const response = await axios.delete(`/reviews/comments/${commentId}`, {
                 headers: {
                     Authorization: `Bearer ${ACCESS_TOKEN}`
                 }
             });
-            const result = response.data;
-            // console.log(result);
             if (response.status === 200) {
-                ListCommentsData();
+                ReviewCommentsData();
                 toast.success('댓글이 삭제되었습니다.', {
                     autoClose: 3000,
                     position: "top-center",
@@ -190,14 +195,42 @@ function ListComment({ postId }) {
                 });
             }
         } catch (error) {
-            console.error("댓글 삭제 실패:", error);
+            console.error('댓글 삭제 실패:', error);
 
-            if (error.response.status === 403 || error.response.status === 404 ) {
-                toast.error('작성자만 변경할 수 있습니다.', {
+            // 토큰이 만료되었거나 유효하지 않을 때
+            if (error.response && error.response.status === 401) {
+                localStorage.removeItem('ACCESS_TOKEN');
+                toast.error('토큰이 만료되었습니다. 다시 로그인하세요.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+                navigate('/login');
+            }
+        }
+    };
+
+    // 리뷰 대댓글 삭제
+    const handleReplyDelete = async (replyId) => {
+        try {
+            const response = await axios.delete(`/reviews/comments/replies/${replyId}`, {
+                headers: {
+                    Authorization: `Bearer ${ACCESS_TOKEN}`
+                }
+            });
+            if (response.status === 200) {
+                ReviewCommentsData();
+                toast.success('댓글이 삭제되었습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+            } else {
+                toast.error('댓글 삭제에 실패했습니다.', {
                     autoClose: 3000,
                     position: "top-center",
                 });
             }
+        } catch (error) {
+            console.error('대댓글 삭제 실패:', error);
 
             // 토큰이 만료되었거나 유효하지 않을 때
             if (error.response && error.response.status === 401) {
@@ -226,18 +259,18 @@ function ListComment({ postId }) {
     const handleReplyChange = (e) => {
         setReplyText(e.target.value);
     };
-
+    
     return (
         <CommentContainer>
             {comments.map((comment, index) => (
-                <Comment key={comment.commentId}>
+                <Comment key={comment.cmtId}>
                     <CommentHeader>
-                        <CommentId>ID. {comment.isSecret ? '익명' : comment.userId}</CommentId>
-                        <DeleteButton onClick={() => handleCommentDelete(comment.commentId)}>삭제</DeleteButton>
+                        <CommentId>ID. {comment.userId}</CommentId>                            
+                        <DeleteButton onClick={() => handleCommentDelete(comment.cmtId)}>삭제</DeleteButton>
                     </CommentHeader>
                     <CommentBody>
                         <CommentText>{comment.content}</CommentText>
-                        <CommentDate>{formatDate(comment.createdDate)}</CommentDate>
+                        <CommentDate>{formatDate(comment.cmtDate)}</CommentDate>
                     </CommentBody>
                     <ReplyButton onClick={() => handleReplyClick(index)}>답글</ReplyButton>
                     {replyIndex === index && (
@@ -247,13 +280,13 @@ function ListComment({ postId }) {
                         </ReplyInputContainer>
                     )}
                     {comment.replies && comment.replies.map((reply) => (
-                        <ReplyBox key={reply.commentId}>
+                        <ReplyBox key={reply.cmtId}>
                             <ReplyHeader>
-                                <ReplyId>ID. {reply.userId}</ReplyId>
-                            <DeleteButton onClick={() => handleCommentDelete(reply.commentId)}>삭제</DeleteButton>
+                                <ReplyId>ID. {reply.cmtId}</ReplyId>
+                            <DeleteButton onClick={() => handleReplyDelete(reply.cmtId)}>삭제</DeleteButton>
                             </ReplyHeader>
                             <ReplyText>{reply.content}</ReplyText>
-                            <ReplyDate>{formatDate(comment.createdDate)}</ReplyDate>
+                            <ReplyDate>{formatDate(reply.cmtDate)}</ReplyDate>
                         </ReplyBox>
                     ))}
                     <hr style={{ marginTop: "20px" }} />
@@ -281,7 +314,6 @@ function ListComment({ postId }) {
 const CommentContainer = styled.div`
     padding: 20px;
     margin-top: 30px;
-    text-align: left;
 `;
 
 const Comment = styled.div`
@@ -420,20 +452,21 @@ const CommentOptions = styled.div`
 //     margin-right: 5px;
 //     cursor: pointer;
 // `;
+
 // const SecretLabel = styled.label`
-//     margin-right: 15px; 
+//     margin-right: 15px;
 // `;
 
 const SubmitButton = styled.button`
     background-color: #FFFFFF;
     font-weight: bold;
     padding: 5px 10px;
-    border: 1px solid #E4EAF0;
-    
+    border: 1.5px solid #E4EAF0;
+
     &:hover {
         border: 1.5px solid #000000;
        cursor: pointer;
-    }    
+    }
 `;
 
-export default ListComment;
+export default ReviewComment;

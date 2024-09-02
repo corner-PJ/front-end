@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+// import styled from "@emotion/styled";
 
 export const LoginRootWrapper = styled.div`
 	min-height: 100vh;
@@ -8,7 +9,6 @@ export const LoginRootWrapper = styled.div`
 	justify-content: center;
 	align-items: center;
 `;
-
 
 export const LogoContainer = styled.div`
     display: flex;
@@ -85,18 +85,21 @@ export const LoginButton = styled.button`
     color: white;
     font-weight: bold;
     font-size: 18px;
-    background-color: rgb(252, 129, 158);
+    background-color: ${(props) => props.$disabled ? '#d3d3d3' : 'rgb(252, 129, 158)'};
     border-radius: 5px;
-    border: none;
+    border: 3px solid;
     margin-top: 10px;
-    width: 100%; 
+    width: 100%;
+	height: 50px;
     max-width: 100%; 
-    box-sizing: border-box; 
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
     &:hover {
-        background-color: white;
-        border: 4px solid rgb(252, 129, 158);
-        color: rgb(252, 129, 158);
+        background-color: ${(props) => props.$disabled ? '#d3d3d3' : 'white'};
+        border: 3px solid ${(props) => props.$disabled ? '#d3d3d3' :' rgb(252, 129, 158)'};
+        color: ${(props) => props.$disabled ? 'white' : 'rgb(252, 129, 158)'};
         box-shadow: 0px 4px 4px 2px rgba(252, 129, 158, 0.25); 
     }
 `;

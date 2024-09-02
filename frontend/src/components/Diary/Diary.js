@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { format, addMonths, subMonths } from 'date-fns';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns';
-import { isSameMonth, isSameDay, addDays, parse } from 'date-fns';
+import { isSameMonth, isSameDay, addDays, parseISO } from 'date-fns';
 import styled from 'styled-components';
 import DiaryDogImg from "../../assets/diaryDogIcon.png"
 import { FaCirclePlus } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { MoveModal } from './Modal/MoveModal';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const RenderHeader = ({ currentMonth, prevMonth, nextMonth }) => {
@@ -42,14 +45,7 @@ const RenderDays = () => {
     );
 };
 
-// 아이콘 추가를 위한 목데이터
-const diaryEntries = {
-    '2024-06-02': 2,
-    '2024-06-08': 1,
-};
-
-
-const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
+const RenderCells = ({ currentMonth, selectedDate, onDateClick, diaryEntries }) => {
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(monthStart);
     const startDate = startOfWeek(monthStart);
@@ -65,7 +61,10 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
             formattedDate = format(day, 'd');
             const cloneDay = day;
             const formattedCloneDay = format(cloneDay, 'yyyy-MM-dd');
-            const entryCount = diaryEntries[formattedCloneDay] || 0;
+            const entries = diaryEntries[formattedCloneDay] || [];
+            const entryCount = entries.length;
+
+            // console.log(`Date: ${formattedCloneDay}, Entry Count: ${entryCount}`);
             
             days.push(
                 <Cell
@@ -79,7 +78,9 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
                             : 'valid'
                     }`}
                     key={day}
-                    onClick={() => onDateClick(format(cloneDay, 'yyyy-MM-dd'), entryCount)}
+                    onClick={() => {
+                        onDateClick(formattedCloneDay, entries);
+                    }}
                 >
                     <span
                         className={
@@ -120,9 +121,55 @@ export const DiaryPage = () => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [diaryEntries, setDiaryEntries] = useState({});
     const navigate = useNavigate();
 
-    const openModal = (day) => {
+    // 일기 조회
+    const fetchDiaryEntries = async (year, month) => {
+        try {
+            const token = localStorage.getItem('authToken');
+            const response = await axios.get('/diary/month', {
+                params: {
+                    year: year,
+                    month: month
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            if (response.data.success) {
+                // 각 날짜에 작성된 일기 개수 계산
+                const entries = response.data.data.reduce((acc, entry) => {
+                    const date = format(parseISO(entry.diaryDate), 'yyyy-MM-dd');
+                    if (!acc[date]) acc[date] = [];
+                    acc[date].push(entry); 
+                    return acc;
+                }, {});
+
+                setDiaryEntries(entries);  // API로부터 받은 데이터를 상태에 저장
+            } else {
+                console.error('일기 목록을 불러오는 데 실패했습니다.');
+                toast.error('데이터를 불러오는데 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+            }
+        } catch (error) {
+            console.error('서버 오류:', error);
+        }
+    };
+
+    useEffect(() => {
+        // 현재 월과 년도를 기준으로 다이어리 항목 불러오기
+        fetchDiaryEntries(currentMonth.getFullYear(), currentMonth.getMonth() + 1);
+    }, [currentMonth]);  // currentMonth가 변경될 때마다 호출
+
+    // useEffect(() => {
+    //     console.log('Diary Entries:', diaryEntries);
+    // }, [diaryEntries]);
+
+    const openModal = () => {
         setIsModalOpen(true);
     };
 
@@ -137,15 +184,20 @@ export const DiaryPage = () => {
     const nextMonth = () => {
         setCurrentMonth(addMonths(currentMonth, 1));
     };
+    
 
-    const onDateClick = (day, entryCount) => {
+    const onDateClick = (day, entries) => {
+        // console.log('Selected entries:', entries);
         setSelectedDate(day);
-        if (entryCount === 0) {  // 글이 없는 경우 모달
-            openModal(day);
-        } else if (entryCount === 1) { // 글 하나인 경우 상세페이지
-            navigate(`/diary/detail?date=${day}`);
-        } else if (entryCount > 1) { // 글 2개 이상인 경우 목록
-            navigate(`/diary/list?date=${day}`);
+    
+        if (!entries || entries.length === 0) {  // 일기가 없는 경우 모달
+            openModal();
+        } else if (entries.length === 1) { // 일기 하나인 경우 상세페이지
+            //console.log("entries[0].id", entries[0].id);
+            navigate(`/diary/${entries[0].diaryId}`);
+        } else if (entries.length > 1) { // 일기 2개 이상인 경우 목록
+            // console.log("Multiple entries, Entries length:", entries.length);
+            navigate(`/diary/list/${day}`);
         }
     };
 
@@ -163,6 +215,7 @@ export const DiaryPage = () => {
                     currentMonth={currentMonth}
                     selectedDate={selectedDate}
                     onDateClick={onDateClick}
+                    diaryEntries={diaryEntries}
                 />
             </CalendarWrapper>
             {selectedDate && (

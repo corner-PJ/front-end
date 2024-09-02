@@ -1,16 +1,59 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function DeleteModal({ isModalOpen, closeModal}) {
     const navigate = useNavigate();
+    const { diaryId } = useParams();
 
-    const MoveToDiaryMain = async() => {
-        closeModal();
+        // 일기 삭제 핸들러
+        const handleDelete = async () => {
         
-        navigate(`/diary`);
-    }
+            try {
+                const token = localStorage.getItem('authToken'); 
+            
+                const response = await axios.delete(
+                    '/diary',  
+                    {
+                        params: { 
+                            diaryId: diaryId
+                        },
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        }
+                    }
+                );
+    
+                // 응답 데이터 확인
+                console.log("서버 응답 데이터:", response.data);
+    
+                if (response.status === 200) {
+                    toast.success('일기가 삭제되었습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
+                    closeModal();
+                    navigate("/diary");
+
+                } else {
+                    toast.error(`일기 삭제에 실패했습니다. 다시 시도해주세요.`, {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
+        
+                }
+            } catch (error) {
+                console.error('일기 삭제 중 오류 발생:', error);
+                toast.error(`일기 삭제 중 오류가 발생했습니다: ${error.message}`, {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+            }
+        };
     
     return (
         <>
@@ -24,7 +67,7 @@ export function DeleteModal({ isModalOpen, closeModal}) {
                             </ContentText>
                 
                             <ButtonWrapper>
-                                <OkBtn onClick={MoveToDiaryMain}>확인</OkBtn>
+                                <OkBtn onClick={handleDelete}>확인</OkBtn>
                                 <CancleBtn onClick={closeModal}>취소</CancleBtn>
                             </ButtonWrapper>
                         </ContentRectangle>
@@ -109,7 +152,7 @@ const OkBtn = styled.button`
     border: 2px solid #E1AFD1;
     border-radius: 16px;
     background-color: #E1AFD1;
-    padding: 15px 35px;
+    padding: 15px 25px;
     margin-right: 20px;
 
     &:hover {

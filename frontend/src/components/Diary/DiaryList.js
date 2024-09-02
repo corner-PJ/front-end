@@ -1,63 +1,91 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from 'styled-components';
 import Choco from "../../assets/Choco.jpg"
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
-
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function DiaryListPage() {
     const navigate = useNavigate();
+    const [diaryEntries, setDiaryEntries] = useState([]);
     const maxLength = 80;
-    const content = "장난감을 물고 다닐 때마다 이렇게 놀고 싶어하는지 알아주지 못 한 것 같다.. 산책가고 싶다는 것도 놀고 싶다는 것일까? 산책 가고 싶다는 줄 알았다.";
     
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const selectedDate = queryParams.get('date');
+    const { date } = useParams();
 
-    const handleReadMore = (day) => {
-        navigate(`/diary/detail?date=${day}`);
+    // 목록 조회 (URL의 날짜가 변경되었을 때)
+    useEffect(() => {
+        const fetchDiaryEntries = async () => {
+            // console.log("date:", date);
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await axios.get('/diary/list', {
+                    params: { 
+                        date: date, 
+                    },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+
+                // console.log("API Response:", response.data);
+
+                if (response.data.success) {
+                    console.log("Diary Entries:", response.data.data);
+                    setDiaryEntries(response.data.data);
+                } else {
+                    toast.error('데이터를 불러오는데 실패했습니다.', {
+                        autoClose: 3000,
+                        position: "top-center",
+                    });
+                }
+            } catch (error) {
+                console.error('서버 오류:', error);
+            }
+        };
+
+        if (date) {
+            fetchDiaryEntries();
+        }
+    }, [date]); 
+
+    // 상세 페이지 이동 (더보기 버튼)
+    const handleReadMore = (diaryId) => {
+        navigate(`/diary/${diaryId}`);
     };
+
+    // 상세 페이지 이동 
+    const moveToDetail = (diaryId) => {
+        navigate(`/diary/${diaryId}`);
+    };
+
 
     return (
         <WritingWrapper>
             <ListWriting>
-                <ListHeader>{format(new Date(selectedDate), "yyyy년 MM월 dd일")}</ListHeader>
+                <ListHeader>{format(new Date(date), "yyyy년 MM월 dd일")}</ListHeader>
                 <ContentContainer>
-                    <ListContentWrapper>
-                        <ListImg src={Choco} />
-                        <ListRectangle>
-                            <ListDate>2024.06.02 16:04</ListDate>
-                            <ListContentHeader>놀고 싶어요 상태에 대한 기록</ListContentHeader>
-                            <ListContent>
-                                {content.length > maxLength ? (
-                                    <>
-                                        {content.substring(0, maxLength)}
-                                        <ReadMoreButton onClick={() => handleReadMore(selectedDate)}>...더보기</ReadMoreButton>
-                                    </>
-                                ) : (
-                                    content
-                                )}
-                            </ListContent>
-                        </ListRectangle>
-                    </ListContentWrapper>
-                    <ListContentWrapper>
-                        <ListImg src={Choco} />
-                        <ListRectangle>
-                            <ListDate>2024.06.02 16:04</ListDate>
-                            <ListContentHeader>놀고 싶어요 상태에 대한 기록</ListContentHeader>
-                            <ListContent>
-                                {content.length > maxLength ? (
-                                    <>
-                                        {content.substring(0, maxLength)}
-                                        <ReadMoreButton onClick={() => handleReadMore(selectedDate)}>...더보기</ReadMoreButton>
-                                    </>
-                                ) : (
-                                    content
-                                )}
-                            </ListContent>
-                        </ListRectangle>
-                    </ListContentWrapper>
-                
+                    {diaryEntries.map((entry, index) => (
+                        <ListContentWrapper key={index} onClick={() => moveToDetail(entry.diaryId)}>
+                            <ListImg src={Choco} />
+                            <ListRectangle>
+                                <ListDate>{format(new Date(entry.diaryDate), "yyyy.MM.dd")}</ListDate>  
+                                <ListContentHeader>놀고 싶어요 상태에 대한 기록</ListContentHeader>  {/* 감정 분석 결과 제목 */}
+                                <ListContent>
+                                    {entry.content.length > maxLength ? (
+                                        <>
+                                            {entry.content.substring(0, maxLength)}
+                                            <ReadMoreButton onClick={() => handleReadMore(entry.diaryId)}>...더보기</ReadMoreButton>
+                                        </>
+                                    ) : (
+                                        entry.content
+                                    )}
+                                </ListContent>
+                            </ListRectangle>
+                        </ListContentWrapper>
+                    ))}
                 </ContentContainer>
             </ListWriting>
         </WritingWrapper>

@@ -4,24 +4,36 @@ import styled from "@emotion/styled";
 import { useNavigate } from 'react-router-dom';
 import { PetRadioGroup } from './petRadioGroup';
 import { PetRadio } from './petRadio';
-
+import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function MypetRegisterPage() {
-    const [name, setName] = useState('');
-    const [age, setAge] = useState('');
-    const [breed, setBreed] = useState('');
-    const [characteristic, setCharacteristic] = useState('');
-    const [image, setImage] = useState(null);
-    const [gender, setGender] = useState(null);
-    const [neutering, setNeutering] = useState(null);
+
+    // 반려견 정보 
+    const [petInfo, setPetInfo] = useState({
+        name: "",
+        age: "",
+        breed: "",
+        sex: "",
+        image: null,
+        neuter: null,
+        feature: "",
+    }); 
 
     const navigate = useNavigate();
+
+    const [file, setFile] = useState(null); 
     const fileInputRef = useRef(null);
-    
+
     const imgUpload = e => {
         const selectedImage = e.target.files[0];
         if (selectedImage) {
-            setImage(URL.createObjectURL(selectedImage));
+            setFile(selectedImage);
+            setPetInfo(prevState => ({
+                ...prevState,
+                image: URL.createObjectURL(selectedImage)
+            }));
         }
     };
 
@@ -29,9 +41,66 @@ export function MypetRegisterPage() {
         fileInputRef.current.click();
     };
 
-    const moveToMypage = () => {
-        navigate('/mypage/');
+    // 폼에서 변경 이벤트 처리 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setPetInfo(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     };
+
+    // 등록하기 
+    const handleSubmit = async () => {
+        try {
+            const token = localStorage.getItem("authToken");
+
+            // FormData 객체 생성
+            const formData = new FormData();
+            formData.append("pet", new Blob([JSON.stringify({
+                name: petInfo.name,
+                age: petInfo.age,
+                breed: petInfo.breed,
+                sex: petInfo.sex,
+                neuter: petInfo.neuter ? 1 : 0,
+                feature: petInfo.feature,
+            })], { type: "application/json" }));
+    
+
+            if (file) {
+                formData.append("file", file); // 이미지 파일 추가
+            }
+
+            const response = await axios.post(
+                "/pet/register",
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        // 'Content-Type': 'application/json' 
+                    },
+                }
+            );
+
+            if (response.data.success) {
+                toast.success('반려견 등록에 성공했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+                console.log("반려견 등록 성공:", response.data);
+                navigate('/mypage');
+            } else {
+                toast.error('반려견 등록에 실패했습니다.', {
+                    autoClose: 3000,
+                    position: "top-center",
+                });
+                console.error("반려견 등록 실패:", response.data.message);
+            }
+        } catch (error) {
+            console.error("반려견 등록 중 오류 발생:", error);
+        }
+    };
+
 
     return (
         <MyPetWrapper>
@@ -39,8 +108,8 @@ export function MypetRegisterPage() {
                 <ContentContainer>
                     <LeftContent>
                         <MypetImg onClick={handleUploadButtonClick}> 
-                            {image ? 
-                                <RPImg src={image} alt="Uploaded Image"/> :
+                            {petInfo.image? 
+                                <RPImg src={petInfo.image} alt="Uploaded Image"/> :
                                 <RPImg src={petRegisterImg} alt="Default Image" />
                             }
                             <HiddenFileInput 
@@ -56,16 +125,17 @@ export function MypetRegisterPage() {
                         <BoxContainer>
                             <Text> 이름 </Text>
                             <ContentInputBox
-                                type="name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                type="text"
+                                name="name"
+                                value={petInfo.name}
+                                onChange={handleChange}
                             />
                         </BoxContainer>
-                        <PetRadioGroup label="성별" value={gender} onChange={setGender}>
+                        <PetRadioGroup label="성별" value={petInfo.sex} onChange={value => setPetInfo(prevState => ({ ...prevState, sex: value }))}>
                             <PetRadio value="남">남</PetRadio>
                             <PetRadio value="여">여</PetRadio>
                         </PetRadioGroup>
-                        <PetRadioGroup label="중성화 여부" value={neutering} onChange={setNeutering}>
+                        <PetRadioGroup label="중성화 여부" value={petInfo.neuter} onChange={value => setPetInfo(prevState => ({ ...prevState, neuter: value }))}>
                             <PetRadio value="예">예</PetRadio>
                             <PetRadio value="아니오">아니오</PetRadio>
                         </PetRadioGroup>
@@ -75,33 +145,34 @@ export function MypetRegisterPage() {
                         <BoxContainer>
                             <Text> 나이 </Text>
                             <ContentInputBox
-                                type="age"
-                                value={age}
-                                onChange={(e) => setAge(e.target.value)}
+                                type="text"
+                                name="age"
+                                value={petInfo.age}
+                                onChange={handleChange}
                             />
                         </BoxContainer>
                         <BoxContainer>
                             <Text> 견종 </Text>
                             <ContentInputBox
-                                type="breed"
-                                value={breed}
-                                onChange={(e) => setBreed(e.target.value)}
+                                type="text"
+                                name="breed"
+                                value={petInfo.breed}
+                                onChange={handleChange}
                             />
                         </BoxContainer>
                         <BoxContainer>
                             <Text> 특징 </Text>
                             <ContentInputBox
-                                type="characteristic"
-                                value={characteristic}
-                                onChange={(e) => setCharacteristic(e.target.value)}
+                                type="text"
+                                name="feature"
+                                value={petInfo.feature}
+                                onChange={handleChange}
                             />
                         </BoxContainer>
                     </RightContent>
                 </ContentContainer>
                 
-                <MypetRegisterBtn onClick={moveToMypage}>등록하기</MypetRegisterBtn>
-                
-
+                <MypetRegisterBtn onClick={handleSubmit}>등록하기</MypetRegisterBtn>
         </MyPetWrapper>
     );
 }
