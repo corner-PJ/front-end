@@ -26,7 +26,7 @@ function Nav() {
             position: "top-center",
         });
         navigate(`/`);
-    }, [navigate]);
+    }, [navigate, ACCESS_TOKEN]);
 
     const handleLogoutButtonClick = () => {
         if (isLogin) {
@@ -63,25 +63,21 @@ function Nav() {
         try {
             const token = localStorage.getItem("authToken");
             // console.log("토큰:", token);
-
-            const response = await axios.get("/mypage/userinfo", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setUserInfo(response.data.data);
+            if (token) {
+                const response = await axios.get("/mypage/userinfo", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setUserInfo(response.data.data);
+                setIsLogin(true);
+            }
         } catch (error) {
             console.error("사용자 정보를 불러오는 중 오류 발생:", error);
         }
         };
 
         fetchUserInfo();
-    }, [ACCESS_TOKEN]);
-
-    useEffect(() => {
-        if (ACCESS_TOKEN) {
-            setIsLogin(true);
-        }
     }, [ACCESS_TOKEN]);
 
     return (
