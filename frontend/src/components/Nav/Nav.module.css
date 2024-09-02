@@ -1,7 +1,7 @@
 .navbar {
     display: flex;
     align-items: center;
-    width: 100vw;
+    width: 100%;
     height: 80px;
     background-color: #FC819E;
     z-index: 999;
@@ -12,9 +12,9 @@
 }
 
 .navbar .logo {
-    width: 5.8em;
-    height: 1.6em;
-    padding: 0 4em 0 1.5em;
+    width: 150px;
+    height: 45px;
+    padding: 0 3em 0 1.5em;
 }
 
 .navbar .pageLink {
@@ -60,6 +60,12 @@
     color: #FFFFFF;
 }
 
+.dropmenu hr {
+    border: solid 1.3px #a0a0a0;
+    width: 10em;
+    margin: 0 auto;
+}
+
 .navbar .login {
     display: flex;
     align-items: center;
@@ -68,9 +74,13 @@
     color: #FFFFFF;
 }
 
-.navbar .profileImg {
-    margin-left: 15px;
-    margin-top: 3px;
-    width: 2em;
-    height: 2em;
+.navbar .logoutImg {
+    margin-left: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+
+    &:hover {
+        cursor: pointer;
+    }
 }
