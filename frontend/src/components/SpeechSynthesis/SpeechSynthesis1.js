@@ -13,7 +13,7 @@ import { GrLinkNext } from "react-icons/gr";
 import Loading from '../Loading/Loading';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import axios from 'axios';
 
 export function SpeechSynthesisPage1() {
 	const [isLoading, setIsLoading] = useState(false);

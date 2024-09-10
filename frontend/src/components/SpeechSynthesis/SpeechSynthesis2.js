@@ -9,6 +9,7 @@ import { LuClipboardList } from "react-icons/lu";
 import Loading from '../Loading/Loading';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 
 const names = [
@@ -16,7 +17,7 @@ const names = [
 	"까미", "보리", "설이", "몽이", "토리",
 	"코코", "콩이", "두부", "별이", "호두", "사랑이",
 	"망고", "쿠키", "하루", "루비", "흰둥이",
-	"레오", "뚱이", "모모", "가을"
+	"레오", "뚱이", "모모", "가을", "모찌"
 ];
 
 export function SpeechSynthesisPage2() {
@@ -24,6 +25,7 @@ export function SpeechSynthesisPage2() {
 	const [progress, setProgress] = useState(0);
 	const [selectedNames, setSelectedNames] = useState([]);
 	const [showResult, setShowResult] = useState(false);
+	const [chartData, setChartData] = useState([]);
 	const [video, setVideo] = useState(null);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -44,12 +46,42 @@ export function SpeechSynthesisPage2() {
         navigate('/speechSynthesis/result/');
     }
 
-    const videoUpload = e => {
-        const selectedVideo = e.target.files[0];
-        if (selectedVideo) {
-            setVideo(URL.createObjectURL(selectedVideo));
-        }
-    };
+	const videoUpload = async (e) => {
+		const selectedVideo = e.target.files[0];
+		if (selectedVideo) {
+			setVideo(URL.createObjectURL(selectedVideo));
+			
+			const formData = new FormData();
+			formData.append('video', selectedVideo);
+	
+			try {
+				const response = await axios.post('http://127.0.0.1:5000/predict', 
+					formData, 
+					{
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+					}
+				);
+				console.log(response);
+				
+				// 서버로부터의 응답 처리
+				if (response.status === 200){
+					toast.success('영상 업로드에 성공했습니다.', {
+						autoClose: 3000,
+						position: "top-center",
+					});
+				} else {
+					toast.error('영상 업로드에 실패했습니다. 다시 시도해주세요.', {
+						autoClose: 3000,
+						position: "top-center",
+					});
+				}
+			} catch (error) {
+				console.error('영상 업로드 중 오류 발생:', error);
+			}
+		}
+	};
 
 	const handleUploadButtonClick = () => {
         fileInputRef.current.click();
@@ -80,8 +112,31 @@ export function SpeechSynthesisPage2() {
 				clearInterval(timer);
 				setIsLoading(false);
 				setShowResult(true);
+				fetchRankingData();
 			}
 		}, intervalDuration);
+	};
+
+	const fetchRankingData  = async () => {
+		try {
+			const response = await axios.post('http://127.0.0.1:5000/calculate_movement', {
+				names: selectedNames,
+			});
+			console.log('POST Response:', response);
+	
+			const rankingResponse = await axios.get('http://127.0.0.1:5000/get_ranking');
+			const ranking = rankingResponse.data.ranking;
+			const filteredRanking = ranking.filter(item => selectedNames.includes(item.name));
+	
+			setChartData(filteredRanking);
+	
+		} catch (error) {
+			console.error('데이터 가져오기 실패:', error);
+			toast.error('데이터를 불러오는데 실패했습니다.', {
+				autoClose: 3000,
+				position: 'top-center',
+			});
+		}
 	};
 
 
@@ -94,9 +149,9 @@ export function SpeechSynthesisPage2() {
 					<NameBox>
 						{names.map(name => (
 							<NameItem
-							key={name}
-							selected={selectedNames.includes(name)}
-							onClick={() => toggleSelection(name)}
+								key={name}
+								selected={selectedNames.includes(name)}
+								onClick={() => toggleSelection(name)}
 							>
 							{name}
 							</NameItem>
@@ -144,7 +199,7 @@ export function SpeechSynthesisPage2() {
                 {!isLoading && showResult && (
 					<ResultWrapper>
 						<ResultText>해당 유기견이 선호하는 이름은 별이입니다.</ResultText>
-						<NameChart />
+						<NameChart data={chartData} />
 
 						<NextBtn onClick={goToResult}>
 							<NextBtnText>결과 전체 보기</NextBtnText>

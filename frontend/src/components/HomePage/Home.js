@@ -34,7 +34,7 @@ export default function Home() {
                     <div className={s.content}>
                         <h1>이름 찾기</h1>
                         <p>음성합성 기술을 활용하여 유기견의 이전 주인의 목소리와 과거 이름을 추적하여, 유기견의 과거 정보를 확인해 새로운 주인과의 성공적인 만남을 주도합니다.</p>
-                        <Link className={s.pageButton} to={"./speechSynthesis"}>이름 찾으로 가기</Link>
+                        <Link className={s.pageButton} to={"./speechSynthesis"}>이름 찾으러 가기</Link>
                     </div>
                 </div>
                 <div className={s.decode}>

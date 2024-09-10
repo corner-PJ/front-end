@@ -108,8 +108,6 @@ const options = {
 }
 
 
-
-
 export function VoiceChart() {
     console.log("Options:", options);
     console.log("Series:", series);
