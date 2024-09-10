@@ -2,29 +2,15 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 import styled from "@emotion/styled";
 
-// 목데이터
-const data = [
-    { name: '별이', number: 123 },
-    { name: '설이', number: 97 },
-    { name: '몽이', number: 94 },
-    { name: '보리', number: 80 },
-    { name: '콩이', number: 61 },
-    { name: '까미', number: 41 },
-    { name: '토리', number: 26 },
-    { name: '사랑이', number: 17 },
-];
-
-
 export const NameChart = ({ data }) => {
 
     const series = [{
         // 차트의 데이터를 담당할 객체. 이름과 시각화할 데이터를 할당.
         name: 'number',
-        data: data.map(item => item.number)
+        data: data.map(item => item.distance)
     }]
     
     const categories = data.map(item => item.name);
-    console.log("Categories:", categories);
     
     const options = {
         chart: {
@@ -92,7 +78,8 @@ export const NameChart = ({ data }) => {
         },
         yaxis: {
             show: false,
-            max: 170,
+            max: Math.max(...data.map(item => item.distance)),
+            min: 0,
         },
         grid: {
             show: false
@@ -104,15 +91,15 @@ export const NameChart = ({ data }) => {
         tooltip: {
             y: {
                 formatter: function (val) {
-                return val 
-            }
+                    return val 
+                }
             }
         },
     
     }    
 
-    console.log("Options:", options);
-    console.log("Series:", series);
+    // console.log("Options:", options);
+    // console.log("Series:", series);
 
     return(
         <ChartWrapper>

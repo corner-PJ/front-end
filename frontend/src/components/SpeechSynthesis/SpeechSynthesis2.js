@@ -26,6 +26,7 @@ export function SpeechSynthesisPage2() {
 	const [selectedNames, setSelectedNames] = useState([]);
 	const [showResult, setShowResult] = useState(false);
 	const [chartData, setChartData] = useState([]);
+	const [topName, setTopName] = useState("");
 	const [video, setVideo] = useState(null);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -127,8 +128,21 @@ export function SpeechSynthesisPage2() {
 			const rankingResponse = await axios.get('http://127.0.0.1:5000/get_ranking');
 			const ranking = rankingResponse.data.ranking;
 			const filteredRanking = ranking.filter(item => selectedNames.includes(item.name));
-	
+			
+			// 1위 이름 찾기
+            const topRank = filteredRanking.find(item => item.rank === 1);
+            if (topRank) {
+                setTopName(topRank.name);
+            }
+
 			setChartData(filteredRanking);
+
+			// 서버로부터의 응답 처리
+			if (response.status === 200){
+				console.log("결과 불러오기 성공");
+			} else {
+				console.log("결과 불러오기 실패 ")
+			}
 	
 		} catch (error) {
 			console.error('데이터 가져오기 실패:', error);
@@ -198,7 +212,7 @@ export function SpeechSynthesisPage2() {
 
                 {!isLoading && showResult && (
 					<ResultWrapper>
-						<ResultText>해당 유기견이 선호하는 이름은 별이입니다.</ResultText>
+						<ResultText>해당 유기견이 선호하는 이름은 "{topName}"입니다.</ResultText>
 						<NameChart data={chartData} />
 
 						<NextBtn onClick={goToResult}>
@@ -206,17 +220,14 @@ export function SpeechSynthesisPage2() {
 						</NextBtn>
 					</ResultWrapper>
 				)}
-				
-				
             </ContentContainer>
-            
         </SpeechSynthesisWrapper>
     );
 }
 
 
 const SpeechSynthesisWrapper = styled.div`
-    min-height: 250vh;
+    min-height: 260vh;
 	width: 100%;
     background-color: white;
     display: flex;
