@@ -46,12 +46,42 @@ export function SpeechSynthesisPage1() {
         }
 	}, [token]);
 
-    const videoUpload = e => {
-        const selectedVideo = e.target.files[0];
-        if (selectedVideo) {
-            setVideo(URL.createObjectURL(selectedVideo));
-        }
-    };
+    const videoUpload = async (e) => {
+		const selectedVideo = e.target.files[0];
+		if (selectedVideo) {
+			setVideo(URL.createObjectURL(selectedVideo));
+			
+			const formData = new FormData();
+			formData.append('video', selectedVideo);
+	
+			try {
+				const response = await axios.post('http://127.0.0.1:5000/predict', 
+					formData, 
+					{
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+					}
+				);
+				console.log(response);
+				
+				// 서버로부터의 응답 처리
+				if (response.status === 200){
+					toast.success('영상 업로드에 성공했습니다.', {
+						autoClose: 3000,
+						position: "top-center",
+					});
+				} else {
+					toast.error('영상 업로드에 실패했습니다. 다시 시도해주세요.', {
+						autoClose: 3000,
+						position: "top-center",
+					});
+				}
+			} catch (error) {
+				console.error('영상 업로드 중 오류 발생:', error);
+			}
+		}
+	};
 
 	const handleUploadButtonClick = () => {
         fileInputRef.current.click();
@@ -82,6 +112,7 @@ export function SpeechSynthesisPage1() {
 				clearInterval(timer);
 				setIsLoading(false);
 				setShowResult(true);
+				
 			}
 		}, intervalDuration);
 	};

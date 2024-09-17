@@ -34,8 +34,10 @@ export function LoginPage() {
     try {
       const response = await axios.post(
 				"/user/login",
-				formData
+				formData,
 			);
+
+      console.log("Response Data:", response.data);
 
       if (response.data.success) {
         console.log("로그인 성공");
